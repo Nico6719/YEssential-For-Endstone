@@ -1,3 +1,9 @@
-from endstone_example.example_plugin import ExamplePlugin
+from .main import YEssentialPlugin
 
-__all__ = ["ExamplePlugin"]
+def create_plugin():
+    return YEssentialPlugin()
+
+__all__ = [
+    'YEssentialPlugin',
+    'create_plugin'
+]
