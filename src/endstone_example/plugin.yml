@@ -1,0 +1,177 @@
+name: YEssential
+version: 2.5.4
+author: Nico6719, PHEyeji
+description: 多功能基础插件 - Endstone Python版本
+entry: YEssential.main:create_plugin
+api: 1.0.0
+
+permissions:
+  yessential.*:
+    description: 所有YEssential权限
+    children:
+      yessential.money: true
+      yessential.home: true
+      yessential.warp: true
+      yessential.rtp: true
+      yessential.tpa: true
+      yessential.redpacket: true
+      yessential.pvp: true
+      yessential.back: true
+      yessential.notice: true
+      yessential.hub: true
+      yessential.suicide: true
+      yessential.clean: true
+      yessential.moneys: true
+      yessential.warp.create: true
+      yessential.warp.delete: true
+      yessential.notice.edit: true
+      yessential.hub.set: true
+      yessential.clean.manage: true
+
+  yessential.money:
+    description: 使用经济系统
+    default: true
+
+  yessential.home:
+    description: 使用家园系统
+    default: true
+
+  yessential.warp:
+    description: 使用传送点系统
+    default: true
+
+  yessential.rtp:
+    description: 使用随机传送
+    default: true
+
+  yessential.tpa:
+    description: 使用玩家传送
+    default: true
+
+  yessential.redpacket:
+    description: 使用红包系统
+    default: true
+
+  yessential.pvp:
+    description: 使用PVP系统
+    default: true
+
+  yessential.back:
+    description: 使用死亡回溯
+    default: true
+
+  yessential.notice:
+    description: 查看公告
+    default: true
+
+  yessential.hub:
+    description: 使用中心传送
+    default: true
+
+  yessential.suicide:
+    description: 使用自杀功能
+    default: true
+
+  yessential.clean:
+    description: 使用清理系统
+    default: false
+
+  yessential.moneys:
+    description: 经济系统管理
+    default: op
+
+  yessential.warp.create:
+    description: 创建传送点
+    default: op
+
+  yessential.warp.delete:
+    description: 删除传送点
+    default: op
+
+  yessential.notice.edit:
+    description: 编辑公告
+    default: op
+
+  yessential.hub.set:
+    description: 设置中心点
+    default: op
+
+  yessential.clean.manage:
+    description: 管理清理系统
+    default: op
+
+commands:
+  money:
+    description: 经济系统
+    usage: "/money"
+    permission: yessential.money
+
+  moneys:
+    description: 经济管理
+    usage: "/moneys"
+    permission: yessential.moneys
+
+  home:
+    description: 家园系统
+    usage: "/home"
+    permission: yessential.home
+
+  warp:
+    description: 传送点系统
+    usage: "/warp"
+    permission: yessential.warp
+
+  rtp:
+    description: 随机传送
+    usage: "/rtp"
+    permission: yessential.rtp
+
+  back:
+    description: 死亡回溯
+    usage: "/back"
+    permission: yessential.back
+
+  notice:
+    description: 查看公告
+    usage: "/notice"
+    permission: yessential.notice
+
+  suicide:
+    description: 自杀
+    usage: "/suicide"
+    permission: yessential.suicide
+
+  tpa:
+    description: 传送请求
+    usage: "/tpa"
+    permission: yessential.tpa
+
+  tpayes:
+    description: 接受传送请求
+    usage: "/tpayes"
+    permission: yessential.tpa
+
+  tpano:
+    description: 拒绝传送请求
+    usage: "/tpano"
+    permission: yessential.tpa
+
+  redpacket:
+    description: 红包系统
+    usage: "/redpacket"
+    permission: yessential.redpacket
+
+  pvp:
+    description: PVP设置
+    usage: "/pvp"
+    permission: yessential.pvp
+
+  hub:
+    description: 中心传送
+    usage: "/hub"
+    permission: yessential.hub
+
+  cleanitem:
+    description: 清理掉落物
+    usage: "/cleanitem"
+    permission: yessential.clean.manage
