@@ -3,11 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "endstone-example"
-version = "0.4.0"
+name = "endstone-yessential"
+version = "0.1.0"
 dependencies = []
 authors = [
-    { name = "Endstone Developers", email = "hello@endstone.dev" },
+    { name = "Nico6719", email = "hello@endstone.dev" },
 ]
 description = "Python example plugin for Endstone servers"
 readme = "README.md"
