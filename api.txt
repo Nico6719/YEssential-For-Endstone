@@ -1,0 +1,6972 @@
+Server
+
+endstone.Server ¶
+
+Represents a server implementation.
+
+Methods:
+
+NameDescriptionbroadcast
+
+Broadcasts the specified message to every user with the given permission name.
+
+broadcast_message
+
+Broadcasts the specified message to every user with permission endstone.broadcast.user
+
+create_block_data
+
+Creates a new BlockData instance for the specified block type, with all properties initialized to defaults, except for those provided.
+
+create_boss_bar
+
+Creates a boss bar instance to display to players. The progress defaults to 1.0.
+
+create_map
+
+Create a new map with an automatically assigned ID.
+
+create_scoreboard
+
+Creates a new Scoreboard to be tracked by the server.
+
+dispatch_command
+
+Dispatches a command on this server, and executes it if found.
+
+get_map
+
+Gets the map from the given map ID.
+
+get_player
+
+get_plugin_command
+
+Gets a PluginCommand with the given name or alias.
+
+get_registry
+
+Returns the registry for the given type.
+
+reload
+
+Reloads the server configuration, functions, scripts and plugins.
+
+reload_data
+
+Reload only the Minecraft data for the server.
+
+shutdown
+
+Shutdowns the server, stopping everything.
+
+Attributes:
+
+NameTypeDescriptionaverage_msptfloat
+
+Gets the average milliseconds per tick (MSPT).
+
+average_tick_usagefloat
+
+Gets the average tick usage of the server.
+
+average_tpsfloat
+
+Gets the average ticks per second (TPS).
+
+ban_listPlayerBanList
+
+Gets the player ban list.
+
+command_senderConsoleCommandSender
+
+Gets a CommandSender for this server.
+
+current_msptfloat
+
+Gets the current milliseconds per tick (MSPT).
+
+current_tick_usagefloat
+
+Gets the current tick usage of the server.
+
+current_tpsfloat
+
+Gets the current ticks per second (TPS).
+
+ip_ban_listIpBanList
+
+Gets the IP ban list.
+
+item_factoryItemFactory
+
+Gets the instance of the item factory (for ItemMeta).
+
+languageLanguage
+
+Gets the current language interface used by the server.
+
+levelLevel
+
+Gets the server level.
+
+loggerLogger
+
+Returns the primary logger associated with this server instance.
+
+max_playersint
+
+The maximum amount of players which can login to this server.
+
+minecraft_versionstr
+
+Gets the Minecraft version that this server is running.
+
+namestr
+
+Gets the name of this server implementation.
+
+online_modebool
+
+Gets whether the Server is in online mode or not.
+
+online_playerslist[Player]
+
+Gets a list of all currently online players.
+
+plugin_managerPluginManager
+
+Gets the plugin manager for interfacing with plugins.
+
+portint
+
+Get the game port that the server runs on.
+
+port_v6int
+
+Get the game port (IPv6) that the server runs on.
+
+protocol_versionint
+
+Gets the network protocol version that this server supports.
+
+schedulerScheduler
+
+Gets the scheduler for managing scheduled events.
+
+scoreboardScoreboard
+
+Gets the primary Scoreboard controlled by the server.
+
+service_managerServiceManager
+
+Gets the service manager.
+
+start_timedatetime
+
+Gets the start time of the server.
+
+versionstr
+
+Gets the version of this server implementation.
+
+average_mspt property ¶
+
+average_mspt: float 
+
+Gets the average milliseconds per tick (MSPT).
+
+average_tick_usage property ¶
+
+average_tick_usage: float 
+
+Gets the average tick usage of the server.
+
+average_tps property ¶
+
+average_tps: float 
+
+Gets the average ticks per second (TPS).
+
+ban_list property ¶
+
+ban_list: PlayerBanList 
+
+Gets the player ban list.
+
+command_sender property ¶
+
+command_sender: ConsoleCommandSender 
+
+Gets a CommandSender for this server.
+
+current_mspt property ¶
+
+current_mspt: float 
+
+Gets the current milliseconds per tick (MSPT).
+
+current_tick_usage property ¶
+
+current_tick_usage: float 
+
+Gets the current tick usage of the server.
+
+current_tps property ¶
+
+current_tps: float 
+
+Gets the current ticks per second (TPS).
+
+ip_ban_list property ¶
+
+ip_ban_list: IpBanList 
+
+Gets the IP ban list.
+
+item_factory property ¶
+
+item_factory: ItemFactory 
+
+Gets the instance of the item factory (for ItemMeta).
+
+language property ¶
+
+language: Language 
+
+Gets the current language interface used by the server.
+
+level property ¶
+
+level: Level 
+
+Gets the server level.
+
+logger property ¶
+
+logger: Logger 
+
+Returns the primary logger associated with this server instance.
+
+max_players property writable ¶
+
+max_players: int 
+
+The maximum amount of players which can login to this server.
+
+minecraft_version property ¶
+
+minecraft_version: str 
+
+Gets the Minecraft version that this server is running.
+
+name property ¶
+
+name: str 
+
+Gets the name of this server implementation.
+
+online_mode property ¶
+
+online_mode: bool 
+
+Gets whether the Server is in online mode or not.
+
+online_players property ¶
+
+online_players: list[Player] 
+
+Gets a list of all currently online players.
+
+plugin_manager property ¶
+
+plugin_manager: PluginManager 
+
+Gets the plugin manager for interfacing with plugins.
+
+port property ¶
+
+port: int 
+
+Get the game port that the server runs on.
+
+port_v6 property ¶
+
+port_v6: int 
+
+Get the game port (IPv6) that the server runs on.
+
+protocol_version property ¶
+
+protocol_version: int 
+
+Gets the network protocol version that this server supports.
+
+scheduler property ¶
+
+scheduler: Scheduler 
+
+Gets the scheduler for managing scheduled events.
+
+scoreboard property ¶
+
+scoreboard: Scoreboard 
+
+Gets the primary Scoreboard controlled by the server.
+
+service_manager property ¶
+
+service_manager: ServiceManager 
+
+Gets the service manager.
+
+start_time property ¶
+
+start_time: datetime 
+
+Gets the start time of the server.
+
+version property ¶
+
+version: str 
+
+Gets the version of this server implementation.
+
+broadcast ¶
+
+broadcast(     message: str | Translatable, permission: str ) -> None 
+
+Broadcasts the specified message to every user with the given permission name.
+
+broadcast_message ¶
+
+broadcast_message(message: str | Translatable) -> None 
+
+Broadcasts the specified message to every user with permission endstone.broadcast.user
+
+create_block_data ¶
+
+create_block_data(     type: str,     block_states: (         Mapping[str, bool | str | int] | None     ) = None, ) -> BlockData 
+
+Creates a new BlockData instance for the specified block type, with all properties initialized to defaults, except for those provided.
+
+create_boss_bar ¶
+
+create_boss_bar(     title: str,     color: BarColor,     style: BarStyle,     flags: list[BarFlag] | None = None, ) -> BossBar 
+
+Creates a boss bar instance to display to players. The progress defaults to 1.0.
+
+create_map ¶
+
+create_map(dimension: Dimension) -> MapView 
+
+Create a new map with an automatically assigned ID.
+
+create_scoreboard ¶
+
+create_scoreboard() -> Scoreboard 
+
+Creates a new Scoreboard to be tracked by the server.
+
+dispatch_command ¶
+
+dispatch_command(     sender: CommandSender, command_line: str ) -> bool 
+
+Dispatches a command on this server, and executes it if found.
+
+get_map ¶
+
+get_map(id: int) -> MapView 
+
+Gets the map from the given map ID.
+
+get_player ¶
+
+get_player(name: str) -> Player 
+
+get_player(unique_id: UUID) -> Player 
+
+get_plugin_command ¶
+
+get_plugin_command(name: str) -> PluginCommand 
+
+Gets a PluginCommand with the given name or alias.
+
+get_registry ¶
+
+get_registry(type: Type[_T]) -> Registry[_T] 
+
+Returns the registry for the given type.
+
+reload ¶
+
+reload() -> None 
+
+Reloads the server configuration, functions, scripts and plugins.
+
+reload_data ¶
+
+reload_data() -> None 
+
+Reload only the Minecraft data for the server.
+
+shutdown ¶
+
+shutdown() -> None 
+
+Shutdowns the server, stopping everything.
+
+
+
+Player
+
+endstone.Player ¶
+
+Bases: Mob
+
+Represents a player.
+
+Methods:
+
+NameDescriptionclose_form
+
+Closes the forms that are currently open for the player.
+
+give_exp
+
+Gives the player the amount of experience specified.
+
+give_exp_levels
+
+Gives the player the amount of experience levels specified.
+
+kick
+
+Kicks player with custom kick message.
+
+perform_command
+
+Makes the player perform the given command.
+
+play_sound
+
+Play a sound for a player at the location.
+
+reset_title
+
+Resets the title displayed to the player. This will clear the displayed title / subtitle and reset timings to their default values.
+
+send_form
+
+Sends a form to the player.
+
+send_map
+
+Render a map and send it to the player in its entirety.
+
+send_packet
+
+Sends a packet to the player.
+
+send_popup
+
+Sends this player a popup message
+
+send_tip
+
+Sends this player a tip message
+
+send_title
+
+Sends a title and a subtitle message to the player. If they are empty strings, the display will be updated as such.
+
+send_toast
+
+Sends this player a toast notification.
+
+spawn_particle
+
+stop_all_sounds
+
+Stop all sounds from playing.
+
+stop_sound
+
+Stop the specified sound from playing.
+
+transfer
+
+Transfers the player to another server.
+
+update_commands
+
+Send the list of commands to the client.
+
+Attributes:
+
+NameTypeDescriptionaddressSocketAddress
+
+Gets the socket address of this player
+
+allow_flightbool
+
+If the Player is allowed to fly via jump key double-tap.
+
+device_idstr
+
+Get the player's current device id.
+
+device_osstr
+
+Get the player's current device's operation system (OS).
+
+ender_chestInventory
+
+Get the player's EnderChest inventory.
+
+exp_levelint
+
+Gets or sets the players current experience level.
+
+exp_progressfloat
+
+Gets or sets the players current experience progress towards the next level.
+
+fly_speedfloat
+
+Gets or sets the current allowed speed that a client can fly.
+
+game_modeGameMode
+
+The player's current game mode.
+
+game_versionstr
+
+Get the player's current game version.
+
+inventoryPlayerInventory
+
+Get the player's inventory.
+
+is_flyingbool
+
+If the player is currently flying or not.
+
+is_opbool
+
+The operator status of this playerall
+
+is_sneakingbool
+
+Gets or sets the sneak mode of the player
+
+is_sprintingbool
+
+Gets or sets whether the player is sprinting or not.
+
+localestr
+
+Get the player's current locale.
+
+namestr
+
+Returns the name of this player
+
+pingint
+
+Gets the player's average ping in milliseconds.
+
+scoreboardScoreboard
+
+Gets or sets the player's visible Scoreboard.
+
+skinSkin
+
+Get the player's skin.
+
+total_expint
+
+Gets the players total experience points.
+
+unique_idUUID
+
+Returns the UUID of this player
+
+walk_speedfloat
+
+Gets or sets the current allowed speed that a client can walk.
+
+xuidstr
+
+Returns the Xbox User ID (XUID) of this player
+
+address property ¶
+
+address: SocketAddress 
+
+Gets the socket address of this player
+
+allow_flight property writable ¶
+
+allow_flight: bool 
+
+If the Player is allowed to fly via jump key double-tap.
+
+device_id property ¶
+
+device_id: str 
+
+Get the player's current device id.
+
+device_os property ¶
+
+device_os: str 
+
+Get the player's current device's operation system (OS).
+
+ender_chest property ¶
+
+ender_chest: Inventory 
+
+Get the player's EnderChest inventory.
+
+exp_level property writable ¶
+
+exp_level: int 
+
+Gets or sets the players current experience level.
+
+exp_progress property writable ¶
+
+exp_progress: float 
+
+Gets or sets the players current experience progress towards the next level.
+
+fly_speed property writable ¶
+
+fly_speed: float 
+
+Gets or sets the current allowed speed that a client can fly.
+
+game_mode property writable ¶
+
+game_mode: GameMode 
+
+The player's current game mode.
+
+game_version property ¶
+
+game_version: str 
+
+Get the player's current game version.
+
+inventory property ¶
+
+inventory: PlayerInventory 
+
+Get the player's inventory.
+
+is_flying property writable ¶
+
+is_flying: bool 
+
+If the player is currently flying or not.
+
+is_op property writable ¶
+
+is_op: bool 
+
+The operator status of this playerall
+
+is_sneaking property writable ¶
+
+is_sneaking: bool 
+
+Gets or sets the sneak mode of the player
+
+is_sprinting property writable ¶
+
+is_sprinting: bool 
+
+Gets or sets whether the player is sprinting or not.
+
+locale property ¶
+
+locale: str 
+
+Get the player's current locale.
+
+name property ¶
+
+name: str 
+
+Returns the name of this player
+
+ping property ¶
+
+ping: int 
+
+Gets the player's average ping in milliseconds.
+
+scoreboard property writable ¶
+
+scoreboard: Scoreboard 
+
+Gets or sets the player's visible Scoreboard.
+
+skin property ¶
+
+skin: Skin 
+
+Get the player's skin.
+
+total_exp property ¶
+
+total_exp: int 
+
+Gets the players total experience points.
+
+unique_id property ¶
+
+unique_id: UUID 
+
+Returns the UUID of this player
+
+walk_speed property writable ¶
+
+walk_speed: float 
+
+Gets or sets the current allowed speed that a client can walk.
+
+xuid property ¶
+
+xuid: str 
+
+Returns the Xbox User ID (XUID) of this player
+
+close_form ¶
+
+close_form() -> None 
+
+Closes the forms that are currently open for the player.
+
+give_exp ¶
+
+give_exp(amount: int) -> None 
+
+Gives the player the amount of experience specified.
+
+give_exp_levels ¶
+
+give_exp_levels(amount: int) -> None 
+
+Gives the player the amount of experience levels specified.
+
+kick ¶
+
+kick(message: str) -> None 
+
+Kicks player with custom kick message.
+
+perform_command ¶
+
+perform_command(command: str) -> bool 
+
+Makes the player perform the given command.
+
+play_sound ¶
+
+play_sound(     location: Location,     sound: str,     volume: float = 1.0,     pitch: float = 1.0, ) -> None 
+
+Play a sound for a player at the location.
+
+reset_title ¶
+
+reset_title() -> None 
+
+Resets the title displayed to the player. This will clear the displayed title / subtitle and reset timings to their default values.
+
+send_form ¶
+
+send_form(     form: MessageForm | ActionForm | ModalForm, ) -> None 
+
+Sends a form to the player.
+
+send_map ¶
+
+send_map(map: MapView) -> None 
+
+Render a map and send it to the player in its entirety.
+
+This may be used when streaming the map in the normal manner is not desirable.
+
+send_packet ¶
+
+send_packet(packet_id: int, payload: bytes) -> None 
+
+Sends a packet to the player.
+
+send_popup ¶
+
+send_popup(message: str) -> None 
+
+Sends this player a popup message
+
+send_tip ¶
+
+send_tip(message: str) -> None 
+
+Sends this player a tip message
+
+send_title ¶
+
+send_title(     title: str,     subtitle: str,     fade_in: int = 10,     stay: int = 70,     fade_out: int = 20, ) -> None 
+
+Sends a title and a subtitle message to the player. If they are empty strings, the display will be updated as such.
+
+send_toast ¶
+
+send_toast(title: str, content: str) -> None 
+
+Sends this player a toast notification.
+
+spawn_particle ¶
+
+spawn_particle(     name: str,     location: Location,     molang_variables_json: str | None = None, ) -> None 
+
+spawn_particle(     name: str,     x: float,     y: float,     z: float,     molang_variables_json: str | None = None, ) -> None 
+
+stop_all_sounds ¶
+
+stop_all_sounds() -> None 
+
+Stop all sounds from playing.
+
+stop_sound ¶
+
+stop_sound(sound: str) -> None 
+
+Stop the specified sound from playing.
+
+transfer ¶
+
+transfer(host: str, port: int = 19132) -> None 
+
+Transfers the player to another server.
+
+update_commands ¶
+
+update_commands() -> None 
+
+Send the list of commands to the client.
+
+endstone.OfflinePlayer ¶
+
+Represents a reference to a player identity and the data belonging to a player that is stored on the disk and can, thus, be retrieved without the player needing to be online.
+
+Attributes:
+
+NameTypeDescriptionnamestr
+
+Returns the name of this player
+
+unique_idUUID
+
+Returns the UUID of this player
+
+name property ¶
+
+name: str 
+
+Returns the name of this player
+
+unique_id property ¶
+
+unique_id: UUID 
+
+Returns the UUID of this player
+
+endstone.Skin ¶
+
+Skin(     id: str,     image: ndarray[uint8],     cape_id: str | None = None,     cape_image: ndarray[uint8] | None = None, ) 
+
+Represents a player skin.
+
+Attributes:
+
+NameTypeDescriptioncape_idstr | None
+
+Get the Cape ID.
+
+cape_imagendarray[uint8]
+
+Get the Cape image.
+
+idstr
+
+Get the Skin ID.
+
+imagendarray[uint8]
+
+Get the Skin image.
+
+cape_id property ¶
+
+cape_id: str | None 
+
+Get the Cape ID.
+
+cape_image property ¶
+
+cape_image: ndarray[uint8] 
+
+Get the Cape image.
+
+id property ¶
+
+id: str 
+
+Get the Skin ID.
+
+image property ¶
+
+image: ndarray[uint8] 
+
+Get the Skin image.
+
+
+
+Actor
+
+endstone.actor ¶
+
+Classes relating to actors (entities) that can exist in a world, including all players, monsters, projectiles, etc.
+
+Classes:
+
+NameDescriptionActor
+
+Represents a base actor in the level.
+
+Item
+
+Represents a base actor in the level.
+
+Mob
+
+Represents a mobile entity (i.e. living entity), such as a monster or player.
+
+Actor ¶
+
+Bases: CommandSender
+
+Represents a base actor in the level.
+
+Methods:
+
+NameDescriptionadd_scoreboard_tag
+
+Adds a tag to this actor.
+
+remove
+
+Remove this actor from the level.
+
+remove_scoreboard_tag
+
+Removes a given tag from this actor.
+
+set_rotation
+
+Sets the actor's rotation.
+
+teleport
+
+Attributes:
+
+NameTypeDescriptiondimensionDimension
+
+Gets the current Dimension this actor resides in.
+
+idint
+
+Returns a unique id for this actor.
+
+is_deadbool
+
+Returns true if this actor has been marked for removal.
+
+is_in_lavabool
+
+Returns true if the actor is in lava.
+
+is_in_waterbool
+
+Returns true if the actor is in water.
+
+is_name_tag_always_visiblebool
+
+Gets or sets if the actor's name tag is always visible or not.
+
+is_name_tag_visiblebool
+
+Gets or sets if the actor's name tag is visible or not.
+
+is_on_groundbool
+
+Returns true if the actor is supported by a block, i.e. on ground.
+
+is_validbool
+
+Returns false if the entity has died, been despawned for some other reason, or has not been added to the level.
+
+levelLevel
+
+Gets the current Level this actor resides in.
+
+locationLocation
+
+Gets the actor's current position.
+
+name_tagstr
+
+Gets or sets the current name tag of the actor.
+
+runtime_idint
+
+Returns the runtime id for this actor.
+
+score_tagstr
+
+Gets or sets the current score tag of the actor.
+
+scoreboard_tagslist[str]
+
+Returns a list of scoreboard tags for this actor.
+
+typestr
+
+Gets the type of the actor.
+
+velocityVector
+
+Gets this actor's current velocity.
+
+dimension property ¶
+
+dimension: Dimension 
+
+Gets the current Dimension this actor resides in.
+
+id property ¶
+
+id: int 
+
+Returns a unique id for this actor.
+
+is_dead property ¶
+
+is_dead: bool 
+
+Returns true if this actor has been marked for removal.
+
+is_in_lava property ¶
+
+is_in_lava: bool 
+
+Returns true if the actor is in lava.
+
+is_in_water property ¶
+
+is_in_water: bool 
+
+Returns true if the actor is in water.
+
+is_name_tag_always_visible property writable ¶
+
+is_name_tag_always_visible: bool 
+
+Gets or sets if the actor's name tag is always visible or not.
+
+is_name_tag_visible property writable ¶
+
+is_name_tag_visible: bool 
+
+Gets or sets if the actor's name tag is visible or not.
+
+is_on_ground property ¶
+
+is_on_ground: bool 
+
+Returns true if the actor is supported by a block, i.e. on ground.
+
+is_valid property ¶
+
+is_valid: bool 
+
+Returns false if the entity has died, been despawned for some other reason, or has not been added to the level.
+
+level property ¶
+
+level: Level 
+
+Gets the current Level this actor resides in.
+
+location property ¶
+
+location: Location 
+
+Gets the actor's current position.
+
+name_tag property writable ¶
+
+name_tag: str 
+
+Gets or sets the current name tag of the actor.
+
+runtime_id property ¶
+
+runtime_id: int 
+
+Returns the runtime id for this actor.
+
+score_tag property writable ¶
+
+score_tag: str 
+
+Gets or sets the current score tag of the actor.
+
+scoreboard_tags property ¶
+
+scoreboard_tags: list[str] 
+
+Returns a list of scoreboard tags for this actor.
+
+type property ¶
+
+type: str 
+
+Gets the type of the actor.
+
+velocity property ¶
+
+velocity: Vector 
+
+Gets this actor's current velocity.
+
+add_scoreboard_tag ¶
+
+add_scoreboard_tag(tag: str) -> bool 
+
+Adds a tag to this actor.
+
+remove ¶
+
+remove() -> None 
+
+Remove this actor from the level.
+
+remove_scoreboard_tag ¶
+
+remove_scoreboard_tag(tag: str) -> bool 
+
+Removes a given tag from this actor.
+
+set_rotation ¶
+
+set_rotation(yaw: float, pitch: float) -> None 
+
+Sets the actor's rotation.
+
+teleport ¶
+
+teleport(location: Location) -> bool 
+
+teleport(target: Actor) -> bool 
+
+Item ¶
+
+Bases: Actor
+
+Represents a base actor in the level.
+
+Attributes:
+
+NameTypeDescriptionis_unlimited_lifetimebool
+
+Gets or sets if this Item lives forever
+
+item_stackItemStack
+
+Gets or sets the item stack associated with this item drop.
+
+pickup_delayint
+
+Gets or sets the delay before this Item is available to be picked up by players.
+
+throwerint | None
+
+Gets or sets the thrower of this item.
+
+is_unlimited_lifetime property writable ¶
+
+is_unlimited_lifetime: bool 
+
+Gets or sets if this Item lives forever
+
+item_stack property writable ¶
+
+item_stack: ItemStack 
+
+Gets or sets the item stack associated with this item drop.
+
+pickup_delay property writable ¶
+
+pickup_delay: int 
+
+Gets or sets the delay before this Item is available to be picked up by players.
+
+thrower property writable ¶
+
+thrower: int | None 
+
+Gets or sets the thrower of this item.
+
+Mob ¶
+
+Bases: Actor
+
+Represents a mobile entity (i.e. living entity), such as a monster or player.
+
+Attributes:
+
+NameTypeDescriptionhealthint
+
+Gets or sets the entity's health from 0 to its max possible value, where 0 is dead.
+
+is_glidingbool
+
+Checks to see if an actor is gliding, such as using an Elytra.
+
+max_healthint
+
+Gets or sets the maximum health this entity has.
+
+health property writable ¶
+
+health: int 
+
+Gets or sets the entity's health from 0 to its max possible value, where 0 is dead.
+
+is_gliding property ¶
+
+is_gliding: bool 
+
+Checks to see if an actor is gliding, such as using an Elytra.
+
+max_health property writable ¶
+
+max_health: int 
+
+Gets or sets the maximum health this entity has.
+
+Block
+ endstone.block ¶
+Classes relating to the blocks in a world, including special states.
+
+Classes:
+
+Name	Description
+Block	Represents a block.
+BlockData	Represents the data related to a live block
+BlockFace	
+BlockState	Represents a captured state of a block, which will not update automatically.
+ Block ¶
+Represents a block.
+
+Methods:
+
+Name	Description
+capture_state	Captures the current state of this block. The returned object will never be updated, and you are not guaranteed that (for example) a sign is still a sign after you capture its state.
+get_relative	
+set_data	Sets the complete data for this block
+set_type	Sets the type of this block
+Attributes:
+
+Name	Type	Description
+data	BlockData	Gets the complete data for this block
+dimension	Dimension	Gets the dimension which contains this Block
+location	Location	Gets the Location of the block
+type	str	Gets or sets the type of the block.
+x	int	Gets the x-coordinate of this block
+y	int	Gets the y-coordinate of this block
+z	int	Gets the z-coordinate of this block
+ data property ¶
+
+data: BlockData
+Gets the complete data for this block
+
+ dimension property ¶
+
+dimension: Dimension
+Gets the dimension which contains this Block
+
+ location property ¶
+
+location: Location
+Gets the Location of the block
+
+ type property ¶
+
+type: str
+Gets or sets the type of the block.
+
+ x property ¶
+
+x: int
+Gets the x-coordinate of this block
+
+ y property ¶
+
+y: int
+Gets the y-coordinate of this block
+
+ z property ¶
+
+z: int
+Gets the z-coordinate of this block
+
+ capture_state ¶
+
+capture_state() -> BlockState
+Captures the current state of this block. The returned object will never be updated, and you are not guaranteed that (for example) a sign is still a sign after you capture its state.
+
+ get_relative ¶
+
+get_relative(
+    offset_x: int, offset_y: int, offset_z: int
+) -> Block
+
+get_relative(face: BlockFace, distance: int = 1) -> Block
+ set_data ¶
+
+set_data(
+    data: BlockData, apply_physics: bool = True
+) -> None
+Sets the complete data for this block
+
+ set_type ¶
+
+set_type(type: str, apply_physics: bool = True) -> None
+Sets the type of this block
+
+ BlockData ¶
+Represents the data related to a live block
+
+Attributes:
+
+Name	Type	Description
+block_states	dict[str, bool | str | int]	Gets the block states for this block.
+runtime_id	int	Gets the runtime id for this block.
+translation_key	str	Gets the translation key for this block.
+type	str	Get the block type represented by this block data.
+ block_states property ¶
+
+block_states: dict[str, bool | str | int]
+Gets the block states for this block.
+
+ runtime_id property ¶
+
+runtime_id: int
+Gets the runtime id for this block.
+
+ translation_key property ¶
+
+translation_key: str
+Gets the translation key for this block.
+
+ type property ¶
+
+type: str
+Get the block type represented by this block data.
+
+ BlockFace ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+DOWN		
+EAST		
+NORTH		
+SOUTH		
+UP		
+WEST		
+ DOWN class-attribute instance-attribute ¶
+
+DOWN = 0
+ EAST class-attribute instance-attribute ¶
+
+EAST = 5
+ NORTH class-attribute instance-attribute ¶
+
+NORTH = 2
+ SOUTH class-attribute instance-attribute ¶
+
+SOUTH = 3
+ UP class-attribute instance-attribute ¶
+
+UP = 1
+ WEST class-attribute instance-attribute ¶
+
+WEST = 4
+ BlockState ¶
+Represents a captured state of a block, which will not update automatically.
+
+Methods:
+
+Name	Description
+update	Attempts to update the block represented by this state.
+Attributes:
+
+Name	Type	Description
+block	Block	Gets the block represented by this block state.
+data	BlockData	Gets or sets the data for this block state.
+dimension	Dimension	Gets the dimension which contains the block represented by this block state.
+location	Location	Gets the location of this block state.
+type	str	Gets or sets the type of this block state.
+x	int	Gets the x-coordinate of this block state.
+y	int	Gets the y-coordinate of this block state.
+z	int	Gets the z-coordinate of this block state.
+ block property ¶
+
+block: Block
+Gets the block represented by this block state.
+
+ data property writable ¶
+
+data: BlockData
+Gets or sets the data for this block state.
+
+ dimension property ¶
+
+dimension: Dimension
+Gets the dimension which contains the block represented by this block state.
+
+ location property ¶
+
+location: Location
+Gets the location of this block state.
+
+ type property writable ¶
+
+type: str
+Gets or sets the type of this block state.
+
+ x property ¶
+
+x: int
+Gets the x-coordinate of this block state.
+
+ y property ¶
+
+y: int
+Gets the y-coordinate of this block state.
+
+ z property ¶
+
+z: int
+Gets the z-coordinate of this block state.
+
+ update ¶
+
+update(
+    force: bool = False, apply_physics: bool = True
+) -> bool
+Attempts to update the block represented by this state.
+
+Boss
+ endstone.boss ¶
+Classes relating to the boss bars that appear at the top of the player's screen.
+
+Classes:
+
+Name	Description
+BarColor	
+BarFlag	
+BarStyle	
+BossBar	Represents a boss bar that is displayed to players.
+ BarColor ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+BLUE		
+GREEN		
+PINK		
+PURPLE		
+REBECCA_PURPLE		
+RED		
+WHITE		
+YELLOW		
+ BLUE class-attribute instance-attribute ¶
+
+BLUE = 1
+ GREEN class-attribute instance-attribute ¶
+
+GREEN = 3
+ PINK class-attribute instance-attribute ¶
+
+PINK = 0
+ PURPLE class-attribute instance-attribute ¶
+
+PURPLE = 5
+ REBECCA_PURPLE class-attribute instance-attribute ¶
+
+REBECCA_PURPLE = 6
+ RED class-attribute instance-attribute ¶
+
+RED = 2
+ WHITE class-attribute instance-attribute ¶
+
+WHITE = 7
+ YELLOW class-attribute instance-attribute ¶
+
+YELLOW = 4
+ BarFlag ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+CREATE_FOG		Creates fog around the world.
+DARKEN_SKY		Darkens the sky like during fighting a wither.
+ CREATE_FOG class-attribute instance-attribute ¶
+
+CREATE_FOG = 1
+Creates fog around the world.
+
+ DARKEN_SKY class-attribute instance-attribute ¶
+
+DARKEN_SKY = 0
+Darkens the sky like during fighting a wither.
+
+ BarStyle ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+SEGMENTED_10		Splits the boss bar into 10 segments
+SEGMENTED_12		Splits the boss bar into 12 segments
+SEGMENTED_20		Splits the boss bar into 20 segments
+SEGMENTED_6		Splits the boss bar into 6 segments
+SOLID		Makes the boss bar solid (no segments)
+ SEGMENTED_10 class-attribute instance-attribute ¶
+
+SEGMENTED_10 = 2
+Splits the boss bar into 10 segments
+
+ SEGMENTED_12 class-attribute instance-attribute ¶
+
+SEGMENTED_12 = 3
+Splits the boss bar into 12 segments
+
+ SEGMENTED_20 class-attribute instance-attribute ¶
+
+SEGMENTED_20 = 4
+Splits the boss bar into 20 segments
+
+ SEGMENTED_6 class-attribute instance-attribute ¶
+
+SEGMENTED_6 = 1
+Splits the boss bar into 6 segments
+
+ SOLID class-attribute instance-attribute ¶
+
+SOLID = 0
+Makes the boss bar solid (no segments)
+
+ BossBar ¶
+Represents a boss bar that is displayed to players.
+
+Methods:
+
+Name	Description
+add_flag	Adds an optional flag to this boss bar.
+add_player	Adds the player to this boss bar causing it to display on their screen.
+has_flag	Checks whether this boss bar has the passed flag set.
+remove_all	Removes all players from this boss bar.
+remove_flag	Removes an existing flag on this boss bar.
+remove_player	Removes the player from this boss bar causing it to be removed from their screen.
+Attributes:
+
+Name	Type	Description
+color	BarColor	The color of this boss bar.
+is_visible	bool	If the boss bar is displayed to attached players.
+players	list[Player]	Returns all players viewing this boss bar.
+progress	float	The progress of the bar between 0.0 and 1.0.
+style	BarStyle	The style of this boss bar.
+title	str	The title of this boss bar.
+ color property writable ¶
+
+color: BarColor
+The color of this boss bar.
+
+ is_visible property writable ¶
+
+is_visible: bool
+If the boss bar is displayed to attached players.
+
+ players property ¶
+
+players: list[Player]
+Returns all players viewing this boss bar.
+
+ progress property writable ¶
+
+progress: float
+The progress of the bar between 0.0 and 1.0.
+
+ style property writable ¶
+
+style: BarStyle
+The style of this boss bar.
+
+ title property writable ¶
+
+title: str
+The title of this boss bar.
+
+ add_flag ¶
+
+add_flag(flag: BarFlag) -> None
+Adds an optional flag to this boss bar.
+
+ add_player ¶
+
+add_player(player: Player) -> None
+Adds the player to this boss bar causing it to display on their screen.
+
+ has_flag ¶
+
+has_flag(flag: BarFlag) -> bool
+Checks whether this boss bar has the passed flag set.
+
+ remove_all ¶
+
+remove_all() -> None
+Removes all players from this boss bar.
+
+ remove_flag ¶
+
+remove_flag(flag: BarFlag) -> None
+Removes an existing flag on this boss bar.
+
+ remove_player ¶
+
+remove_player(player: Player) -> None
+Removes the player from this boss bar causing it to be removed from their screen.
+
+Command
+ endstone.command ¶
+Classes relating to handling specialized non-chat player input.
+
+Classes:
+
+Name	Description
+BlockCommandSender	Represents a block command sender.
+Command	Represents a Command, which executes various tasks upon user input
+CommandExecutor	Represents a class which contains a single method for executing commands
+CommandSender	Represents a command sender.
+CommandSenderWrapper	Represents a wrapper that forwards commands to the wrapped CommandSender and captures its output
+ConsoleCommandSender	Represents a console command sender.
+ BlockCommandSender ¶
+Bases: CommandSender
+
+Represents a block command sender.
+
+Attributes:
+
+Name	Type	Description
+block	Block	Returns the block this command sender belongs to
+ block property ¶
+
+block: Block
+Returns the block this command sender belongs to
+
+ Command ¶
+
+Command(
+    name: str,
+    description: str | None = None,
+    usages: list[str] | None = None,
+    aliases: list[str] | None = None,
+    permissions: list[str] | None = None,
+    *args,
+    **kwargs
+)
+Represents a Command, which executes various tasks upon user input
+
+Methods:
+
+Name	Description
+execute	Executes the command, returning its success
+test_permission	Tests the given CommandSender to see if they can perform this command.
+test_permission_silently	Tests the given CommandSender to see if they can perform this command. No error is sent to the sender.
+Attributes:
+
+Name	Type	Description
+aliases	list[str]	List of aliases of this command
+description	str	Brief description of this command
+is_registered	bool	Returns the current registered state of this command
+name	str	Name of this command.
+permissions	list[str]	The permissions required by users to be able to perform this command
+usages	list[str]	List of usages of this command
+ aliases property writable ¶
+
+aliases: list[str]
+List of aliases of this command
+
+ description property writable ¶
+
+description: str
+Brief description of this command
+
+ is_registered property ¶
+
+is_registered: bool
+Returns the current registered state of this command
+
+ name property writable ¶
+
+name: str
+Name of this command.
+
+ permissions property writable ¶
+
+permissions: list[str]
+The permissions required by users to be able to perform this command
+
+ usages property writable ¶
+
+usages: list[str]
+List of usages of this command
+
+ execute ¶
+
+execute(sender: CommandSender, args: list[str]) -> bool
+Executes the command, returning its success
+
+ test_permission ¶
+
+test_permission(target: CommandSender) -> bool
+Tests the given CommandSender to see if they can perform this command.
+
+ test_permission_silently ¶
+
+test_permission_silently(target: CommandSender) -> bool
+Tests the given CommandSender to see if they can perform this command. No error is sent to the sender.
+
+ CommandExecutor ¶
+
+CommandExecutor()
+Represents a class which contains a single method for executing commands
+
+Methods:
+
+Name	Description
+on_command	Executes the given command, returning its success.
+ on_command ¶
+
+on_command(
+    sender: CommandSender, command: Command, args: list[str]
+) -> bool
+Executes the given command, returning its success.
+
+ CommandSender ¶
+Bases: Permissible
+
+Represents a command sender.
+
+Methods:
+
+Name	Description
+send_error_message	Sends this sender an error message
+send_message	Sends this sender a message
+Attributes:
+
+Name	Type	Description
+name	str	Gets the name of this command sender
+server	Server	Returns the server instance that this command is running on
+ name property ¶
+
+name: str
+Gets the name of this command sender
+
+ server property ¶
+
+server: Server
+Returns the server instance that this command is running on
+
+ send_error_message ¶
+
+send_error_message(message: str | Translatable) -> None
+Sends this sender an error message
+
+ send_message ¶
+
+send_message(message: str | Translatable) -> None
+Sends this sender a message
+
+ CommandSenderWrapper ¶
+
+CommandSenderWrapper(
+    sender: CommandSender,
+    on_message: Callable[[str | Translatable], None] = None,
+    on_error: Callable[[str | Translatable], None] = None,
+)
+Bases: CommandSender
+
+Represents a wrapper that forwards commands to the wrapped CommandSender and captures its output
+
+ ConsoleCommandSender ¶
+Bases: CommandSender
+
+Represents a console command sender.
+
+Event
+ endstone.event ¶
+Classes relating to handling triggered code executions.
+
+Classes:
+
+Name	Description
+ActorDamageEvent	Called when an Actor is damaged.
+ActorDeathEvent	Called when an Actor dies.
+ActorEvent	Represents an Actor-related event.
+ActorExplodeEvent	Called when an Actor explodes.
+ActorKnockbackEvent	Called when a living entity receives knockback.
+ActorRemoveEvent	Called when an Actor is removed.
+ActorSpawnEvent	Called when an Actor is spawned into a world.
+ActorTeleportEvent	Called when a non-player entity is teleported from one location to another.
+BlockBreakEvent	Called when a block is broken by a player.
+BlockCookEvent	Called when an ItemStack is successfully cooked in a block.
+BlockEvent	Represents an Block-related event
+BlockExplodeEvent	Called when a block explodes.
+BlockFormEvent	Called when a block is formed or spreads based on world conditions.
+BlockFromToEvent	Represents events with a source block and a destination block, currently only applies to liquid (lava and water) and teleporting dragon eggs.
+BlockGrowEvent	Called when a block grows naturally in the world.
+BlockPistonEvent	Called when a piston block is triggered
+BlockPistonExtendEvent	Called when a piston extends.
+BlockPistonRetractEvent	Called when a piston retracts.
+BlockPlaceEvent	Called when a block is placed by a player.
+BroadcastMessageEvent	Event triggered for server broadcast messages such as from Server.broadcast
+Cancellable	Represents an event that may be cancelled by a plugin or the server.
+ChunkEvent	Represents a Chunk related event
+ChunkLoadEvent	Called when a chunk is loaded
+ChunkUnloadEvent	Called when a chunk is unloaded
+DimensionEvent	Represents events within a dimension
+Event	Represents an event.
+EventPriority	Listeners are called in following order: LOWEST -> LOW -> NORMAL -> HIGH -> HIGHEST -> MONITOR
+EventResult	
+LeavesDecayEvent	Called when leaves are decaying naturally.
+LevelEvent	Represents events within a level
+MapInitializeEvent	Called when a map is initialized.
+MobEvent	Represents an Mob-related event.
+PacketReceiveEvent	Called when the server receives a packet from a connected client.
+PacketSendEvent	Called when the server sends a packet to a connected client.
+PlayerBedEnterEvent	Called when a player is almost about to enter the bed.
+PlayerBedLeaveEvent	Called when a player is leaving a bed.
+PlayerChatEvent	Called when a player sends a chat message.
+PlayerCommandEvent	Called whenever a player runs a command.
+PlayerDeathEvent	Called when a player dies
+PlayerDimensionChangeEvent	Called when a player switches to another dimension.
+PlayerDropItemEvent	Called when a player drops an item from their inventory
+PlayerEmoteEvent	Called when a player uses and emote
+PlayerEvent	Represents a player related event
+PlayerGameModeChangeEvent	Called when the GameMode of the player is changed.
+PlayerInteractActorEvent	Represents an event that is called when a player right-clicks an actor.
+PlayerInteractEvent	Represents an event that is called when a player right-clicks a block.
+PlayerItemConsumeEvent	Called when a player is finishing consuming an item (food, potion, milk bucket).
+PlayerItemHeldEvent	Called when a player changes their currently held item.
+PlayerJoinEvent	Called when a player joins a server
+PlayerJumpEvent	Called when a player jumps.
+PlayerKickEvent	Called when a player gets kicked from the server
+PlayerLoginEvent	Called when a player attempts to login in.
+PlayerMoveEvent	Called when a player moves.
+PlayerPickupItemEvent	Called when a player picks an item up from the ground.
+PlayerPortalEvent	Called when a player is about to teleport because it is in contact with a portal.
+PlayerQuitEvent	Called when a player leaves a server.
+PlayerRespawnEvent	Called when a player respawns.
+PlayerSkinChangeEvent	Called when a player changes their skin.
+PlayerTeleportEvent	Called when a player is teleported from one location to another.
+PluginDisableEvent	Called when a plugin is disabled.
+PluginEnableEvent	Called when a plugin is enabled.
+ScriptMessageEvent	Called when a message is sent by /scriptevent command
+ServerCommandEvent	Called when the console runs a command, early in the process.
+ServerEvent	Represents a server-related event
+ServerListPingEvent	Called when a server ping is coming in.
+ServerLoadEvent	Called when either the server startup or reload has completed.
+ThunderChangeEvent	Called when the thunder state in a world is changing.
+WeatherChangeEvent	Called when the weather (rain) state in a world is changing.
+WeatherEvent	Represents a weather-related event
+Functions:
+
+Name	Description
+event_handler	
+ ActorDamageEvent ¶
+Bases: MobEvent, Cancellable
+
+Called when an Actor is damaged.
+
+Attributes:
+
+Name	Type	Description
+damage	float	Gets or sets the amount of damage caused by the event
+damage_source	DamageSource	Gets the source of damage.
+ damage property writable ¶
+
+damage: float
+Gets or sets the amount of damage caused by the event
+
+ damage_source property ¶
+
+damage_source: DamageSource
+Gets the source of damage.
+
+ ActorDeathEvent ¶
+Bases: MobEvent
+
+Called when an Actor dies.
+
+Attributes:
+
+Name	Type	Description
+damage_source	DamageSource	Gets the source of damage which caused the death.
+ damage_source property ¶
+
+damage_source: DamageSource
+Gets the source of damage which caused the death.
+
+ ActorEvent ¶
+Bases: Event
+
+Represents an Actor-related event.
+
+Attributes:
+
+Name	Type	Description
+actor	Actor	Returns the Actor involved in this event
+ actor property ¶
+
+actor: Actor
+Returns the Actor involved in this event
+
+ ActorExplodeEvent ¶
+Bases: ActorEvent, Cancellable
+
+Called when an Actor explodes.
+
+Attributes:
+
+Name	Type	Description
+block_list	list[Block]	Gets or sets the list of blocks that would have been removed or were removed from the explosion event.
+location	Location	Returns the location where the explosion happened.
+ block_list property writable ¶
+
+block_list: list[Block]
+Gets or sets the list of blocks that would have been removed or were removed from the explosion event.
+
+ location property ¶
+
+location: Location
+Returns the location where the explosion happened.
+
+ ActorKnockbackEvent ¶
+Bases: MobEvent, Cancellable
+
+Called when a living entity receives knockback.
+
+Attributes:
+
+Name	Type	Description
+knockback	Vector	Gets or sets the knockback that will be applied to the entity.
+source	Actor	Get the source actor that has caused knockback to the defender, if exists.
+ knockback property writable ¶
+
+knockback: Vector
+Gets or sets the knockback that will be applied to the entity.
+
+ source property ¶
+
+source: Actor
+Get the source actor that has caused knockback to the defender, if exists.
+
+ ActorRemoveEvent ¶
+Bases: ActorEvent
+
+Called when an Actor is removed.
+
+ ActorSpawnEvent ¶
+Bases: ActorEvent, Cancellable
+
+Called when an Actor is spawned into a world.
+
+ ActorTeleportEvent ¶
+Bases: ActorEvent, Cancellable
+
+Called when a non-player entity is teleported from one location to another.
+
+Attributes:
+
+Name	Type	Description
+from_location	Location	Gets or sets the location that this actor moved from.
+to_location	Location	Gets or sets the location that this actor moved to.
+ from_location property writable ¶
+
+from_location: Location
+Gets or sets the location that this actor moved from.
+
+ to_location property writable ¶
+
+to_location: Location
+Gets or sets the location that this actor moved to.
+
+ BlockBreakEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when a block is broken by a player.
+
+Attributes:
+
+Name	Type	Description
+player	Player	Gets the Player that is breaking the block involved in this event.
+ player property ¶
+
+player: Player
+Gets the Player that is breaking the block involved in this event.
+
+ BlockCookEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when an ItemStack is successfully cooked in a block.
+
+Attributes:
+
+Name	Type	Description
+result	ItemStack	Gets or sets the resultant ItemStack for this event
+source	ItemStack	Gets the smelted ItemStack for this event
+ result property writable ¶
+
+result: ItemStack
+Gets or sets the resultant ItemStack for this event
+
+ source property ¶
+
+source: ItemStack
+Gets the smelted ItemStack for this event
+
+ BlockEvent ¶
+Bases: Event
+
+Represents an Block-related event
+
+Attributes:
+
+Name	Type	Description
+block	Block	Gets the block involved in this event.
+ block property ¶
+
+block: Block
+Gets the block involved in this event.
+
+ BlockExplodeEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when a block explodes.
+
+Attributes:
+
+Name	Type	Description
+block_list	list[Block]	Gets or sets the list of blocks that would have been removed or were removed from the explosion event.
+ block_list property writable ¶
+
+block_list: list[Block]
+Gets or sets the list of blocks that would have been removed or were removed from the explosion event.
+
+ BlockFormEvent ¶
+Bases: BlockGrowEvent
+
+Called when a block is formed or spreads based on world conditions. If a Block Form event is cancelled, the block will not be formed.
+
+ BlockFromToEvent ¶
+Bases: BlockEvent, Cancellable
+
+Represents events with a source block and a destination block, currently only applies to liquid (lava and water) and teleporting dragon eggs. If a Block From To event is cancelled, the block will not move (the liquid will not flow).
+
+Attributes:
+
+Name	Type	Description
+to_block	Block	Gets the faced Block.
+ to_block property ¶
+
+to_block: Block
+Gets the faced Block.
+
+ BlockGrowEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when a block grows naturally in the world. If a Block Grow event is cancelled, the block will not grow.
+
+Attributes:
+
+Name	Type	Description
+new_state	BlockState	Gets the state of the block where it will form or spread to.
+ new_state property ¶
+
+new_state: BlockState
+Gets the state of the block where it will form or spread to.
+
+ BlockPistonEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when a piston block is triggered
+
+Attributes:
+
+Name	Type	Description
+direction	BlockFace	Return the direction in which the piston will operate.
+ direction property ¶
+
+direction: BlockFace
+Return the direction in which the piston will operate.
+
+ BlockPistonExtendEvent ¶
+Bases: BlockPistonEvent
+
+Called when a piston extends.
+
+ BlockPistonRetractEvent ¶
+Bases: BlockPistonEvent
+
+Called when a piston retracts.
+
+ BlockPlaceEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when a block is placed by a player.
+
+Attributes:
+
+Name	Type	Description
+block_against	Block	Gets the block that this block was placed against
+block_placed	Block	Gets the block placed.
+block_replaced_state	BlockState	Gets the BlockState for the block which was replaced.
+player	Player	Gets the player who placed the block involved in this event.
+ block_against property ¶
+
+block_against: Block
+Gets the block that this block was placed against
+
+ block_placed property ¶
+
+block_placed: Block
+Gets the block placed.
+
+ block_replaced_state property ¶
+
+block_replaced_state: BlockState
+Gets the BlockState for the block which was replaced.
+
+ player property ¶
+
+player: Player
+Gets the player who placed the block involved in this event.
+
+ BroadcastMessageEvent ¶
+Bases: ServerEvent, Cancellable
+
+Event triggered for server broadcast messages such as from Server.broadcast
+
+Attributes:
+
+Name	Type	Description
+message	str | Translatable	Gets or sets the message to broadcast.
+recipients	set[CommandSender]	Gets a set of recipients that this broadcast message will be displayed to.
+ message property writable ¶
+
+message: str | Translatable
+Gets or sets the message to broadcast.
+
+ recipients property ¶
+
+recipients: set[CommandSender]
+Gets a set of recipients that this broadcast message will be displayed to.
+
+ Cancellable ¶
+Represents an event that may be cancelled by a plugin or the server.
+
+Methods:
+
+Name	Description
+cancel	Cancel this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
+Attributes:
+
+Name	Type	Description
+cancelled	bool	Gets or sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins. [Warning] Deprecated: Use is_cancelled instead.
+is_cancelled	bool	Gets or sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
+ cancelled property writable ¶
+
+cancelled: bool
+Gets or sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins. [Warning] Deprecated: Use is_cancelled instead.
+
+ is_cancelled property writable ¶
+
+is_cancelled: bool
+Gets or sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
+
+ cancel ¶
+
+cancel() -> None
+Cancel this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
+
+ ChunkEvent ¶
+Bases: DimensionEvent
+
+Represents a Chunk related event
+
+Attributes:
+
+Name	Type	Description
+chunk	Chunk	Gets the chunk being loaded/unloaded
+ chunk property ¶
+
+chunk: Chunk
+Gets the chunk being loaded/unloaded
+
+ ChunkLoadEvent ¶
+Bases: ChunkEvent
+
+Called when a chunk is loaded
+
+ ChunkUnloadEvent ¶
+Bases: ChunkEvent
+
+Called when a chunk is unloaded
+
+ DimensionEvent ¶
+Bases: LevelEvent
+
+Represents events within a dimension
+
+Attributes:
+
+Name	Type	Description
+dimension	Dimension	Gets the dimension primarily involved with this event
+ dimension property ¶
+
+dimension: Dimension
+Gets the dimension primarily involved with this event
+
+ Event ¶
+Represents an event.
+
+Attributes:
+
+Name	Type	Description
+event_name	str	Gets a user-friendly identifier for this event.
+is_asynchronous	bool	Whether the event fires asynchronously.
+ event_name property ¶
+
+event_name: str
+Gets a user-friendly identifier for this event.
+
+ is_asynchronous property ¶
+
+is_asynchronous: bool
+Whether the event fires asynchronously.
+
+ EventPriority ¶
+Bases: IntEnum
+
+Listeners are called in following order: LOWEST -> LOW -> NORMAL -> HIGH -> HIGHEST -> MONITOR
+
+Attributes:
+
+Name	Type	Description
+HIGH		Event call is of high importance
+HIGHEST		Event call is critical and must have the final say in what happens to the event
+LOW		Event call is of low importance
+LOWEST		Event call is of very low importance and should be run first, to allow other plugins to further customise the outcome
+MONITOR		Event is listened to purely for monitoring the outcome of an event. No modifications to the event should be made under this priority.
+NORMAL		Event call is neither important nor unimportant, and may be run normally
+ HIGH class-attribute instance-attribute ¶
+
+HIGH = 3
+Event call is of high importance
+
+ HIGHEST class-attribute instance-attribute ¶
+
+HIGHEST = 4
+Event call is critical and must have the final say in what happens to the event
+
+ LOW class-attribute instance-attribute ¶
+
+LOW = 1
+Event call is of low importance
+
+ LOWEST class-attribute instance-attribute ¶
+
+LOWEST = 0
+Event call is of very low importance and should be run first, to allow other plugins to further customise the outcome
+
+ MONITOR class-attribute instance-attribute ¶
+
+MONITOR = 5
+Event is listened to purely for monitoring the outcome of an event. No modifications to the event should be made under this priority.
+
+ NORMAL class-attribute instance-attribute ¶
+
+NORMAL = 2
+Event call is neither important nor unimportant, and may be run normally
+
+ EventResult ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+ALLOW		
+DEFAULT		
+DENY		
+ ALLOW class-attribute instance-attribute ¶
+
+ALLOW = 2
+ DEFAULT class-attribute instance-attribute ¶
+
+DEFAULT = 1
+ DENY class-attribute instance-attribute ¶
+
+DENY = 0
+ LeavesDecayEvent ¶
+Bases: BlockEvent, Cancellable
+
+Called when leaves are decaying naturally. If a Leaves Decay event is cancelled, the leaves will not decay.
+
+ LevelEvent ¶
+Bases: Event
+
+Represents events within a level
+
+Attributes:
+
+Name	Type	Description
+level	Level	Gets the level primarily involved with this event
+ level property ¶
+
+level: Level
+Gets the level primarily involved with this event
+
+ MapInitializeEvent ¶
+Bases: ServerEvent
+
+Called when a map is initialized.
+
+Attributes:
+
+Name	Type	Description
+map	MapView	Gets the map initialized in this event.
+ map property ¶
+
+map: MapView
+Gets the map initialized in this event.
+
+ MobEvent ¶
+Bases: Event
+
+Represents an Mob-related event.
+
+Attributes:
+
+Name	Type	Description
+actor	Mob	Returns the Mob involved in this event
+ actor property ¶
+
+actor: Mob
+Returns the Mob involved in this event
+
+ PacketReceiveEvent ¶
+Bases: ServerEvent, Cancellable
+
+Called when the server receives a packet from a connected client.
+
+Attributes:
+
+Name	Type	Description
+address	SocketAddress	Gets the network address to which this packet is being sent.
+packet_id	int	Gets the ID of the packet.
+payload	bytes	Gets or sets the raw packet data excluding the header.
+player	Player	Gets the player involved in this event
+sub_client_id	int	Gets the SubClient ID (0 = primary client; 1-3 = split-screen clients).
+ address property ¶
+
+address: SocketAddress
+Gets the network address to which this packet is being sent.
+
+ packet_id property ¶
+
+packet_id: int
+Gets the ID of the packet.
+
+ payload property writable ¶
+
+payload: bytes
+Gets or sets the raw packet data excluding the header.
+
+ player property ¶
+
+player: Player
+Gets the player involved in this event NOTE: This may return None if the packet is sent before the player completes the login process.
+
+ sub_client_id property ¶
+
+sub_client_id: int
+Gets the SubClient ID (0 = primary client; 1-3 = split-screen clients).
+
+ PacketSendEvent ¶
+Bases: ServerEvent, Cancellable
+
+Called when the server sends a packet to a connected client.
+
+Attributes:
+
+Name	Type	Description
+address	SocketAddress	Gets the network address to which this packet is being sent.
+packet_id	int	Gets the ID of the packet.
+payload	bytes	Gets or sets the raw packet data excluding the header.
+player	Player	Gets the player involved in this event
+sub_client_id	int	Gets the SubClient ID (0 = primary client; 1-3 = split-screen clients).
+ address property ¶
+
+address: SocketAddress
+Gets the network address to which this packet is being sent.
+
+ packet_id property ¶
+
+packet_id: int
+Gets the ID of the packet.
+
+ payload property writable ¶
+
+payload: bytes
+Gets or sets the raw packet data excluding the header.
+
+ player property ¶
+
+player: Player
+Gets the player involved in this event NOTE: This may return None if the packet is sent before the player completes the login process.
+
+ sub_client_id property ¶
+
+sub_client_id: int
+Gets the SubClient ID (0 = primary client; 1-3 = split-screen clients).
+
+ PlayerBedEnterEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player is almost about to enter the bed.
+
+Attributes:
+
+Name	Type	Description
+bed	Block	Returns the bed block involved in this event.
+ bed property ¶
+
+bed: Block
+Returns the bed block involved in this event.
+
+ PlayerBedLeaveEvent ¶
+Bases: PlayerEvent
+
+Called when a player is leaving a bed.
+
+Attributes:
+
+Name	Type	Description
+bed	Block	Returns the bed block involved in this event.
+ bed property ¶
+
+bed: Block
+Returns the bed block involved in this event.
+
+ PlayerChatEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player sends a chat message.
+
+Attributes:
+
+Name	Type	Description
+format	str	Sets the format to use to display this chat message
+message	str	Gets or sets the message that the player will send.
+player	Player	Gets or sets the player that this message will display as
+recipients	list[Player]	Gets a set of recipients that this chat message will be displayed to
+ format property writable ¶
+
+format: str
+Sets the format to use to display this chat message
+
+ message property writable ¶
+
+message: str
+Gets or sets the message that the player will send.
+
+ player property writable ¶
+
+player: Player
+Gets or sets the player that this message will display as
+
+ recipients property ¶
+
+recipients: list[Player]
+Gets a set of recipients that this chat message will be displayed to
+
+ PlayerCommandEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called whenever a player runs a command.
+
+Attributes:
+
+Name	Type	Description
+command	str	Gets or sets the command that the player will send.
+ command property writable ¶
+
+command: str
+Gets or sets the command that the player will send.
+
+ PlayerDeathEvent ¶
+Bases: ActorDeathEvent
+
+Called when a player dies
+
+Attributes:
+
+Name	Type	Description
+death_message	str | Translatable | None	Gets or sets the death message that will appear to everyone on the server.
+player	Player	Gets the Player that is breaking the block involved in this event.
+ death_message property writable ¶
+
+death_message: str | Translatable | None
+Gets or sets the death message that will appear to everyone on the server.
+
+ player property ¶
+
+player: Player
+Gets the Player that is breaking the block involved in this event.
+
+ PlayerDimensionChangeEvent ¶
+Bases: PlayerEvent
+
+Called when a player switches to another dimension.
+
+Attributes:
+
+Name	Type	Description
+from_dimension	Dimension	Gets the dimension the player is switching from.
+to_dimension	Dimension	Gets the dimension the player is switching to.
+ from_dimension property ¶
+
+from_dimension: Dimension
+Gets the dimension the player is switching from.
+
+ to_dimension property ¶
+
+to_dimension: Dimension
+Gets the dimension the player is switching to.
+
+ PlayerDropItemEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player drops an item from their inventory
+
+Attributes:
+
+Name	Type	Description
+item	ItemStack	Gets the ItemStack dropped by the player
+ item property ¶
+
+item: ItemStack
+Gets the ItemStack dropped by the player
+
+ PlayerEmoteEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player uses and emote
+
+Attributes:
+
+Name	Type	Description
+emote_id	str	Gets the emote piece ID
+is_muted	bool	Gets or sets the muted state for the emote.
+ emote_id property ¶
+
+emote_id: str
+Gets the emote piece ID
+
+ is_muted property writable ¶
+
+is_muted: bool
+Gets or sets the muted state for the emote.
+
+ PlayerEvent ¶
+Bases: Event
+
+Represents a player related event
+
+Attributes:
+
+Name	Type	Description
+player	Player	Returns the player involved in this event.
+ player property ¶
+
+player: Player
+Returns the player involved in this event.
+
+ PlayerGameModeChangeEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when the GameMode of the player is changed.
+
+Attributes:
+
+Name	Type	Description
+new_game_mode	GameMode	Gets the GameMode the player is switched to.
+ new_game_mode property ¶
+
+new_game_mode: GameMode
+Gets the GameMode the player is switched to.
+
+ PlayerInteractActorEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Represents an event that is called when a player right-clicks an actor.
+
+Attributes:
+
+Name	Type	Description
+actor	Actor	Gets the actor that was right-clicked by the player.
+ actor property ¶
+
+actor: Actor
+Gets the actor that was right-clicked by the player.
+
+ PlayerInteractEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Represents an event that is called when a player right-clicks a block.
+
+Classes:
+
+Name	Description
+Action	
+Attributes:
+
+Name	Type	Description
+LEFT_CLICK_AIR		
+LEFT_CLICK_BLOCK		
+RIGHT_CLICK_AIR		
+RIGHT_CLICK_BLOCK		
+action	Action	Returns the action type of interaction
+block	Block	Returns the clicked block
+block_face	BlockFace	Returns the face of the block that was clicked
+clicked_position	Vector | None	Gets the exact position on the block the player interacted with.
+has_block	bool	Check if this event involved a block
+has_item	bool	Check if this event involved an item
+item	ItemStack | None	Returns the item in hand represented by this event
+ LEFT_CLICK_AIR class-attribute instance-attribute ¶
+
+LEFT_CLICK_AIR = LEFT_CLICK_AIR
+ LEFT_CLICK_BLOCK class-attribute instance-attribute ¶
+
+LEFT_CLICK_BLOCK = LEFT_CLICK_BLOCK
+ RIGHT_CLICK_AIR class-attribute instance-attribute ¶
+
+RIGHT_CLICK_AIR = RIGHT_CLICK_AIR
+ RIGHT_CLICK_BLOCK class-attribute instance-attribute ¶
+
+RIGHT_CLICK_BLOCK = RIGHT_CLICK_BLOCK
+ action property ¶
+
+action: Action
+Returns the action type of interaction
+
+ block property ¶
+
+block: Block
+Returns the clicked block
+
+ block_face property ¶
+
+block_face: BlockFace
+Returns the face of the block that was clicked
+
+ clicked_position property ¶
+
+clicked_position: Vector | None
+Gets the exact position on the block the player interacted with.
+
+ has_block property ¶
+
+has_block: bool
+Check if this event involved a block
+
+ has_item property ¶
+
+has_item: bool
+Check if this event involved an item
+
+ item property ¶
+
+item: ItemStack | None
+Returns the item in hand represented by this event
+
+ Action ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+LEFT_CLICK_AIR		
+LEFT_CLICK_BLOCK		
+RIGHT_CLICK_AIR		
+RIGHT_CLICK_BLOCK		
+ LEFT_CLICK_AIR class-attribute instance-attribute ¶
+
+LEFT_CLICK_AIR = 2
+ LEFT_CLICK_BLOCK class-attribute instance-attribute ¶
+
+LEFT_CLICK_BLOCK = 0
+ RIGHT_CLICK_AIR class-attribute instance-attribute ¶
+
+RIGHT_CLICK_AIR = 3
+ RIGHT_CLICK_BLOCK class-attribute instance-attribute ¶
+
+RIGHT_CLICK_BLOCK = 1
+ PlayerItemConsumeEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player is finishing consuming an item (food, potion, milk bucket).
+
+Attributes:
+
+Name	Type	Description
+hand	EquipmentSlot	Get the hand used to consume the item.
+item	ItemStack	Gets the item that is being consumed.
+ hand property ¶
+
+hand: EquipmentSlot
+Get the hand used to consume the item.
+
+ item property ¶
+
+item: ItemStack
+Gets the item that is being consumed.
+
+ PlayerItemHeldEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player changes their currently held item.
+
+Attributes:
+
+Name	Type	Description
+new_slot	int	Gets the new held slot index
+previous_slot	int	Gets the previous held slot index.
+ new_slot property ¶
+
+new_slot: int
+Gets the new held slot index
+
+ previous_slot property ¶
+
+previous_slot: int
+Gets the previous held slot index.
+
+ PlayerJoinEvent ¶
+Bases: PlayerEvent
+
+Called when a player joins a server
+
+Attributes:
+
+Name	Type	Description
+join_message	str | Translatable | None	Gets or sets the join message to send to all online players.
+ join_message property writable ¶
+
+join_message: str | Translatable | None
+Gets or sets the join message to send to all online players.
+
+ PlayerJumpEvent ¶
+Bases: PlayerMoveEvent
+
+Called when a player jumps.
+
+ PlayerKickEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player gets kicked from the server
+
+Attributes:
+
+Name	Type	Description
+reason	str	Gets or sets the reason why the player is getting kicked
+ reason property writable ¶
+
+reason: str
+Gets or sets the reason why the player is getting kicked
+
+ PlayerLoginEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player attempts to login in.
+
+Attributes:
+
+Name	Type	Description
+kick_message	str	Gets or sets kick message to display if event is cancelled
+ kick_message property writable ¶
+
+kick_message: str
+Gets or sets kick message to display if event is cancelled
+
+ PlayerMoveEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player moves.
+
+Attributes:
+
+Name	Type	Description
+from_location	Location	Gets or sets the location that this player moved from.
+to_location	Location	Gets or sets the location that this player moved to.
+ from_location property writable ¶
+
+from_location: Location
+Gets or sets the location that this player moved from.
+
+ to_location property writable ¶
+
+to_location: Location
+Gets or sets the location that this player moved to.
+
+ PlayerPickupItemEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player picks an item up from the ground.
+
+Attributes:
+
+Name	Type	Description
+item	Item	Gets the Item picked up by the entity.
+ item property ¶
+
+item: Item
+Gets the Item picked up by the entity.
+
+ PlayerPortalEvent ¶
+Bases: PlayerTeleportEvent
+
+Called when a player is about to teleport because it is in contact with a portal.
+
+ PlayerQuitEvent ¶
+Bases: PlayerEvent
+
+Called when a player leaves a server.
+
+Attributes:
+
+Name	Type	Description
+quit_message	str | Translatable | None	Gets or sets the quit message to send to all online players.
+ quit_message property writable ¶
+
+quit_message: str | Translatable | None
+Gets or sets the quit message to send to all online players.
+
+ PlayerRespawnEvent ¶
+Bases: PlayerEvent
+
+Called when a player respawns.
+
+ PlayerSkinChangeEvent ¶
+Bases: PlayerEvent, Cancellable
+
+Called when a player changes their skin.
+
+Attributes:
+
+Name	Type	Description
+new_skin	Skin	Gets the player's new skin.
+skin_change_message	str | Translatable | None	Gets or sets the message to send to all online players for this skin change.
+ new_skin property ¶
+
+new_skin: Skin
+Gets the player's new skin.
+
+ skin_change_message property writable ¶
+
+skin_change_message: str | Translatable | None
+Gets or sets the message to send to all online players for this skin change.
+
+ PlayerTeleportEvent ¶
+Bases: PlayerMoveEvent
+
+Called when a player is teleported from one location to another.
+
+ PluginDisableEvent ¶
+Bases: ServerEvent
+
+Called when a plugin is disabled.
+
+Attributes:
+
+Name	Type	Description
+plugin	Plugin	
+ plugin property ¶
+
+plugin: Plugin
+ PluginEnableEvent ¶
+Bases: ServerEvent
+
+Called when a plugin is enabled.
+
+Attributes:
+
+Name	Type	Description
+plugin	Plugin	
+ plugin property ¶
+
+plugin: Plugin
+ ScriptMessageEvent ¶
+Bases: ServerEvent, Cancellable
+
+Called when a message is sent by /scriptevent command
+
+Attributes:
+
+Name	Type	Description
+message	str	Get the message to send.
+message_id	str	Get the message id to send.
+sender	CommandSender	Gets the command sender who initiated the command.
+ message property ¶
+
+message: str
+Get the message to send.
+
+ message_id property ¶
+
+message_id: str
+Get the message id to send.
+
+ sender property ¶
+
+sender: CommandSender
+Gets the command sender who initiated the command.
+
+ ServerCommandEvent ¶
+Bases: ServerEvent, Cancellable
+
+Called when the console runs a command, early in the process.
+
+Attributes:
+
+Name	Type	Description
+command	str	Gets or sets the command that the server will execute
+sender	CommandSender	Get the command sender.
+ command property writable ¶
+
+command: str
+Gets or sets the command that the server will execute
+
+ sender property ¶
+
+sender: CommandSender
+Get the command sender.
+
+ ServerEvent ¶
+Bases: Event
+
+Represents a server-related event
+
+ ServerListPingEvent ¶
+Bases: ServerEvent, Cancellable
+
+Called when a server ping is coming in.
+
+Attributes:
+
+Name	Type	Description
+address	SocketAddress	Get the address the ping is coming from.
+game_mode	GameMode	Gets or sets the current game mode.
+level_name	str	Gets or sets the level name.
+local_port	int	Get or set the local port of the server.
+local_port_v6	int	Get or set the local port of the server for IPv6 support
+max_players	int	Gets or sets the maximum number of players allowed.
+minecraft_version_network	str	Gets or sets the network version of Minecraft that is supported by this server
+motd	str	Gets or sets the message of the day message.
+network_protocol_version	int	Get the network protocol version of this server
+num_players	int	Gets or sets the number of players online.
+server_guid	str	Get or set the unique identifier of the server.
+ address property ¶
+
+address: SocketAddress
+Get the address the ping is coming from.
+
+ game_mode property writable ¶
+
+game_mode: GameMode
+Gets or sets the current game mode.
+
+ level_name property writable ¶
+
+level_name: str
+Gets or sets the level name.
+
+ local_port property writable ¶
+
+local_port: int
+Get or set the local port of the server.
+
+ local_port_v6 property writable ¶
+
+local_port_v6: int
+Get or set the local port of the server for IPv6 support
+
+ max_players property writable ¶
+
+max_players: int
+Gets or sets the maximum number of players allowed.
+
+ minecraft_version_network property writable ¶
+
+minecraft_version_network: str
+Gets or sets the network version of Minecraft that is supported by this server
+
+ motd property writable ¶
+
+motd: str
+Gets or sets the message of the day message.
+
+ network_protocol_version property ¶
+
+network_protocol_version: int
+Get the network protocol version of this server
+
+ num_players property writable ¶
+
+num_players: int
+Gets or sets the number of players online.
+
+ server_guid property writable ¶
+
+server_guid: str
+Get or set the unique identifier of the server.
+
+ ServerLoadEvent ¶
+Bases: Event
+
+Called when either the server startup or reload has completed.
+
+Classes:
+
+Name	Description
+LoadType	
+Attributes:
+
+Name	Type	Description
+STARTUP		
+type	LoadType	
+ STARTUP class-attribute instance-attribute ¶
+
+STARTUP = STARTUP
+ type property ¶
+
+type: LoadType
+ LoadType ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+STARTUP		
+ STARTUP class-attribute instance-attribute ¶
+
+STARTUP = 0
+ ThunderChangeEvent ¶
+Bases: WeatherEvent, Cancellable
+
+Called when the thunder state in a world is changing.
+
+Attributes:
+
+Name	Type	Description
+to_thunder_state	bool	Gets the state of thunder that the world is being set to
+ to_thunder_state property ¶
+
+to_thunder_state: bool
+Gets the state of thunder that the world is being set to
+
+ WeatherChangeEvent ¶
+Bases: WeatherEvent, Cancellable
+
+Called when the weather (rain) state in a world is changing.
+
+Attributes:
+
+Name	Type	Description
+to_weather_state	bool	Gets the state of weather that the world is being set to
+ to_weather_state property ¶
+
+to_weather_state: bool
+Gets the state of weather that the world is being set to
+
+ WeatherEvent ¶
+Bases: Event
+
+Represents a weather-related event
+
+Attributes:
+
+Name	Type	Description
+level	Level	Returns the Level where this event is occurring
+ level property ¶
+
+level: Level
+Returns the Level where this event is occurring
+
+ event_handler ¶
+
+event_handler(
+    func=None,
+    *,
+    priority: EventPriority = NORMAL,
+    ignore_cancelled: bool = False
+) -> None
+
+Form
+ endstone.form ¶
+Classes:
+
+Name	Description
+ActionForm	Represents a form with buttons that let the player take action.
+Button	Represents a button with text and an optional icon.
+Divider	Represents a divider.
+Dropdown	Represents a dropdown with a set of predefined options.
+Header	Represents a header with a label.
+Label	Represents a text label.
+MessageForm	Represents a form with two buttons.
+ModalForm	Represents a modal form with controls.
+Slider	Represents a slider with a label.
+StepSlider	Represents a step slider with a set of predefined options.
+TextInput	Represents a text input field.
+Toggle	Represents a toggle button with a label.
+ ActionForm ¶
+
+ActionForm(
+    title: str | Translatable = "",
+    content: str | Translatable = "",
+    buttons: (
+        list[Button | Divider | Header | Label] | None
+    ) = None,
+    on_submit: Callable[[Player, int], None] = None,
+    on_close: Callable[[Player], None] = None,
+)
+Represents a form with buttons that let the player take action.
+
+Methods:
+
+Name	Description
+add_button	Adds a button to the form.
+add_divider	Adds a divider to the form.
+add_header	Adds a header to the form.
+add_label	Adds a label to the form.
+Attributes:
+
+Name	Type	Description
+content	str | Translatable	Gets or sets the content of the form.
+controls	list[Button | Divider | Header | Label]	Gets or sets the controls of the action form.
+on_close	Callable[[Player], None]	Gets or sets the on close callback.
+on_submit	Callable[[Player, int], None]	Gets or sets the on submit callback.
+title	str | Translatable	Gets or sets the title of the form.
+ content property writable ¶
+
+content: str | Translatable
+Gets or sets the content of the form.
+
+ controls property writable ¶
+
+controls: list[Button | Divider | Header | Label]
+Gets or sets the controls of the action form.
+
+ on_close property writable ¶
+
+on_close: Callable[[Player], None]
+Gets or sets the on close callback.
+
+ on_submit property writable ¶
+
+on_submit: Callable[[Player, int], None]
+Gets or sets the on submit callback.
+
+ title property writable ¶
+
+title: str | Translatable
+Gets or sets the title of the form.
+
+ add_button ¶
+
+add_button(
+    text: str | Translatable,
+    icon: str | None = None,
+    on_click: Callable[[Player], None] = None,
+) -> ActionForm
+Adds a button to the form.
+
+ add_divider ¶
+
+add_divider() -> ActionForm
+Adds a divider to the form.
+
+ add_header ¶
+
+add_header(text: str | Translatable) -> ActionForm
+Adds a header to the form.
+
+ add_label ¶
+
+add_label(text: str | Translatable) -> ActionForm
+Adds a label to the form.
+
+ Button ¶
+
+Button(
+    text: str | Translatable = "",
+    icon: str | None = None,
+    on_click: Callable[[Player], None] = None,
+)
+Represents a button with text and an optional icon.
+
+Attributes:
+
+Name	Type	Description
+icon	str | None	Gets or sets the icon path or URL of the button
+on_click	Callable[[Player], None]	Gets or sets the on click callback.
+text	str | Translatable	Gets or sets the text of the button
+ icon property writable ¶
+
+icon: str | None
+Gets or sets the icon path or URL of the button
+
+ on_click property writable ¶
+
+on_click: Callable[[Player], None]
+Gets or sets the on click callback.
+
+ text property writable ¶
+
+text: str | Translatable
+Gets or sets the text of the button
+
+ Divider ¶
+
+Divider()
+Represents a divider.
+
+ Dropdown ¶
+
+Dropdown(
+    label: str | Translatable = "",
+    options: list[str] | None = None,
+    default_index: int | None = None,
+)
+Represents a dropdown with a set of predefined options.
+
+Methods:
+
+Name	Description
+add_option	Adds a new option to the dropdown.
+Attributes:
+
+Name	Type	Description
+default_index	int | None	Gets or sets the optional default index of the dropdown.
+label	str | Translatable	Gets or sets the label of the dropdown.
+options	list[str]	Gets or sets the options of the dropdown.
+ default_index property writable ¶
+
+default_index: int | None
+Gets or sets the optional default index of the dropdown.
+
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the dropdown.
+
+ options property writable ¶
+
+options: list[str]
+Gets or sets the options of the dropdown.
+
+ add_option ¶
+
+add_option(option: str) -> Dropdown
+Adds a new option to the dropdown.
+
+ Header ¶
+
+Header(label: str | Translatable = '')
+Represents a header with a label.
+
+Attributes:
+
+Name	Type	Description
+label	str | Translatable	Gets or sets the label of the header.
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the header.
+
+ Label ¶
+
+Label(text: str | Translatable = '')
+Represents a text label.
+
+Attributes:
+
+Name	Type	Description
+text	str | Translatable	Gets or sets the text of the label.
+ text property writable ¶
+
+text: str | Translatable
+Gets or sets the text of the label.
+
+ MessageForm ¶
+
+MessageForm(
+    title: str | Translatable = "",
+    content: str | Translatable = "",
+    button1: str | Translatable = "",
+    button2: str | Translatable = "",
+    on_submit: Callable[[Player, int], None] = None,
+    on_close: Callable[[Player], None] = None,
+)
+Represents a form with two buttons.
+
+Attributes:
+
+Name	Type	Description
+button1	str | Translatable	Gets or sets the text of button1.
+button2	str | Translatable	Gets or sets the text of button2.
+content	str | Translatable	Gets or sets the content of the form.
+on_close	Callable[[Player], None]	Gets or sets the on close callback.
+on_submit	Callable[[Player, int], None]	Gets or sets the on submit callback.
+title	str | Translatable	Gets or sets the title of the form.
+ button1 property writable ¶
+
+button1: str | Translatable
+Gets or sets the text of button1.
+
+ button2 property writable ¶
+
+button2: str | Translatable
+Gets or sets the text of button2.
+
+ content property writable ¶
+
+content: str | Translatable
+Gets or sets the content of the form.
+
+ on_close property writable ¶
+
+on_close: Callable[[Player], None]
+Gets or sets the on close callback.
+
+ on_submit property writable ¶
+
+on_submit: Callable[[Player, int], None]
+Gets or sets the on submit callback.
+
+ title property writable ¶
+
+title: str | Translatable
+Gets or sets the title of the form.
+
+ ModalForm ¶
+
+ModalForm(
+    title: str | Translatable = "",
+    controls: (
+        list[
+            Dropdown
+            | Label
+            | Slider
+            | StepSlider
+            | TextInput
+            | Toggle
+            | Divider
+            | Header
+        ]
+        | None
+    ) = None,
+    submit_button: str | Translatable | None = None,
+    icon: str | None = None,
+    on_submit: Callable[[Player, str], None] = None,
+    on_close: Callable[[Player], None] = None,
+)
+Represents a modal form with controls.
+
+Methods:
+
+Name	Description
+add_control	Adds a control to the form.
+Attributes:
+
+Name	Type	Description
+controls	list[Dropdown | Label | Slider | StepSlider | TextInput | Toggle | Divider | Header]	Gets or sets the controls of the modal form.
+icon	str | None	Gets or sets the icon of the form.
+on_close	Callable[[Player], None]	Gets or sets the on close callback.
+on_submit	Callable[[Player, str], None]	Gets or sets the on submit callback.
+submit_button	str | Translatable | None	Gets or sets the submit button message of the form.
+title	str | Translatable	Gets or sets the title of the form.
+ controls property writable ¶
+
+controls: list[
+    Dropdown
+    | Label
+    | Slider
+    | StepSlider
+    | TextInput
+    | Toggle
+    | Divider
+    | Header
+]
+Gets or sets the controls of the modal form.
+
+ icon property writable ¶
+
+icon: str | None
+Gets or sets the icon of the form.
+
+ on_close property writable ¶
+
+on_close: Callable[[Player], None]
+Gets or sets the on close callback.
+
+ on_submit property writable ¶
+
+on_submit: Callable[[Player, str], None]
+Gets or sets the on submit callback.
+
+ submit_button property writable ¶
+
+submit_button: str | Translatable | None
+Gets or sets the submit button message of the form.
+
+ title property writable ¶
+
+title: str | Translatable
+Gets or sets the title of the form.
+
+ add_control ¶
+
+add_control(
+    control: (
+        Dropdown
+        | Label
+        | Slider
+        | StepSlider
+        | TextInput
+        | Toggle
+        | Divider
+        | Header
+    ),
+) -> ModalForm
+Adds a control to the form.
+
+ Slider ¶
+
+Slider(
+    label: str | Translatable = "",
+    min: float = 0,
+    max: float = 100,
+    step: float = 20,
+    default_value: float | None = None,
+)
+Represents a slider with a label.
+
+Attributes:
+
+Name	Type	Description
+default_value	float | None	Gets or sets the optional default value of the slider.
+label	str | Translatable	Gets or sets the label of the slider.
+max	float	Gets or sets the maximum value of the slider.
+min	float	Gets or sets the minimum value of the slider.
+step	float	Gets or sets the step size of the slider.
+ default_value property writable ¶
+
+default_value: float | None
+Gets or sets the optional default value of the slider.
+
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the slider.
+
+ max property writable ¶
+
+max: float
+Gets or sets the maximum value of the slider.
+
+ min property writable ¶
+
+min: float
+Gets or sets the minimum value of the slider.
+
+ step property writable ¶
+
+step: float
+Gets or sets the step size of the slider.
+
+ StepSlider ¶
+
+StepSlider(
+    label: str | Translatable = "",
+    options: list[str] | None = None,
+    default_index: int | None = None,
+)
+Represents a step slider with a set of predefined options.
+
+Methods:
+
+Name	Description
+add_option	Adds a new option to the step slider.
+Attributes:
+
+Name	Type	Description
+default_index	int | None	Gets or sets the optional default index of the step slider.
+label	str | Translatable	Gets or sets the label of the step slider.
+options	list[str]	Gets or sets the options of the step slider.
+ default_index property writable ¶
+
+default_index: int | None
+Gets or sets the optional default index of the step slider.
+
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the step slider.
+
+ options property writable ¶
+
+options: list[str]
+Gets or sets the options of the step slider.
+
+ add_option ¶
+
+add_option(option: str) -> Dropdown
+Adds a new option to the step slider.
+
+ TextInput ¶
+
+TextInput(
+    label: str | Translatable = "",
+    placeholder: str | Translatable = "",
+    default_value: str | None = None,
+)
+Represents a text input field.
+
+Attributes:
+
+Name	Type	Description
+default_value	str | None	Gets or sets the optional default text of the text input field.
+label	str | Translatable	Gets or sets the label of the text input field.
+placeholder	str | Translatable	Gets or sets the placeholder of the text input field.
+ default_value property writable ¶
+
+default_value: str | None
+Gets or sets the optional default text of the text input field.
+
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the text input field.
+
+ placeholder property writable ¶
+
+placeholder: str | Translatable
+Gets or sets the placeholder of the text input field.
+
+ Toggle ¶
+
+Toggle(
+    label: str | Translatable = "",
+    default_value: bool = False,
+)
+Represents a toggle button with a label.
+
+Attributes:
+
+Name	Type	Description
+default_value	bool	Gets or sets the value of the toggle.
+label	str | Translatable	Gets or sets the label of the toggle.
+ default_value property writable ¶
+
+default_value: bool
+Gets or sets the value of the toggle.
+
+ label property writable ¶
+
+label: str | Translatable
+Gets or sets the label of the toggle.
+
+Language
+ endstone.lang ¶
+Classes:
+
+Name	Description
+Language	Represents the interface for translating text into different languages.
+Translatable	Represents an object with a text representation that can be translated by the Minecraft client.
+ Language ¶
+Represents the interface for translating text into different languages.
+
+Methods:
+
+Name	Description
+translate	
+Attributes:
+
+Name	Type	Description
+locale	str	Gets the current locale.
+ locale property ¶
+
+locale: str
+Gets the current locale.
+
+ translate ¶
+
+translate(
+    text: str,
+    params: list[str] | None = None,
+    locale: str | None = None,
+) -> str
+
+translate(
+    translatable: Translatable, locale: str | None = None
+) -> str
+ Translatable ¶
+
+Translatable(text: str, params: list[str] | None = None)
+Represents an object with a text representation that can be translated by the Minecraft client.
+
+Attributes:
+
+Name	Type	Description
+params	list[str]	Get the translation parameters.
+text	str	Get the text to be translated.
+ params property ¶
+
+params: list[str]
+Get the translation parameters.
+
+ text property ¶
+
+text: str
+Get the text to be translated.
+
+Level
+ endstone.level ¶
+Classes:
+
+Name	Description
+Chunk	Represents a chunk of blocks.
+Dimension	Represents a dimension within a Level.
+Level	
+Location	Represents a 3-dimensional location in a dimension within a level.
+ Chunk ¶
+Represents a chunk of blocks.
+
+Attributes:
+
+Name	Type	Description
+dimension	Dimension	Gets the dimension containing this chunk
+level	Level	Gets the level containing this chunk
+x	int	Gets the X-coordinate of this chunk
+z	int	Gets the Z-coordinate of this chunk
+ dimension property ¶
+
+dimension: Dimension
+Gets the dimension containing this chunk
+
+ level property ¶
+
+level: Level
+Gets the level containing this chunk
+
+ x property ¶
+
+x: int
+Gets the X-coordinate of this chunk
+
+ z property ¶
+
+z: int
+Gets the Z-coordinate of this chunk
+
+ Dimension ¶
+Represents a dimension within a Level.
+
+Classes:
+
+Name	Description
+Type	Represents various dimension types.
+Methods:
+
+Name	Description
+drop_item	Drops an item at the specified Location
+get_block_at	
+get_highest_block_at	
+get_highest_block_y_at	Gets the highest non-empty (impassable) coordinate at the given coordinates.
+spawn_actor	Creates an actor at the given Location
+Attributes:
+
+Name	Type	Description
+CUSTOM		
+NETHER		
+OVERWORLD		
+THE_END		
+actors	list[Actor]	Get a list of all actors in this dimension
+level	Level	Gets the level to which this dimension belongs
+loaded_chunks	list[Chunk]	Gets a list of all loaded Chunks
+name	str	Gets the name of this dimension
+type	Type	Gets the type of this dimension
+ CUSTOM class-attribute instance-attribute ¶
+
+CUSTOM = CUSTOM
+ NETHER class-attribute instance-attribute ¶
+
+NETHER = NETHER
+ OVERWORLD class-attribute instance-attribute ¶
+
+OVERWORLD = OVERWORLD
+ THE_END class-attribute instance-attribute ¶
+
+THE_END = THE_END
+ actors property ¶
+
+actors: list[Actor]
+Get a list of all actors in this dimension
+
+ level property ¶
+
+level: Level
+Gets the level to which this dimension belongs
+
+ loaded_chunks property ¶
+
+loaded_chunks: list[Chunk]
+Gets a list of all loaded Chunks
+
+ name property ¶
+
+name: str
+Gets the name of this dimension
+
+ type property ¶
+
+type: Type
+Gets the type of this dimension
+
+ Type ¶
+Bases: Enum
+
+Represents various dimension types.
+
+Attributes:
+
+Name	Type	Description
+CUSTOM		
+NETHER		
+OVERWORLD		
+THE_END		
+ CUSTOM class-attribute instance-attribute ¶
+
+CUSTOM = 999
+ NETHER class-attribute instance-attribute ¶
+
+NETHER = 1
+ OVERWORLD class-attribute instance-attribute ¶
+
+OVERWORLD = 0
+ THE_END class-attribute instance-attribute ¶
+
+THE_END = 2
+ drop_item ¶
+
+drop_item(location: Location, item: ItemStack) -> Item
+Drops an item at the specified Location
+
+ get_block_at ¶
+
+get_block_at(location: Location) -> Block
+
+get_block_at(x: int, y: int, z: int) -> Block
+ get_highest_block_at ¶
+
+get_highest_block_at(location: Location) -> Block
+
+get_highest_block_at(x: int, z: int) -> Block
+ get_highest_block_y_at ¶
+
+get_highest_block_y_at(x: int, z: int) -> int
+Gets the highest non-empty (impassable) coordinate at the given coordinates.
+
+ spawn_actor ¶
+
+spawn_actor(location: Location, type: str) -> Actor
+Creates an actor at the given Location
+
+ Level ¶
+Methods:
+
+Name	Description
+get_dimension	Gets the dimension with the given name.
+Attributes:
+
+Name	Type	Description
+actors	list[Actor]	Get a list of all actors in this level
+dimensions	list[Dimension]	Gets a list of all dimensions within this level.
+name	str	Gets the unique name of this level
+seed	int	Gets the Seed for this level.
+time	int	Gets and sets the relative in-game time on the server
+ actors property ¶
+
+actors: list[Actor]
+Get a list of all actors in this level
+
+ dimensions property ¶
+
+dimensions: list[Dimension]
+Gets a list of all dimensions within this level.
+
+ name property ¶
+
+name: str
+Gets the unique name of this level
+
+ seed property ¶
+
+seed: int
+Gets the Seed for this level.
+
+ time property writable ¶
+
+time: int
+Gets and sets the relative in-game time on the server
+
+ get_dimension ¶
+
+get_dimension(name: str) -> Dimension
+Gets the dimension with the given name.
+
+ Location ¶
+
+Location(
+    dimension: Dimension,
+    x: float,
+    y: float,
+    z: float,
+    pitch: float = 0.0,
+    yaw: float = 0.0,
+)
+Represents a 3-dimensional location in a dimension within a level.
+
+Methods:
+
+Name	Description
+distance	The distance between this Location and another
+distance_squared	The squared distance between this Location and another
+normalize_pitch	Normalizes the given pitch angle to a value between +/-90 degrees.
+normalize_yaw	Normalizes the given yaw angle to a value between +/-180 degrees.
+zero	Zero this vector's components.
+Attributes:
+
+Name	Type	Description
+block	Block	Gets the block at the represented location
+block_x	int	Gets the floored value of the X component, indicating the block that this location is contained with.
+block_y	int	Gets the floored value of the Y component, indicating the block that this location is contained with.
+block_z	int	Gets the floored value of the Z component, indicating the block that this location is contained with.
+dimension	Dimension	The Dimension that contains this position
+direction	Vector	Gets or sets a vector of yaw and pitch that points in the direction of the vector
+length	float	The magnitude of the Location
+length_squared	float	The squared magnitude of the Location
+pitch	float	The pitch of this location, measured in degrees.
+x	float	The x-coordinate of this location
+y	float	The y-coordinate of this location
+yaw	float	The yaw of this location, measured in degrees.
+z	float	The z-coordinate of this location
+ block property ¶
+
+block: Block
+Gets the block at the represented location
+
+ block_x property ¶
+
+block_x: int
+Gets the floored value of the X component, indicating the block that this location is contained with.
+
+ block_y property ¶
+
+block_y: int
+Gets the floored value of the Y component, indicating the block that this location is contained with.
+
+ block_z property ¶
+
+block_z: int
+Gets the floored value of the Z component, indicating the block that this location is contained with.
+
+ dimension property writable ¶
+
+dimension: Dimension
+The Dimension that contains this position
+
+ direction property writable ¶
+
+direction: Vector
+Gets or sets a vector of yaw and pitch that points in the direction of the vector
+
+ length property ¶
+
+length: float
+The magnitude of the Location
+
+ length_squared property ¶
+
+length_squared: float
+The squared magnitude of the Location
+
+ pitch property writable ¶
+
+pitch: float
+The pitch of this location, measured in degrees.
+
+ x property writable ¶
+
+x: float
+The x-coordinate of this location
+
+ y property writable ¶
+
+y: float
+The y-coordinate of this location
+
+ yaw property writable ¶
+
+yaw: float
+The yaw of this location, measured in degrees.
+
+ z property writable ¶
+
+z: float
+The z-coordinate of this location
+
+ distance ¶
+
+distance(other: Location) -> float
+The distance between this Location and another
+
+ distance_squared ¶
+
+distance_squared(other: Location) -> float
+The squared distance between this Location and another
+
+ normalize_pitch staticmethod ¶
+
+normalize_pitch(pitch: float) -> float
+Normalizes the given pitch angle to a value between +/-90 degrees.
+
+ normalize_yaw staticmethod ¶
+
+normalize_yaw(yaw: float) -> float
+Normalizes the given yaw angle to a value between +/-180 degrees.
+
+ zero ¶
+
+zero() -> Location
+Zero this vector's components.
+
+Inventory
+ endstone.inventory ¶
+Classes relating to player inventories and item interactions.
+
+Classes:
+
+Name	Description
+BookMeta	Represents the metadata for a written book.
+BookMetaGeneration	
+CrossbowMeta	Represents the metadata for a crossbow.
+EquipmentSlot	
+Inventory	Interface to the various inventories.
+ItemFactory	
+ItemMeta	Represents the metadata of a generic item.
+ItemStack	Represents a stack of items.
+ItemType	Represents an item type.
+MapMeta	Represents the metadata for a map item.
+PlayerInventory	Interface to the inventory of a Player, including the four armor slots and any extra slots.
+WritableBookMeta	Represents the metadata for a writable book.
+ BookMeta ¶
+Bases: WritableBookMeta
+
+Represents the metadata for a written book.
+
+Attributes:
+
+Name	Type	Description
+author	str	Gets or sets the author of the book.
+generation	BookMetaGeneration | None	Gets or sets the generation of the book.
+has_author	bool	Checks for the existence of an author in the book.
+has_generation	bool	Checks for the existence of generation level in the book.
+has_title	bool	Checks for the existence of a title in the book.
+title	str	Gets or sets the title of the book.
+ author property writable ¶
+
+author: str
+Gets or sets the author of the book.
+
+ generation property writable ¶
+
+generation: BookMetaGeneration | None
+Gets or sets the generation of the book.
+
+ has_author property ¶
+
+has_author: bool
+Checks for the existence of an author in the book.
+
+ has_generation property ¶
+
+has_generation: bool
+Checks for the existence of generation level in the book.
+
+ has_title property ¶
+
+has_title: bool
+Checks for the existence of a title in the book.
+
+ title property writable ¶
+
+title: str
+Gets or sets the title of the book.
+
+ BookMetaGeneration ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+COPY_OF_COPY		
+COPY_OF_ORIGINAL		
+ORIGINAL		
+ COPY_OF_COPY class-attribute instance-attribute ¶
+
+COPY_OF_COPY = 2
+ COPY_OF_ORIGINAL class-attribute instance-attribute ¶
+
+COPY_OF_ORIGINAL = 1
+ ORIGINAL class-attribute instance-attribute ¶
+
+ORIGINAL = 0
+ CrossbowMeta ¶
+Bases: ItemMeta
+
+Represents the metadata for a crossbow.
+
+Attributes:
+
+Name	Type	Description
+charged_projectile	ItemStack | None	Gets or sets the charged projectile.
+has_charged_projectile	bool	Returns whether the crossbow has a charged projectile.
+ charged_projectile property writable ¶
+
+charged_projectile: ItemStack | None
+Gets or sets the charged projectile.
+
+ has_charged_projectile property ¶
+
+has_charged_projectile: bool
+Returns whether the crossbow has a charged projectile.
+
+ EquipmentSlot ¶
+Bases: Enum
+
+Attributes:
+
+Name	Type	Description
+BODY		Only for certain entities such as horses and wolves.
+CHEST		
+FEET		
+HAND		
+HEAD		
+LEGS		
+OFF_HAND		
+ BODY class-attribute instance-attribute ¶
+
+BODY = 6
+Only for certain entities such as horses and wolves.
+
+ CHEST class-attribute instance-attribute ¶
+
+CHEST = 4
+ FEET class-attribute instance-attribute ¶
+
+FEET = 2
+ HAND class-attribute instance-attribute ¶
+
+HAND = 0
+ HEAD class-attribute instance-attribute ¶
+
+HEAD = 5
+ LEGS class-attribute instance-attribute ¶
+
+LEGS = 3
+ OFF_HAND class-attribute instance-attribute ¶
+
+OFF_HAND = 1
+ Inventory ¶
+Interface to the various inventories.
+
+Methods:
+
+Name	Description
+add_item	Stores the given ItemStacks in the inventory.
+all	
+clear	
+contains	
+contains_at_least	
+first	
+get_item	Returns the ItemStack found in the slot at the given index
+remove	
+remove_item	Removes the given ItemStacks from the inventory.
+set_item	Stores the ItemStack at the given index of the inventory.
+Attributes:
+
+Name	Type	Description
+contents	list[ItemStack | None]	Returns all ItemStacks from the inventory
+first_empty	int	Returns the first empty Slot.
+is_empty	bool	Check whether this inventory is empty. An inventory is considered to be empty if there are no ItemStacks in any slot of this inventory.
+max_stack_size	int	Returns the maximum stack size for an ItemStack in this inventory.
+size	int	Returns the size of the inventory
+ contents property writable ¶
+
+contents: list[ItemStack | None]
+Returns all ItemStacks from the inventory
+
+ first_empty property ¶
+
+first_empty: int
+Returns the first empty Slot.
+
+ is_empty property ¶
+
+is_empty: bool
+Check whether this inventory is empty. An inventory is considered to be empty if there are no ItemStacks in any slot of this inventory.
+
+ max_stack_size property ¶
+
+max_stack_size: int
+Returns the maximum stack size for an ItemStack in this inventory.
+
+ size property ¶
+
+size: int
+Returns the size of the inventory
+
+ add_item ¶
+
+add_item(*args) -> dict[int, ItemStack]
+Stores the given ItemStacks in the inventory. This will try to fill existing stacks and empty slots as well as it can.
+
+The returned map contains what it couldn't store, where the key is the index, and the value is the ItemStack. If all items are stored, it will return an empty dict.
+
+ all ¶
+
+all(item: ItemStack) -> dict[int, ItemStack]
+
+all(type: str) -> dict[int, ItemStack]
+ clear ¶
+
+clear(index: int) -> None
+
+clear() -> None
+ contains ¶
+
+contains(item: ItemStack, amount: int) -> bool
+
+contains(item: ItemStack) -> bool
+
+contains(type: str) -> bool
+ contains_at_least ¶
+
+contains_at_least(item: ItemStack, amount: int) -> bool
+
+contains_at_least(type: str, amount: int) -> bool
+ first ¶
+
+first(item: ItemStack) -> int
+
+first(type: str) -> int
+ get_item ¶
+
+get_item(index: int) -> ItemStack | None
+Returns the ItemStack found in the slot at the given index
+
+ remove ¶
+
+remove(item: ItemStack) -> None
+
+remove(type: str) -> None
+ remove_item ¶
+
+remove_item(*args) -> dict[int, ItemStack]
+Removes the given ItemStacks from the inventory. It will try to remove 'as much as possible' from the types and amounts you give as arguments.
+
+The returned HashMap contains what it couldn't remove, where the key is the index, and the value is the ItemStack. If all the given ItemStacks are removed, it will return an empty dict.
+
+ set_item ¶
+
+set_item(index: int, item: ItemStack | None) -> None
+Stores the ItemStack at the given index of the inventory.
+
+ ItemFactory ¶
+Methods:
+
+Name	Description
+as_meta_for	Returns an appropriate item meta for the specified item type.
+equals	This method is used to compare two ItemMeta objects.
+get_item_meta	This creates a new item meta for the item type.
+is_applicable	This method checks the item meta to confirm that it is applicable (no data lost if applied) to the specified ItemStack
+ as_meta_for ¶
+
+as_meta_for(meta: ItemMeta, type: str) -> ItemMeta
+Returns an appropriate item meta for the specified item type.
+
+ equals ¶
+
+equals(meta1: ItemMeta, meta2: ItemMeta) -> bool
+This method is used to compare two ItemMeta objects.
+
+ get_item_meta ¶
+
+get_item_meta(type: str) -> ItemMeta
+This creates a new item meta for the item type.
+
+ is_applicable ¶
+
+is_applicable(meta: ItemMeta, type: str) -> bool
+This method checks the item meta to confirm that it is applicable (no data lost if applied) to the specified ItemStack
+
+ ItemMeta ¶
+Represents the metadata of a generic item.
+
+Methods:
+
+Name	Description
+add_enchant	Adds the specified enchantment to this item meta.
+clone	Creates a clone of the current metadata.
+get_enchant_level	Checks for the level of the specified enchantment.
+has_enchant	Checks for existence of the specified enchantment.
+remove_enchant	Removes the specified enchantment from this item meta.
+remove_enchants	Removes all enchantments from this item meta.
+Attributes:
+
+Name	Type	Description
+damage	int	Gets or sets the damage.
+display_name	str	Gets or sets the display name.
+enchants	dict[Enchantment, int]	Returns a copy the enchantments in this ItemMeta.
+has_damage	bool	Checks to see if this item has damage.
+has_display_name	bool	Checks for existence of a display name.
+has_enchants	bool	Checks for the existence of any enchantments.
+has_lore	bool	Checks for existence of lore.
+has_repair_cost	bool	Checks to see if this item has a repair penalty.
+is_unbreakable	bool	Gets or sets the unbreakable tag. An unbreakable item will not lose durability.
+lore	list[str]	Gets or sets the lore for this item.
+repair_cost	int	Gets or sets the repair penalty.
+ damage property writable ¶
+
+damage: int
+Gets or sets the damage.
+
+ display_name property writable ¶
+
+display_name: str
+Gets or sets the display name.
+
+ enchants property ¶
+
+enchants: dict[Enchantment, int]
+Returns a copy the enchantments in this ItemMeta.
+
+ has_damage property ¶
+
+has_damage: bool
+Checks to see if this item has damage.
+
+ has_display_name property ¶
+
+has_display_name: bool
+Checks for existence of a display name.
+
+ has_enchants property ¶
+
+has_enchants: bool
+Checks for the existence of any enchantments.
+
+ has_lore property ¶
+
+has_lore: bool
+Checks for existence of lore.
+
+ has_repair_cost property ¶
+
+has_repair_cost: bool
+Checks to see if this item has a repair penalty.
+
+ is_unbreakable property writable ¶
+
+is_unbreakable: bool
+Gets or sets the unbreakable tag. An unbreakable item will not lose durability.
+
+ lore property writable ¶
+
+lore: list[str]
+Gets or sets the lore for this item.
+
+ repair_cost property writable ¶
+
+repair_cost: int
+Gets or sets the repair penalty.
+
+ add_enchant ¶
+
+add_enchant(
+    id: str, level: int, force: bool = False
+) -> bool
+Adds the specified enchantment to this item meta.
+
+ clone ¶
+
+clone() -> ItemMeta
+Creates a clone of the current metadata.
+
+ get_enchant_level ¶
+
+get_enchant_level(id: str) -> int
+Checks for the level of the specified enchantment.
+
+ has_enchant ¶
+
+has_enchant(id: str) -> bool
+Checks for existence of the specified enchantment.
+
+ remove_enchant ¶
+
+remove_enchant(id: str) -> bool
+Removes the specified enchantment from this item meta.
+
+ remove_enchants ¶
+
+remove_enchants() -> None
+Removes all enchantments from this item meta.
+
+ ItemStack ¶
+
+ItemStack(type: str, amount: int = 1, data: int = 0)
+Represents a stack of items.
+
+Methods:
+
+Name	Description
+is_similar	Checks if the two stacks are equal, but does not consider stack size (amount).
+set_item_meta	Set the ItemMeta of this ItemStack.
+Attributes:
+
+Name	Type	Description
+amount	int	Gets or sets the amount of items in this stack.
+data	int	Gets or sets the data for this stack of items.
+item_meta	ItemMeta	Gets a copy of the ItemMeta of this ItemStack.
+max_stack_size	int	Get the maximum stack size for this item.
+nbt	CompoundTag	Gets or sets the NBT compound tag of this item stack.
+translation_key	str	Get the translation key for this item.
+type	ItemType	Gets or sets the type of this item.
+ amount property writable ¶
+
+amount: int
+Gets or sets the amount of items in this stack.
+
+ data property writable ¶
+
+data: int
+Gets or sets the data for this stack of items.
+
+ item_meta property ¶
+
+item_meta: ItemMeta
+Gets a copy of the ItemMeta of this ItemStack.
+
+ max_stack_size property ¶
+
+max_stack_size: int
+Get the maximum stack size for this item.
+
+ nbt property writable ¶
+
+nbt: CompoundTag
+Gets or sets the NBT compound tag of this item stack.
+
+ translation_key property ¶
+
+translation_key: str
+Get the translation key for this item.
+
+ type property writable ¶
+
+type: ItemType
+Gets or sets the type of this item.
+
+ is_similar ¶
+
+is_similar(other: ItemStack) -> bool
+Checks if the two stacks are equal, but does not consider stack size (amount).
+
+ set_item_meta ¶
+
+set_item_meta(meta: ItemMeta) -> bool
+Set the ItemMeta of this ItemStack.
+
+ ItemType ¶
+Represents an item type.
+
+Methods:
+
+Name	Description
+create_item_stack	Constructs a new ItemStack with this item type.
+get	Attempts to get the ItemType with the given name.
+get_translation_key	Get the translation key, suitable for use in a translation component.
+Attributes:
+
+Name	Type	Description
+id	str	Return the identifier of this item type.
+max_durability	int	Gets the maximum durability of this item type
+max_stack_size	int	Gets the maximum amount of this item type that can be held in a stack.
+translation_key	str	Get the translation key, suitable for use in a translation component.
+ id property ¶
+
+id: str
+Return the identifier of this item type.
+
+ max_durability property ¶
+
+max_durability: int
+Gets the maximum durability of this item type
+
+ max_stack_size property ¶
+
+max_stack_size: int
+Gets the maximum amount of this item type that can be held in a stack.
+
+ translation_key property ¶
+
+translation_key: str
+Get the translation key, suitable for use in a translation component.
+
+ create_item_stack ¶
+
+create_item_stack(amount: int = 1) -> ItemStack
+Constructs a new ItemStack with this item type.
+
+ get staticmethod ¶
+
+get(name: str) -> ItemType
+Attempts to get the ItemType with the given name.
+
+ get_translation_key ¶
+
+get_translation_key(data: int = 0) -> str
+Get the translation key, suitable for use in a translation component.
+
+ MapMeta ¶
+Bases: ItemMeta
+
+Represents the metadata for a map item.
+
+Attributes:
+
+Name	Type	Description
+has_map_id	bool	Checks for existence of a map ID number.
+has_map_view	bool	Checks for existence of an associated map.
+map_id	int	Gets or sets the map ID. This is used to determine what map is displayed.
+map_view	MapView	Gets or sets the map view that is associated with this map item.
+ has_map_id property ¶
+
+has_map_id: bool
+Checks for existence of a map ID number.
+
+ has_map_view property ¶
+
+has_map_view: bool
+Checks for existence of an associated map.
+
+ map_id property writable ¶
+
+map_id: int
+Gets or sets the map ID. This is used to determine what map is displayed.
+
+ map_view property writable ¶
+
+map_view: MapView
+Gets or sets the map view that is associated with this map item.
+
+ PlayerInventory ¶
+Bases: Inventory
+
+Interface to the inventory of a Player, including the four armor slots and any extra slots.
+
+Attributes:
+
+Name	Type	Description
+boots	ItemStack | None	Gets or sets the ItemStack in the boots slot
+chestplate	ItemStack | None	Gets or sets the ItemStack in the chestplate slot
+held_item_slot	int	Gets or sets the slot number of the currently held item
+helmet	ItemStack | None	Gets or sets the ItemStack in the helmet slot
+item_in_main_hand	ItemStack | None	Gets or sets the item the player is currently holding in their main hand.
+item_in_off_hand	ItemStack | None	Gets or sets the item the player is currently holding in their off hand.
+leggings	ItemStack | None	Gets or sets the ItemStack in the leg slot
+ boots property writable ¶
+
+boots: ItemStack | None
+Gets or sets the ItemStack in the boots slot
+
+ chestplate property writable ¶
+
+chestplate: ItemStack | None
+Gets or sets the ItemStack in the chestplate slot
+
+ held_item_slot property writable ¶
+
+held_item_slot: int
+Gets or sets the slot number of the currently held item
+
+ helmet property writable ¶
+
+helmet: ItemStack | None
+Gets or sets the ItemStack in the helmet slot
+
+ item_in_main_hand property writable ¶
+
+item_in_main_hand: ItemStack | None
+Gets or sets the item the player is currently holding in their main hand.
+
+ item_in_off_hand property writable ¶
+
+item_in_off_hand: ItemStack | None
+Gets or sets the item the player is currently holding in their off hand.
+
+ leggings property writable ¶
+
+leggings: ItemStack | None
+Gets or sets the ItemStack in the leg slot
+
+ WritableBookMeta ¶
+Bases: ItemMeta
+
+Represents the metadata for a writable book.
+
+Methods:
+
+Name	Description
+add_page	Adds new pages to the end of the book.
+get_page	Gets the specified page in the book.
+set_page	Sets the specified page in the book.
+Attributes:
+
+Name	Type	Description
+has_pages	bool	Checks for the existence of pages in the book.
+page_count	int	Gets the number of pages in the book.
+pages	list[str]	Gets or sets all the pages in the book.
+ has_pages property ¶
+
+has_pages: bool
+Checks for the existence of pages in the book.
+
+ page_count property ¶
+
+page_count: int
+Gets the number of pages in the book.
+
+ pages property writable ¶
+
+pages: list[str]
+Gets or sets all the pages in the book.
+
+ add_page ¶
+
+add_page(*args: str) -> None
+Adds new pages to the end of the book.
+
+ get_page ¶
+
+get_page(page: int) -> str
+Gets the specified page in the book.
+
+ set_page ¶
+
+set_page(page: int, data: str) -> None
+Sets the specified page in the book.
+
+Named Binary Tag (NBT)
+ endstone.nbt ¶
+Classes relating to the NBT data format.
+
+Classes:
+
+Name	Description
+ByteArrayTag	
+ByteTag	
+CompoundTag	
+DoubleTag	
+FloatTag	
+IntArrayTag	
+IntTag	
+ListTag	
+LongTag	
+ShortTag	
+StringTag	
+Tag	
+Functions:
+
+Name	Description
+load	Deserialize binary NBT data into a tag.
+ ByteArrayTag ¶
+
+ByteArrayTag()
+
+ByteArrayTag(iterable: Iterable)
+
+ByteArrayTag(buffer: Buffer)
+Bases: Tag
+
+Methods:
+
+Name	Description
+append	
+clear	
+dump	Serialize this tag to binary NBT format.
+extend	
+ append ¶
+
+append(value: int) -> None
+ clear ¶
+
+clear() -> None
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ extend ¶
+
+extend(iterable: Iterable) -> None
+ ByteTag ¶
+
+ByteTag()
+
+ByteTag(value: int)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	int	
+ value property ¶
+
+value: int
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ CompoundTag ¶
+
+CompoundTag()
+
+CompoundTag(mapping: dict)
+Bases: Tag
+
+Methods:
+
+Name	Description
+clear	
+dump	Serialize this tag to binary NBT format.
+items	
+keys	
+pop	
+setdefault	
+to_dict	
+values	
+ clear ¶
+
+clear() -> None
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ items ¶
+
+items() -> Iterator[tuple[str, Tag]]
+ keys ¶
+
+keys() -> Iterator[str]
+ pop ¶
+
+pop(key: str) -> Tag
+
+pop(key: str, default: object = None) -> object
+ setdefault ¶
+
+setdefault(key: str, default: Tag) -> Tag
+ to_dict ¶
+
+to_dict() -> dict
+ values ¶
+
+values() -> Iterator[Tag]
+ DoubleTag ¶
+
+DoubleTag()
+
+DoubleTag(value: float)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	float	
+ value property ¶
+
+value: float
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ FloatTag ¶
+
+FloatTag()
+
+FloatTag(value: float)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	float	
+ value property ¶
+
+value: float
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ IntArrayTag ¶
+
+IntArrayTag()
+
+IntArrayTag(iterable: Iterable)
+Bases: Tag
+
+Methods:
+
+Name	Description
+append	
+clear	
+dump	Serialize this tag to binary NBT format.
+extend	
+ append ¶
+
+append(value: int) -> None
+ clear ¶
+
+clear() -> None
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ extend ¶
+
+extend(iterable: Iterable) -> None
+ IntTag ¶
+
+IntTag()
+
+IntTag(value: int)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	int	
+ value property ¶
+
+value: int
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ ListTag ¶
+
+ListTag()
+
+ListTag(iterable: Iterable)
+Bases: Tag
+
+Methods:
+
+Name	Description
+append	
+clear	
+dump	Serialize this tag to binary NBT format.
+empty	
+extend	
+pop	
+size	
+to_list	
+ append ¶
+
+append(tag: Tag) -> None
+ clear ¶
+
+clear() -> None
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ empty ¶
+
+empty() -> bool
+ extend ¶
+
+extend(iterable: Iterable) -> None
+ pop ¶
+
+pop(index: int = -1) -> Tag
+ size ¶
+
+size() -> int
+ to_list ¶
+
+to_list() -> list
+ LongTag ¶
+
+LongTag()
+
+LongTag(value: int)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	int	
+ value property ¶
+
+value: int
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ ShortTag ¶
+
+ShortTag()
+
+ShortTag(value: int)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	int	
+ value property ¶
+
+value: int
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ StringTag ¶
+
+StringTag()
+
+StringTag(value: str)
+Bases: Tag
+
+Methods:
+
+Name	Description
+dump	Serialize this tag to binary NBT format.
+Attributes:
+
+Name	Type	Description
+value	str	
+ value property ¶
+
+value: str
+ dump ¶
+
+dump(
+    name: str | None = None,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> bytes
+Serialize this tag to binary NBT format.
+
+Parameters:
+
+Name	Type	Description	Default
+name	str | None	Optional root tag name. If None, an empty name is used.	None
+byte_order	Literal['little', 'big']	Byte order for encoding, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, use Bedrock network varint encoding for lengths and Int/Long values.	False
+Returns:
+
+Name	Type	Description
+bytes	bytes	The binary NBT data.
+ Tag ¶
+ load ¶
+
+load(
+    data: bytes,
+    byte_order: Literal["little", "big"] = "little",
+    network: bool = False,
+) -> tuple[Tag, str]
+Deserialize binary NBT data into a tag.
+
+Parameters:
+
+Name	Type	Description	Default
+data	bytes	Binary NBT data (bytes).	required
+byte_order	Literal['little', 'big']	Byte order of the binary data, either 'little' (Bedrock) or 'big' (Java).	'little'
+network	bool	If True, expect Bedrock network varint encoding.	False
+Returns:
+
+Type	Description
+tuple[Tag, str]	tuple[Tag, str]: A tuple of (tag, name) where name is the root tag name.
+
+Permissions
+ endstone.permissions ¶
+Classes relating to permissions of players.
+
+Classes:
+
+Name	Description
+Permissible	Represents an object that may become a server operator and can be assigned permissions.
+Permission	Represents a unique permission that may be attached to a Permissible
+PermissionAttachment	Holds information about a permission attachment on a Permissible object
+PermissionAttachmentInfo	Holds information on a permission and which PermissionAttachment provides it
+PermissionDefault	Represents the possible default values for permissions
+PermissionLevel	
+ Permissible ¶
+Represents an object that may become a server operator and can be assigned permissions.
+
+Methods:
+
+Name	Description
+add_attachment	
+has_permission	
+is_permission_set	
+recalculate_permissions	Recalculates the permissions.
+remove_attachment	Removes a given PermissionAttachment.
+Attributes:
+
+Name	Type	Description
+effective_permissions	set[PermissionAttachmentInfo]	Gets effective permissions.
+permission_level	PermissionLevel	Gets the permission level of this object
+ effective_permissions property ¶
+
+effective_permissions: set[PermissionAttachmentInfo]
+Gets effective permissions.
+
+ permission_level property ¶
+
+permission_level: PermissionLevel
+Gets the permission level of this object
+
+ add_attachment ¶
+
+add_attachment(
+    plugin: Plugin, name: str, value: bool
+) -> PermissionAttachment
+
+add_attachment(plugin: Plugin) -> PermissionAttachment
+ has_permission ¶
+
+has_permission(name: str) -> bool
+
+has_permission(perm: Permission) -> bool
+ is_permission_set ¶
+
+is_permission_set(name: str) -> bool
+
+is_permission_set(perm: Permission) -> bool
+ recalculate_permissions ¶
+
+recalculate_permissions() -> None
+Recalculates the permissions.
+
+ remove_attachment ¶
+
+remove_attachment(attachment: PermissionAttachment) -> bool
+Removes a given PermissionAttachment.
+
+ Permission ¶
+
+Permission(
+    name: str,
+    description: str | None = None,
+    default: PermissionDefault | None = None,
+    children: Mapping[str, bool] | None = None,
+    *args,
+    **kwargs
+)
+Represents a unique permission that may be attached to a Permissible
+
+Methods:
+
+Name	Description
+add_parent	
+recalculate_permissibles	Recalculates all Permissibles that contain this permission.
+Attributes:
+
+Name	Type	Description
+children	dict[str, bool]	Gets the children of this permission.
+default	PermissionDefault	The default value of this permission.
+description	str	The brief description of this permission
+name	str	Gets the unique fully qualified name of this Permission.
+permissibles	set[Permissible]	Gets a set containing every Permissible that has this permission.
+ children property ¶
+
+children: dict[str, bool]
+Gets the children of this permission.
+
+ default property writable ¶
+
+default: PermissionDefault
+The default value of this permission.
+
+ description property writable ¶
+
+description: str
+The brief description of this permission
+
+ name property ¶
+
+name: str
+Gets the unique fully qualified name of this Permission.
+
+ permissibles property ¶
+
+permissibles: set[Permissible]
+Gets a set containing every Permissible that has this permission.
+
+ add_parent ¶
+
+add_parent(name: str, value: bool) -> Permission
+
+add_parent(perm: Permission, value: bool) -> None
+ recalculate_permissibles ¶
+
+recalculate_permissibles() -> None
+Recalculates all Permissibles that contain this permission.
+
+ PermissionAttachment ¶
+
+PermissionAttachment(
+    plugin: Plugin, permissible: Permissible
+)
+Holds information about a permission attachment on a Permissible object
+
+Methods:
+
+Name	Description
+remove	Removes this attachment from its registered Permissible.
+set_permission	
+unset_permission	
+Attributes:
+
+Name	Type	Description
+permissible	Permissible	Gets the Permissible that this is attached to.
+permissions	dict[str, bool]	Gets a copy of all set permissions and values contained within this attachment.
+plugin	Plugin	Gets the plugin responsible for this attachment.
+removal_callback	Callable[[PermissionAttachment], None]	The callback to be called when this attachment is removed.
+ permissible property ¶
+
+permissible: Permissible
+Gets the Permissible that this is attached to.
+
+ permissions property ¶
+
+permissions: dict[str, bool]
+Gets a copy of all set permissions and values contained within this attachment.
+
+ plugin property ¶
+
+plugin: Plugin
+Gets the plugin responsible for this attachment.
+
+ removal_callback property writable ¶
+
+removal_callback: Callable[[PermissionAttachment], None]
+The callback to be called when this attachment is removed.
+
+ remove ¶
+
+remove() -> bool
+Removes this attachment from its registered Permissible.
+
+ set_permission ¶
+
+set_permission(name: str, value: bool) -> None
+
+set_permission(perm: Permission, value: bool) -> None
+ unset_permission ¶
+
+unset_permission(name: str) -> None
+
+unset_permission(perm: Permission) -> None
+ PermissionAttachmentInfo ¶
+
+PermissionAttachmentInfo(
+    permissible: Permissible,
+    permission: str,
+    attachment: PermissionAttachment,
+    value: bool,
+)
+Holds information on a permission and which PermissionAttachment provides it
+
+Attributes:
+
+Name	Type	Description
+attachment	PermissionAttachment	Gets the attachment providing this permission.
+permissible	Permissible	Get the permissible this is attached to
+permission	str	Gets the permission being set
+value	bool	Gets the value of this permission
+ attachment property ¶
+
+attachment: PermissionAttachment
+Gets the attachment providing this permission.
+
+ permissible property ¶
+
+permissible: Permissible
+Get the permissible this is attached to
+
+ permission property ¶
+
+permission: str
+Gets the permission being set
+
+ value property ¶
+
+value: bool
+Gets the value of this permission
+
+ PermissionDefault ¶
+Bases: Enum
+
+Represents the possible default values for permissions
+
+Attributes:
+
+Name	Type	Description
+CONSOLE		
+FALSE		
+NOT_OP		
+OP		
+TRUE		
+ CONSOLE class-attribute instance-attribute ¶
+
+CONSOLE = 4
+ FALSE class-attribute instance-attribute ¶
+
+FALSE = 1
+ NOT_OP class-attribute instance-attribute ¶
+
+NOT_OP = 3
+ OP class-attribute instance-attribute ¶
+
+OP = 2
+ TRUE class-attribute instance-attribute ¶
+
+TRUE = 0
+ PermissionLevel ¶
+Bases: IntEnum
+
+Attributes:
+
+Name	Type	Description
+CONSOLE		
+DEFAULT		
+OP		
+ CONSOLE class-attribute instance-attribute ¶
+
+CONSOLE = 2
+ DEFAULT class-attribute instance-attribute ¶
+
+DEFAULT = 0
+ OP class-attribute instance-attribute ¶
+
+OP = 1
+
+Plugin
+ endstone.plugin ¶
+Classes relating to loading and managing plugins.
+
+Modules:
+
+Name	Description
+plugin_loader	
+Classes:
+
+Name	Description
+Plugin	Represents a Plugin
+PluginCommand	Represents a Command belonging to a Plugin
+PluginDescription	Represents the basic information about a plugin that the plugin loader needs to know.
+PluginLoadOrder	Represents the order in which a plugin should be initialized and enabled.
+PluginLoader	Represents a plugin loader, which handles direct access to specific types of plugins
+PluginManager	Represents a plugin manager that handles all plugins from the Server
+Service	Represents a list of methods.
+ServiceManager	Represent a service manager that manages services and service providers.
+ServicePriority	Represents various priorities of a provider.
+ Plugin ¶
+
+Plugin()
+Bases: Plugin
+
+Represents a Plugin
+
+Methods:
+
+Name	Description
+get_command	Gets the command with the given name, specific to this plugin.
+on_disable	Called when this plugin is disabled
+on_enable	Called when this plugin is enabled
+on_load	Called after a plugin is loaded but before it has been enabled.
+register_events	Registers all events defined in the given listener instance.
+reload_config	Returns the plugin's configuration loaded from config.toml.
+save_config	Saves the current configuration to the config.toml file.
+save_default_config	Saves the default config.toml file to the plugin's data folder.
+save_resources	Saves a packaged resource from the plugin module to the data folder.
+Attributes:
+
+Name	Type	Description
+api_version		
+authors		
+commands		
+config	dict	Returns the plugin's configuration loaded from config.toml.
+contributors		
+data_folder	Path	Returns the folder that the plugin data's files are located in.
+default_permission		
+depend		
+description		
+is_enabled	bool	Returns a value indicating whether this plugin is currently enabled
+load		
+load_before		
+logger	Logger	Returns the plugin logger associated with this server's logger.
+name	str	Returns the name of the plugin.
+permissions		
+plugin_loader	PluginLoader	Gets the associated PluginLoader responsible for this plugin
+prefix		
+provides		
+server	Server	Returns the Server instance currently running this plugin
+soft_depend		
+version		
+website		
+ api_version class-attribute instance-attribute ¶
+
+api_version = None
+ authors class-attribute instance-attribute ¶
+
+authors = None
+ commands class-attribute instance-attribute ¶
+
+commands = None
+ config property ¶
+
+config: dict
+Returns the plugin's configuration loaded from config.toml.
+
+Loads and returns the plugin’s configuration data from config.toml. If the configuration has not been loaded yet, it is automatically reloaded using reload_config().
+
+Returns:
+
+Name	Type	Description
+dict	dict	The plugin's configuration data.
+ contributors class-attribute instance-attribute ¶
+
+contributors = None
+ data_folder property ¶
+
+data_folder: Path
+Returns the folder that the plugin data's files are located in.
+
+ default_permission class-attribute instance-attribute ¶
+
+default_permission = None
+ depend class-attribute instance-attribute ¶
+
+depend = None
+ description class-attribute instance-attribute ¶
+
+description = None
+ is_enabled property ¶
+
+is_enabled: bool
+Returns a value indicating whether this plugin is currently enabled
+
+ load class-attribute instance-attribute ¶
+
+load = None
+ load_before class-attribute instance-attribute ¶
+
+load_before = None
+ logger property ¶
+
+logger: Logger
+Returns the plugin logger associated with this server's logger.
+
+ name property ¶
+
+name: str
+Returns the name of the plugin.
+
+ permissions class-attribute instance-attribute ¶
+
+permissions = None
+ plugin_loader property ¶
+
+plugin_loader: PluginLoader
+Gets the associated PluginLoader responsible for this plugin
+
+ prefix class-attribute instance-attribute ¶
+
+prefix = None
+ provides class-attribute instance-attribute ¶
+
+provides = None
+ server property ¶
+
+server: Server
+Returns the Server instance currently running this plugin
+
+ soft_depend class-attribute instance-attribute ¶
+
+soft_depend = None
+ version class-attribute instance-attribute ¶
+
+version = None
+ website class-attribute instance-attribute ¶
+
+website = None
+ get_command ¶
+
+get_command(name: str) -> PluginCommand
+Gets the command with the given name, specific to this plugin.
+
+ on_disable ¶
+
+on_disable() -> None
+Called when this plugin is disabled
+
+ on_enable ¶
+
+on_enable() -> None
+Called when this plugin is enabled
+
+ on_load ¶
+
+on_load() -> None
+Called after a plugin is loaded but before it has been enabled.
+
+ register_events ¶
+
+register_events(listener: object) -> None
+Registers all events defined in the given listener instance.
+
+Parameters:
+
+Name	Type	Description	Default
+listener	object	The listener object containing event handler methods to be registered.	required
+ reload_config ¶
+
+reload_config() -> dict
+Returns the plugin's configuration loaded from config.toml.
+
+Loads and returns the plugin’s configuration data from config.toml. If a default configuration file is packaged with the plugin, its values are used as defaults.
+
+Returns:
+
+Name	Type	Description
+dict	dict	The plugin's configuration data.
+ save_config ¶
+
+save_config() -> None
+Saves the current configuration to the config.toml file.
+
+ save_default_config ¶
+
+save_default_config() -> None
+Saves the default config.toml file to the plugin's data folder.
+
+If config.toml does not already exist in the plugin’s data folder, this method copies the default version from the plugin’s packaged resources. If the file already exists, the method does nothing and fails silently.
+
+ save_resources ¶
+
+save_resources(path: str, replace: bool = False) -> None
+Saves a packaged resource from the plugin module to the data folder.
+
+The method locates a resource bundled within the plugin’s package and copies it to the plugin’s data folder, preserving its relative directory structure. If the target file already exists, it will only be replaced if replace is set to True.
+
+Parameters:
+
+Name	Type	Description	Default
+path	str	The relative path to the resource inside the plugin’s package. Directory separators are normalized to forward slashes.	required
+replace	bool	Whether to overwrite the existing file if it already exists. Defaults to False.	False
+Raises:
+
+Type	Description
+FileNotFoundError	If the specified resource cannot be found in the package.
+OSError	If an error occurs while copying or creating directories.
+ PluginCommand ¶
+
+PluginCommand(
+    name: str,
+    description: str | None = None,
+    usages: list[str] | None = None,
+    aliases: list[str] | None = None,
+    permissions: list[str] | None = None,
+    *args,
+    **kwargs
+)
+Bases: Command
+
+Represents a Command belonging to a Plugin
+
+Attributes:
+
+Name	Type	Description
+executor	CommandExecutor	The CommandExecutor to run when parsing this command
+plugin	Plugin	The owner of this PluginCommand
+ executor property writable ¶
+
+executor: CommandExecutor
+The CommandExecutor to run when parsing this command
+
+ plugin property ¶
+
+plugin: Plugin
+The owner of this PluginCommand
+
+ PluginDescription ¶
+
+PluginDescription(
+    name: str,
+    version: str,
+    description: str | None = None,
+    load: PluginLoadOrder | None = None,
+    authors: list[str] | None = None,
+    contributors: list[str] | None = None,
+    website: str | None = None,
+    prefix: str | None = None,
+    provides: list[str] | None = None,
+    depend: list[str] | None = None,
+    soft_depend: list[str] | None = None,
+    load_before: list[str] | None = None,
+    default_permission: PermissionDefault | None = None,
+    commands: list[Command] | None = None,
+    permissions: list[Permission] | None = None,
+    *args,
+    **kwargs
+)
+Represents the basic information about a plugin that the plugin loader needs to know.
+
+Attributes:
+
+Name	Type	Description
+api_version	str	Gives the API version which this plugin is designed to support.
+authors	list[str]	Gives the list of authors for the plugin.
+commands	list[Command]	Gives the list of commands the plugin will register at runtime.
+contributors	list[str]	Gives the list of contributors for the plugin.
+default_permission	PermissionDefault	Gives the default value of permissions registered for the plugin.
+depend	list[str]	Gives a list of other plugins that the plugin requires.
+description	str	Gives a human-friendly description of the functionality the plugin provides.
+full_name	str	Returns the name of a plugin, including the version.
+load	PluginLoadOrder	Gives the phase of server startup that the plugin should be loaded.
+load_before	list[str]	Gets the list of plugins that should consider this plugin a soft-dependency.
+name	str	Gives the name of the plugin. This name is a unique identifier for plugins.
+permissions	list[Permission]	Gives the list of permissions the plugin will register at runtime, immediately proceeding enabling.
+prefix	str	Gives the token to prefix plugin-specific logging messages with.
+provides	list[str]	Gives the list of other plugin APIs which this plugin provides. These are usable for other plugins to depend on.
+soft_depend	list[str]	Gives a list of other plugins that the plugin requires for full functionality.
+version	str	Gives the version of the plugin.
+website	str	Gives the plugin's or plugin's author's website.
+ api_version property ¶
+
+api_version: str
+Gives the API version which this plugin is designed to support.
+
+ authors property ¶
+
+authors: list[str]
+Gives the list of authors for the plugin.
+
+ commands property ¶
+
+commands: list[Command]
+Gives the list of commands the plugin will register at runtime.
+
+ contributors property ¶
+
+contributors: list[str]
+Gives the list of contributors for the plugin.
+
+ default_permission property ¶
+
+default_permission: PermissionDefault
+Gives the default value of permissions registered for the plugin.
+
+ depend property ¶
+
+depend: list[str]
+Gives a list of other plugins that the plugin requires.
+
+ description property ¶
+
+description: str
+Gives a human-friendly description of the functionality the plugin provides.
+
+ full_name property ¶
+
+full_name: str
+Returns the name of a plugin, including the version.
+
+ load property ¶
+
+load: PluginLoadOrder
+Gives the phase of server startup that the plugin should be loaded.
+
+ load_before property ¶
+
+load_before: list[str]
+Gets the list of plugins that should consider this plugin a soft-dependency.
+
+ name property ¶
+
+name: str
+Gives the name of the plugin. This name is a unique identifier for plugins.
+
+ permissions property ¶
+
+permissions: list[Permission]
+Gives the list of permissions the plugin will register at runtime, immediately proceeding enabling.
+
+ prefix property ¶
+
+prefix: str
+Gives the token to prefix plugin-specific logging messages with.
+
+ provides property ¶
+
+provides: list[str]
+Gives the list of other plugin APIs which this plugin provides. These are usable for other plugins to depend on.
+
+ soft_depend property ¶
+
+soft_depend: list[str]
+Gives a list of other plugins that the plugin requires for full functionality.
+
+ version property ¶
+
+version: str
+Gives the version of the plugin.
+
+ website property ¶
+
+website: str
+Gives the plugin's or plugin's author's website.
+
+ PluginLoadOrder ¶
+Bases: Enum
+
+Represents the order in which a plugin should be initialized and enabled.
+
+Attributes:
+
+Name	Type	Description
+POSTWORLD		
+STARTUP		
+ POSTWORLD class-attribute instance-attribute ¶
+
+POSTWORLD = 1
+ STARTUP class-attribute instance-attribute ¶
+
+STARTUP = 0
+ PluginLoader ¶
+
+PluginLoader(server: Server)
+Represents a plugin loader, which handles direct access to specific types of plugins
+
+Methods:
+
+Name	Description
+disable_plugin	Disables the specified plugin
+enable_plugin	Enables the specified plugin
+load_plugin	Loads the plugin contained in the specified file
+load_plugins	Loads the plugin contained within the specified directory
+Attributes:
+
+Name	Type	Description
+plugin_file_filters	list[str]	Returns a list of all filename filters expected by this PluginLoader
+server	Server	Retrieves the Server object associated with the PluginLoader.
+ plugin_file_filters property ¶
+
+plugin_file_filters: list[str]
+Returns a list of all filename filters expected by this PluginLoader
+
+ server property ¶
+
+server: Server
+Retrieves the Server object associated with the PluginLoader.
+
+ disable_plugin ¶
+
+disable_plugin(plugin: Plugin) -> None
+Disables the specified plugin
+
+ enable_plugin ¶
+
+enable_plugin(plugin: Plugin) -> None
+Enables the specified plugin
+
+ load_plugin ¶
+
+load_plugin(file: str) -> Plugin
+Loads the plugin contained in the specified file
+
+ load_plugins ¶
+
+load_plugins(directory: str) -> list[Plugin]
+Loads the plugin contained within the specified directory
+
+ PluginManager ¶
+Represents a plugin manager that handles all plugins from the Server
+
+Methods:
+
+Name	Description
+call_event	Calls an event which will be passed to plugins.
+clear_plugins	Disables and removes all plugins
+disable_plugin	Disables the specified plugin
+disable_plugins	Disables all the loaded plugins
+enable_plugin	Enables the specified plugin
+enable_plugins	Enable all the loaded plugins
+get_default_perm_subscriptions	Gets a set containing all subscribed Permissibles to the given default list, by permission level.
+get_default_permissions	Gets the default permissions for the given permission level.
+get_permission	Gets a Permission from its fully qualified name.
+get_permission_subscriptions	Gets a set containing all subscribed Permissibles to the given permission.
+get_plugin	Checks if the given plugin is loaded and returns it when applicable.
+is_plugin_enabled	
+load_plugin	Loads the plugin in the specified file
+load_plugins	
+recalculate_permission_defaults	Recalculates the defaults for the given Permission.
+register_event	Registers the given event
+remove_permission	
+subscribe_to_default_perms	Subscribes to the given Default permissions by permission level.
+subscribe_to_permission	Subscribes the given Permissible for information about the requested Permission.
+unsubscribe_from_default_perms	Unsubscribes from the given Default permissions by permission level.
+unsubscribe_from_permission	Unsubscribes the given Permissible for information about the requested Permission.
+Attributes:
+
+Name	Type	Description
+permissions	set[Permission]	Gets a set of all registered permissions.
+plugins	list[Plugin]	Gets a list of all currently loaded plugins
+ permissions property ¶
+
+permissions: set[Permission]
+Gets a set of all registered permissions.
+
+ plugins property ¶
+
+plugins: list[Plugin]
+Gets a list of all currently loaded plugins
+
+ call_event ¶
+
+call_event(event: Event) -> None
+Calls an event which will be passed to plugins.
+
+ clear_plugins ¶
+
+clear_plugins() -> None
+Disables and removes all plugins
+
+ disable_plugin ¶
+
+disable_plugin(plugin: Plugin) -> None
+Disables the specified plugin
+
+ disable_plugins ¶
+
+disable_plugins() -> None
+Disables all the loaded plugins
+
+ enable_plugin ¶
+
+enable_plugin(plugin: Plugin) -> None
+Enables the specified plugin
+
+ enable_plugins ¶
+
+enable_plugins() -> None
+Enable all the loaded plugins
+
+ get_default_perm_subscriptions ¶
+
+get_default_perm_subscriptions(
+    level: PermissionLevel,
+) -> set[Permissible]
+Gets a set containing all subscribed Permissibles to the given default list, by permission level.
+
+ get_default_permissions ¶
+
+get_default_permissions(
+    level: PermissionLevel,
+) -> list[Permission]
+Gets the default permissions for the given permission level.
+
+ get_permission ¶
+
+get_permission(name: str) -> Permission
+Gets a Permission from its fully qualified name.
+
+ get_permission_subscriptions ¶
+
+get_permission_subscriptions(
+    permission: str,
+) -> set[Permissible]
+Gets a set containing all subscribed Permissibles to the given permission.
+
+ get_plugin ¶
+
+get_plugin(name: str) -> Plugin
+Checks if the given plugin is loaded and returns it when applicable.
+
+ is_plugin_enabled ¶
+
+is_plugin_enabled(plugin: str) -> bool
+
+is_plugin_enabled(plugin: Plugin) -> bool
+ load_plugin ¶
+
+load_plugin(file: str) -> Plugin
+Loads the plugin in the specified file
+
+ load_plugins ¶
+
+load_plugins(directory: str) -> list[Plugin]
+
+load_plugins(files: list[str]) -> list[Plugin]
+ recalculate_permission_defaults ¶
+
+recalculate_permission_defaults(perm: Permission) -> None
+Recalculates the defaults for the given Permission.
+
+ register_event ¶
+
+register_event(
+    name: str,
+    executor: Callable[[Event], None],
+    priority: EventPriority,
+    plugin: Plugin,
+    ignore_cancelled: bool,
+) -> None
+Registers the given event
+
+ remove_permission ¶
+
+remove_permission(perm: Permission) -> None
+
+remove_permission(name: str) -> None
+ subscribe_to_default_perms ¶
+
+subscribe_to_default_perms(
+    level: PermissionLevel, permissible: Permissible
+) -> None
+Subscribes to the given Default permissions by permission level.
+
+ subscribe_to_permission ¶
+
+subscribe_to_permission(
+    permission: str, permissible: Permissible
+) -> None
+Subscribes the given Permissible for information about the requested Permission.
+
+ unsubscribe_from_default_perms ¶
+
+unsubscribe_from_default_perms(
+    level: PermissionLevel, permissible: Permissible
+) -> None
+Unsubscribes from the given Default permissions by permission level.
+
+ unsubscribe_from_permission ¶
+
+unsubscribe_from_permission(
+    permission: str, permissible: Permissible
+) -> None
+Unsubscribes the given Permissible for information about the requested Permission.
+
+ Service ¶
+
+Service()
+Represents a list of methods.
+
+ ServiceManager ¶
+Represent a service manager that manages services and service providers.
+
+Methods:
+
+Name	Description
+load	
+register	Register a provider of a service.
+unregister	
+unregister_all	Unregister all the services registered by a particular plugin.
+ load ¶
+
+load(name: str) -> Service
+ register ¶
+
+register(
+    name: str,
+    provider: Service,
+    plugin: Plugin,
+    priority: ServicePriority,
+) -> None
+Register a provider of a service.
+
+ unregister ¶
+
+unregister(name: str, provider: Service) -> None
+
+unregister(provider: Service) -> None
+ unregister_all ¶
+
+unregister_all(plugin: Plugin) -> None
+Unregister all the services registered by a particular plugin.
+
+ ServicePriority ¶
+Bases: IntEnum
+
+Represents various priorities of a provider.
+
+Attributes:
+
+Name	Type	Description
+HIGH		
+HIGHEST		
+LOW		
+LOWEST		
+NORMAL		
+ HIGH class-attribute instance-attribute ¶
+
+HIGH = 3
+ HIGHEST class-attribute instance-attribute ¶
+
+HIGHEST = 4
+ LOW class-attribute instance-attribute ¶
+
+LOW = 1
+ LOWEST class-attribute instance-attribute ¶
+
+LOWEST = 0
+ NORMAL class-attribute instance-attribute ¶
+
+NORMAL = 2
+
+Scoreboard
+ endstone.scoreboard ¶
+Classes relating to manage the client side score display system.
+
+Classes:
+
+Name	Description
+Criteria	Represents a scoreboard criteria.
+DisplaySlot	Locations for displaying objectives to the player
+Objective	Represents an objective on a scoreboard that can show scores specific to entries.
+ObjectiveSortOrder	Represents the sort order of objectives on a DisplaySlot.
+RenderType	Controls the way in which an Objective is rendered on the client side.
+Score	Represents a score for an objective on a scoreboard.
+Scoreboard	Represents a scoreboard
+ Criteria ¶
+Represents a scoreboard criteria.
+
+Classes:
+
+Name	Description
+Type	Represents a scoreboard criteria.
+Attributes:
+
+Name	Type	Description
+DUMMY		
+default_render_type	RenderType	
+is_read_only	bool	
+name	str	
+ DUMMY class-attribute instance-attribute ¶
+
+DUMMY = DUMMY
+ default_render_type property ¶
+
+default_render_type: RenderType
+ is_read_only property ¶
+
+is_read_only: bool
+ name property ¶
+
+name: str
+ Type ¶
+Bases: Enum
+
+Represents a scoreboard criteria.
+
+Attributes:
+
+Name	Type	Description
+DUMMY		The dummy criteria. Not changed by the server.
+ DUMMY class-attribute instance-attribute ¶
+
+DUMMY = 0
+The dummy criteria. Not changed by the server.
+
+ DisplaySlot ¶
+Bases: Enum
+
+Locations for displaying objectives to the player
+
+Attributes:
+
+Name	Type	Description
+BELOW_NAME		Displays the score below the player's name.
+PLAYER_LIST		Displays the score in the player list on the pause screen.
+SIDE_BAR		Displays the score on the side of the player's screen.
+ BELOW_NAME class-attribute instance-attribute ¶
+
+BELOW_NAME = 0
+Displays the score below the player's name.
+
+ PLAYER_LIST class-attribute instance-attribute ¶
+
+PLAYER_LIST = 1
+Displays the score in the player list on the pause screen.
+
+ SIDE_BAR class-attribute instance-attribute ¶
+
+SIDE_BAR = 2
+Displays the score on the side of the player's screen.
+
+ Objective ¶
+Represents an objective on a scoreboard that can show scores specific to entries.
+
+Methods:
+
+Name	Description
+get_score	Gets an entry's Score for this objective
+set_display	Sets the display slot and sort order for this objective. This will remove it from any other display slot.
+unregister	Unregisters this objective from the associated Scoreboard.
+Attributes:
+
+Name	Type	Description
+criteria	Criteria	Gets the criteria this objective tracks
+display_name	str	Gets or sets the name displayed to players for this objective
+display_slot	DisplaySlot | None	Gets or sets the display slot this objective is displayed at
+is_displayed	bool	Gets if the objective is currently displayed in a slot.
+is_modifiable	bool	Gets if the objective's scores can be modified directly by a plugin
+name	str	Gets the name of this Objective
+render_type	RenderType	Gets the manner in which this objective will be rendered.
+scoreboard	Scoreboard	Gets the scoreboard to which this objective is attached
+sort_order	ObjectiveSortOrder | None	Gets or sets the sort order for this objective
+ criteria property ¶
+
+criteria: Criteria
+Gets the criteria this objective tracks
+
+ display_name property writable ¶
+
+display_name: str
+Gets or sets the name displayed to players for this objective
+
+ display_slot property writable ¶
+
+display_slot: DisplaySlot | None
+Gets or sets the display slot this objective is displayed at
+
+ is_displayed property ¶
+
+is_displayed: bool
+Gets if the objective is currently displayed in a slot.
+
+ is_modifiable property ¶
+
+is_modifiable: bool
+Gets if the objective's scores can be modified directly by a plugin
+
+ name property ¶
+
+name: str
+Gets the name of this Objective
+
+ render_type property ¶
+
+render_type: RenderType
+Gets the manner in which this objective will be rendered.
+
+ scoreboard property ¶
+
+scoreboard: Scoreboard
+Gets the scoreboard to which this objective is attached
+
+ sort_order property writable ¶
+
+sort_order: ObjectiveSortOrder | None
+Gets or sets the sort order for this objective
+
+ get_score ¶
+
+get_score(entry: Player | Actor | str) -> Score
+Gets an entry's Score for this objective
+
+ set_display ¶
+
+set_display(
+    slot: DisplaySlot | None,
+    order: ObjectiveSortOrder = ASCENDING,
+) -> None
+Sets the display slot and sort order for this objective. This will remove it from any other display slot.
+
+ unregister ¶
+
+unregister() -> None
+Unregisters this objective from the associated Scoreboard.
+
+ ObjectiveSortOrder ¶
+Bases: Enum
+
+Represents the sort order of objectives on a DisplaySlot.
+
+Attributes:
+
+Name	Type	Description
+ASCENDING		Sorts the objectives in the ascending order
+DESCENDING		Sorts the objectives in the descending order
+ ASCENDING class-attribute instance-attribute ¶
+
+ASCENDING = 0
+Sorts the objectives in the ascending order
+
+ DESCENDING class-attribute instance-attribute ¶
+
+DESCENDING = 1
+Sorts the objectives in the descending order
+
+ RenderType ¶
+Bases: Enum
+
+Controls the way in which an Objective is rendered on the client side.
+
+Attributes:
+
+Name	Type	Description
+HEARTS		
+INTEGER		
+ HEARTS class-attribute instance-attribute ¶
+
+HEARTS = 1
+ INTEGER class-attribute instance-attribute ¶
+
+INTEGER = 0
+ Score ¶
+Represents a score for an objective on a scoreboard.
+
+Attributes:
+
+Name	Type	Description
+entry	Player | Actor | str	Gets the entry being tracked by this Score
+is_score_set	bool	Shows if this score has been set at any point in time.
+objective	Objective	Gets the Objective being tracked by this Score.
+scoreboard	Scoreboard	Gets the scoreboard for the associated objective.
+value	int	Gets or sets the current score.
+ entry property ¶
+
+entry: Player | Actor | str
+Gets the entry being tracked by this Score
+
+ is_score_set property ¶
+
+is_score_set: bool
+Shows if this score has been set at any point in time.
+
+ objective property ¶
+
+objective: Objective
+Gets the Objective being tracked by this Score.
+
+ scoreboard property ¶
+
+scoreboard: Scoreboard
+Gets the scoreboard for the associated objective.
+
+ value property writable ¶
+
+value: int
+Gets or sets the current score.
+
+ Scoreboard ¶
+Represents a scoreboard
+
+Methods:
+
+Name	Description
+add_objective	Registers an Objective on this Scoreboard with a name displayed to players
+clear_slot	Clears any objective in the specified slot
+get_objective	
+get_objectives_by_criteria	Gets all Objectives of a Criteria on the Scoreboard
+get_scores	Gets all scores for an entry on this Scoreboard
+reset_scores	Removes all scores for an entry on this Scoreboard
+Attributes:
+
+Name	Type	Description
+entries	list[Player | Actor | str]	Gets all entries tracked by this Scoreboard
+objectives	list[Objective]	Gets all Objectives on this Scoreboard
+ entries property ¶
+
+entries: list[Player | Actor | str]
+Gets all entries tracked by this Scoreboard
+
+ objectives property ¶
+
+objectives: list[Objective]
+Gets all Objectives on this Scoreboard
+
+ add_objective ¶
+
+add_objective(
+    name: str,
+    criteria: Type,
+    display_name: str | None = None,
+    render_type: RenderType = INTEGER,
+) -> Objective
+Registers an Objective on this Scoreboard with a name displayed to players
+
+ clear_slot ¶
+
+clear_slot(slot: DisplaySlot) -> None
+Clears any objective in the specified slot
+
+ get_objective ¶
+
+get_objective(name: str) -> Objective
+
+get_objective(slot: DisplaySlot) -> Objective
+ get_objectives_by_criteria ¶
+
+get_objectives_by_criteria(
+    criteria: Type,
+) -> list[Objective]
+Gets all Objectives of a Criteria on the Scoreboard
+
+ get_scores ¶
+
+get_scores(entry: Player | Actor | str) -> list[Score]
+Gets all scores for an entry on this Scoreboard
+
+ reset_scores ¶
+
+reset_scores(entry: Player | Actor | str) -> None
+Removes all scores for an entry on this Scoreboard
+
+Scheduler
+ endstone.scheduler ¶
+Classes relating to letting plugins run code at specific time intervals.
+
+Classes:
+
+Name	Description
+Scheduler	Represents a scheduler that executes various tasks
+Task	Represents a task being executed by the scheduler
+ Scheduler ¶
+Represents a scheduler that executes various tasks
+
+Methods:
+
+Name	Description
+cancel_task	Removes task from scheduler.
+cancel_tasks	Removes all tasks associated with a particular plugin from the scheduler.
+get_pending_tasks	Returns a vector of all pending tasks.
+is_queued	Check if the task queued to be run later.
+is_running	Check if the task currently running.
+run_task	Returns a task that will be executed synchronously
+ cancel_task ¶
+
+cancel_task(id: int) -> None
+Removes task from scheduler.
+
+ cancel_tasks ¶
+
+cancel_tasks(plugin: Plugin) -> None
+Removes all tasks associated with a particular plugin from the scheduler.
+
+ get_pending_tasks ¶
+
+get_pending_tasks() -> list[Task]
+Returns a vector of all pending tasks.
+
+ is_queued ¶
+
+is_queued(id: int) -> bool
+Check if the task queued to be run later.
+
+ is_running ¶
+
+is_running(id: int) -> bool
+Check if the task currently running.
+
+ run_task ¶
+
+run_task(
+    plugin: Plugin,
+    task: Callable[[], None],
+    delay: int = 0,
+    period: int = 0,
+) -> Task
+Returns a task that will be executed synchronously
+
+ Task ¶
+Represents a task being executed by the scheduler
+
+Methods:
+
+Name	Description
+cancel	Attempts to cancel this task.
+Attributes:
+
+Name	Type	Description
+is_cancelled	bool	Returns true if the task has been cancelled.
+is_sync	bool	Returns true if the task is run by server thread.
+owner	Plugin	Returns the Plugin that owns the task.
+task_id	int	Returns the task id.
+ is_cancelled property ¶
+
+is_cancelled: bool
+Returns true if the task has been cancelled.
+
+ is_sync property ¶
+
+is_sync: bool
+Returns true if the task is run by server thread.
+
+ owner property ¶
+
+owner: Plugin
+Returns the Plugin that owns the task.
+
+ task_id property ¶
+
+task_id: int
+Returns the task id.
+
+ cancel ¶
+
+cancel() -> None
+Attempts to cancel this task.
+
+Miscellaneous
+ endstone.ColorFormat ¶
+All supported color and format codes.
+
+Attributes:
+
+Name	Type	Description
+AQUA		
+BLACK		
+BLUE		
+BOLD		
+DARK_AQUA		
+DARK_BLUE		
+DARK_GRAY		
+DARK_GREEN		
+DARK_PURPLE		
+DARK_RED		
+GOLD		
+GRAY		
+GREEN		
+ITALIC		
+LIGHT_PURPLE		
+MATERIAL_AMETHYST		
+MATERIAL_COPPER		
+MATERIAL_DIAMOND		
+MATERIAL_EMERALD		
+MATERIAL_GOLD		
+MATERIAL_IRON		
+MATERIAL_LAPIS		
+MATERIAL_NETHERITE		
+MATERIAL_QUARTZ		
+MATERIAL_REDSTONE		
+MATERIAL_RESIN		
+MINECOIN_GOLD		
+OBFUSCATED		
+RED		
+RESET		
+WHITE		
+YELLOW		
+ AQUA class-attribute instance-attribute ¶
+
+AQUA = '§b'
+ BLACK class-attribute instance-attribute ¶
+
+BLACK = '§0'
+ BLUE class-attribute instance-attribute ¶
+
+BLUE = '§9'
+ BOLD class-attribute instance-attribute ¶
+
+BOLD = '§l'
+ DARK_AQUA class-attribute instance-attribute ¶
+
+DARK_AQUA = '§3'
+ DARK_BLUE class-attribute instance-attribute ¶
+
+DARK_BLUE = '§1'
+ DARK_GRAY class-attribute instance-attribute ¶
+
+DARK_GRAY = '§8'
+ DARK_GREEN class-attribute instance-attribute ¶
+
+DARK_GREEN = '§2'
+ DARK_PURPLE class-attribute instance-attribute ¶
+
+DARK_PURPLE = '§5'
+ DARK_RED class-attribute instance-attribute ¶
+
+DARK_RED = '§4'
+ GOLD class-attribute instance-attribute ¶
+
+GOLD = '§6'
+ GRAY class-attribute instance-attribute ¶
+
+GRAY = '§7'
+ GREEN class-attribute instance-attribute ¶
+
+GREEN = '§a'
+ ITALIC class-attribute instance-attribute ¶
+
+ITALIC = '§o'
+ LIGHT_PURPLE class-attribute instance-attribute ¶
+
+LIGHT_PURPLE = '§d'
+ MATERIAL_AMETHYST class-attribute instance-attribute ¶
+
+MATERIAL_AMETHYST = '§u'
+ MATERIAL_COPPER class-attribute instance-attribute ¶
+
+MATERIAL_COPPER = '§n'
+ MATERIAL_DIAMOND class-attribute instance-attribute ¶
+
+MATERIAL_DIAMOND = '§s'
+ MATERIAL_EMERALD class-attribute instance-attribute ¶
+
+MATERIAL_EMERALD = '§q'
+ MATERIAL_GOLD class-attribute instance-attribute ¶
+
+MATERIAL_GOLD = '§p'
+ MATERIAL_IRON class-attribute instance-attribute ¶
+
+MATERIAL_IRON = '§i'
+ MATERIAL_LAPIS class-attribute instance-attribute ¶
+
+MATERIAL_LAPIS = '§t'
+ MATERIAL_NETHERITE class-attribute instance-attribute ¶
+
+MATERIAL_NETHERITE = '§j'
+ MATERIAL_QUARTZ class-attribute instance-attribute ¶
+
+MATERIAL_QUARTZ = '§h'
+ MATERIAL_REDSTONE class-attribute instance-attribute ¶
+
+MATERIAL_REDSTONE = '§m'
+ MATERIAL_RESIN class-attribute instance-attribute ¶
+
+MATERIAL_RESIN = '§v'
+ MINECOIN_GOLD class-attribute instance-attribute ¶
+
+MINECOIN_GOLD = '§g'
+ OBFUSCATED class-attribute instance-attribute ¶
+
+OBFUSCATED = '§k'
+ RED class-attribute instance-attribute ¶
+
+RED = '§c'
+ RESET class-attribute instance-attribute ¶
+
+RESET = '§r'
+ WHITE class-attribute instance-attribute ¶
+
+WHITE = '§f'
+ YELLOW class-attribute instance-attribute ¶
+
+YELLOW = '§e'
+ endstone.GameMode ¶
+Bases: Enum
+
+Represents the various type of game modes that Players may have.
+
+Attributes:
+
+Name	Type	Description
+ADVENTURE		
+CREATIVE		
+SPECTATOR		
+SURVIVAL		
+ ADVENTURE class-attribute instance-attribute ¶
+
+ADVENTURE = 2
+ CREATIVE class-attribute instance-attribute ¶
+
+CREATIVE = 1
+ SPECTATOR class-attribute instance-attribute ¶
+
+SPECTATOR = 3
+ SURVIVAL class-attribute instance-attribute ¶
+
+SURVIVAL = 0
+ endstone.Logger ¶
+Logger class which can format and output varies levels of logs.
+
+Classes:
+
+Name	Description
+Level	Specifies the log level.
+Methods:
+
+Name	Description
+critical	Log a message at the CRITICAL level.
+debug	Log a message at the DEBUG level.
+error	Log a message at the ERROR level.
+info	Log a message at the INFO level.
+is_enabled_for	Check if the Logger instance is enabled for the given log Level.
+set_level	Set the logging level for this Logger instance.
+trace	Log a message at the TRACE level.
+warning	Log a message at the WARNING level.
+Attributes:
+
+Name	Type	Description
+CRITICAL		
+DEBUG		
+ERROR		
+INFO		
+TRACE		
+WARNING		
+name	str	Get the name of this Logger instance.
+ CRITICAL class-attribute instance-attribute ¶
+
+CRITICAL = CRITICAL
+ DEBUG class-attribute instance-attribute ¶
+
+DEBUG = DEBUG
+ ERROR class-attribute instance-attribute ¶
+
+ERROR = ERROR
+ INFO class-attribute instance-attribute ¶
+
+INFO = INFO
+ TRACE class-attribute instance-attribute ¶
+
+TRACE = TRACE
+ WARNING class-attribute instance-attribute ¶
+
+WARNING = WARNING
+ name property ¶
+
+name: str
+Get the name of this Logger instance.
+
+ Level ¶
+Bases: IntEnum
+
+Specifies the log level.
+
+Attributes:
+
+Name	Type	Description
+CRITICAL		
+DEBUG		
+ERROR		
+INFO		
+TRACE		
+WARNING		
+ CRITICAL class-attribute instance-attribute ¶
+
+CRITICAL = 5
+ DEBUG class-attribute instance-attribute ¶
+
+DEBUG = 1
+ ERROR class-attribute instance-attribute ¶
+
+ERROR = 4
+ INFO class-attribute instance-attribute ¶
+
+INFO = 2
+ TRACE class-attribute instance-attribute ¶
+
+TRACE = 0
+ WARNING class-attribute instance-attribute ¶
+
+WARNING = 3
+ critical ¶
+
+critical(message: str) -> None
+Log a message at the CRITICAL level.
+
+ debug ¶
+
+debug(message: str) -> None
+Log a message at the DEBUG level.
+
+ error ¶
+
+error(message: str) -> None
+Log a message at the ERROR level.
+
+ info ¶
+
+info(message: str) -> None
+Log a message at the INFO level.
+
+ is_enabled_for ¶
+
+is_enabled_for(level: Level) -> bool
+Check if the Logger instance is enabled for the given log Level.
+
+ set_level ¶
+
+set_level(level: Level) -> None
+Set the logging level for this Logger instance.
+
+ trace ¶
+
+trace(message: str) -> None
+Log a message at the TRACE level.
+
+ warning ¶
+
+warning(message: str) -> None
+Log a message at the WARNING level.
+
+ endstone.Registry ¶
+Bases: Generic[_T]
+
+Presents a registry
+
+Methods:
+
+Name	Description
+get	Get the object by its key.
+get_or_throw	Get the object by its key or throw if missing.
+ get ¶
+
+get(key: str) -> _T | None
+Get the object by its key.
+
+ get_or_throw ¶
+
+get_or_throw(key: str) -> _T
+Get the object by its key or throw if missing.
+
+ endstone.util ¶
+Multi and single purpose classes.
+
+Classes:
+
+Name	Description
+SocketAddress	Represents an IP Socket Address (hostname + port number).
+Vector	Represents a 3-dimensional vector.
+ SocketAddress ¶
+
+SocketAddress()
+
+SocketAddress(hostname: str, port: int)
+Represents an IP Socket Address (hostname + port number).
+
+Attributes:
+
+Name	Type	Description
+hostname	str	Gets the hostname.
+port	int	Gets the port number.
+ hostname property ¶
+
+hostname: str
+Gets the hostname.
+
+ port property ¶
+
+port: int
+Gets the port number.
+
+ Vector ¶
+
+Vector()
+
+Vector(x: float, y: float, z: float)
+Represents a 3-dimensional vector.
+
+Methods:
+
+Name	Description
+angle	Gets the angle between this vector and another in radians.
+cross_product	Calculates the cross-product of this vector with another.
+distance	The distance between this Vector and another
+distance_squared	The squared distance between this Vector and another
+dot	Calculates the dot product of this vector with another.
+is_in_aabb	Returns whether this vector is in an axis-aligned bounding box.
+is_in_sphere	Returns whether this vector is within a sphere.
+midpoint	Gets a new midpoint vector between this vector and another.
+normalize	Converts this vector to a unit vector (a vector with length of 1).
+normalize_zero	Converts each component of value -0.0 to 0.0
+rotate_around_axis	Rotates the vector around a given arbitrary axis in 3-dimensional space.
+rotate_around_x	Rotates the vector around the x-axis.
+rotate_around_y	Rotates the vector around the y-axis.
+rotate_around_z	Rotates the vector around the z-axis.
+zero	Zero this vector's components.
+Attributes:
+
+Name	Type	Description
+block_x	int	Gets the floored value of the X component, indicating the block that this vector is contained with.
+block_y	int	Gets the floored value of the Y component, indicating the block that this vector is contained with.
+block_z	int	Gets the floored value of the Z component, indicating the block that this vector is contained with.
+is_normalized	bool	Returns if a vector is normalized.
+is_zero	bool	Check whether or not each component of this vector is equal to 0.
+length	float	The magnitude of the Vector
+length_squared	float	The squared magnitude of the Vector
+x	float	The X component of the vector
+y	float	The Y component of the vector
+z	float	The Z component of the vector
+ block_x property ¶
+
+block_x: int
+Gets the floored value of the X component, indicating the block that this vector is contained with.
+
+ block_y property ¶
+
+block_y: int
+Gets the floored value of the Y component, indicating the block that this vector is contained with.
+
+ block_z property ¶
+
+block_z: int
+Gets the floored value of the Z component, indicating the block that this vector is contained with.
+
+ is_normalized property ¶
+
+is_normalized: bool
+Returns if a vector is normalized.
+
+ is_zero property ¶
+
+is_zero: bool
+Check whether or not each component of this vector is equal to 0.
+
+ length property ¶
+
+length: float
+The magnitude of the Vector
+
+ length_squared property ¶
+
+length_squared: float
+The squared magnitude of the Vector
+
+ x property writable ¶
+
+x: float
+The X component of the vector
+
+ y property writable ¶
+
+y: float
+The Y component of the vector
+
+ z property writable ¶
+
+z: float
+The Z component of the vector
+
+ angle ¶
+
+angle(other: Vector) -> float
+Gets the angle between this vector and another in radians.
+
+ cross_product ¶
+
+cross_product(other: Vector) -> Vector
+Calculates the cross-product of this vector with another.
+
+ distance ¶
+
+distance(other: Vector) -> float
+The distance between this Vector and another
+
+ distance_squared ¶
+
+distance_squared(other: Vector) -> float
+The squared distance between this Vector and another
+
+ dot ¶
+
+dot(other: Vector) -> float
+Calculates the dot product of this vector with another.
+
+ is_in_aabb ¶
+
+is_in_aabb(min: Vector, max: Vector) -> bool
+Returns whether this vector is in an axis-aligned bounding box.
+
+ is_in_sphere ¶
+
+is_in_sphere(origin: Vector, radius: float) -> bool
+Returns whether this vector is within a sphere.
+
+ midpoint ¶
+
+midpoint(other: Vector) -> Vector
+Gets a new midpoint vector between this vector and another.
+
+ normalize ¶
+
+normalize() -> Vector
+Converts this vector to a unit vector (a vector with length of 1).
+
+ normalize_zero ¶
+
+normalize_zero() -> Vector
+Converts each component of value -0.0 to 0.0
+
+ rotate_around_axis ¶
+
+rotate_around_axis(
+    axis: Vector, angle: float, normalize: bool = True
+) -> Vector
+Rotates the vector around a given arbitrary axis in 3-dimensional space.
+
+ rotate_around_x ¶
+
+rotate_around_x(angle: float) -> Vector
+Rotates the vector around the x-axis.
+
+ rotate_around_y ¶
+
+rotate_around_y(angle: float) -> Vector
+Rotates the vector around the y-axis.
+
+ rotate_around_z ¶
+
+rotate_around_z(angle: float) -> Vector
+Rotates the vector around the z-axis.
+
+ zero ¶
+
+zero() -> Vector
+Zero this vector's components.

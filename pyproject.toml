@@ -7,15 +7,16 @@ name = "endstone-yessential"
 version = "0.1.0"
 dependencies = []
 authors = [
-    { name = "Nico6719", email = "hello@endstone.dev" },
+    { name = "Nico6719", email = "nico6719@qq.com" },
+    { name = "MengHanLOVE", email = "2193438288@qq.com" }
 ]
-description = "Python example plugin for Endstone servers"
+description = "基于 Endstone 的 YEssential"
 readme = "README.md"
-license = { file = "LICENSE" }
-keywords = ["endstone", "plugin"]
+license-files = ["LICEN[CS]E*"]
+keywords = ["endstone", "plugin", "essential", "yessential", "tpa", "money", "shop"]
 
 [project.urls]
-Homepage = "https://github.com/EndstoneMC/python-example-plugin"
+Homepage = "https://github.com/Nico6719/YEssential-For-Endstone"
 
 [project.entry-points."endstone"]
-example = "endstone_example:ExamplePlugin"
+yessential = "endstone_yessential:YEssentialPlugin"
