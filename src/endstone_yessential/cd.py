@@ -3,7 +3,7 @@ import os
 import time
 from typing import Dict, List, Any, Optional
 from endstone import Player
-from endstone.form import ActionForm, ModalForm, CustomForm
+from endstone.form import ActionForm, ModalForm, Dropdown, TextInput, Label
 from endstone.command import Command, CommandSender
 
 class MenuConfigManager:
@@ -424,18 +424,20 @@ class MenuAdminHandler:
         current_money_type = self.config_manager.get_money()
         current_score = self.config_manager.get_score()
 
-        form = CustomForm(title="设置经济参数")
-        form.add_dropdown("选择经济模式", ["计分板", "LLMoney"], money_type if money_type is not None else current_money_type)
-        form.add_input("输入计分板项", f"当前: {current_score}", score_name if score_name else "")
-
+        controls = [
+            Dropdown(label="选择经济模式", options=["计分板", "LLMoney"], default_index=money_type if money_type is not None else current_money_type),
+            TextInput(label="输入计分板项", placeholder=f"当前: {current_score}", default_value=score_name if score_name else "")
+        ]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="设置经济参数", controls=controls)
 
         def on_submit(p, data):
             if not data:
                 self.show_main_settings(player)
                 return
-            selected_money_type = data[0]
+            selected_money_type = int(data[0])
             input_score = data[1].strip() if data[1] else ""
 
             if selected_money_type == current_money_type and input_score == "":
@@ -487,14 +489,16 @@ class MenuAdminHandler:
             self.show_add_menu(player)
             return
 
-        form = CustomForm(title="添加二级菜单")
-        form.add_dropdown("选择上级菜单", file_options, form_data.get("parentIndex", 0))
-        form.add_input("二级菜单文件名称", "例如: aaa", form_data.get("fileName", ""))
-        form.add_input("二级菜单标题", "例如: 二级菜单", form_data.get("title", ""))
-        form.add_input("二级菜单提示", "例如: 选择:", form_data.get("content", ""))
-
+        controls = [
+            Dropdown(label="选择上级菜单", options=file_options, default_index=form_data.get("parentIndex", 0)),
+            TextInput(label="二级菜单文件名称", placeholder="例如: aaa", default_value=form_data.get("fileName", "")),
+            TextInput(label="二级菜单标题", placeholder="例如: 二级菜单", default_value=form_data.get("title", "")),
+            TextInput(label="二级菜单提示", placeholder="例如: 选择:", default_value=form_data.get("content", ""))
+        ]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="添加二级菜单", controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -543,16 +547,18 @@ class MenuAdminHandler:
         file_options = [MenuDataManager.get_default_sub_menu().get("title", "菜单") + " | " + f for f in menu_files]
         button_types = ["玩家二级菜单", "管理员二级菜单", "玩家执行指令", "管理员执行指令"]
 
-        form = CustomForm(title="添加菜单按钮")
-        form.add_dropdown("选择菜单文件", file_options, form_data.get("fileIndex", 0))
-        form.add_dropdown("选择按钮类型", button_types, form_data.get("buttonType", 0))
-        form.add_input("按钮标题", "例如: 说你好", form_data.get("buttonText", ""))
-        form.add_input("按钮执行指令", "例如: say @a 你好", form_data.get("command", ""))
-        form.add_input("按钮所需金币", "例如: 999", str(form_data.get("money", "")))
-        form.add_input("按钮位置(0为首)", "例如: 0", str(form_data.get("position", "")))
-
+        controls = [
+            Dropdown(label="选择菜单文件", options=file_options, default_index=form_data.get("fileIndex", 0)),
+            Dropdown(label="选择按钮类型", options=button_types, default_index=form_data.get("buttonType", 0)),
+            TextInput(label="按钮标题", placeholder="例如: 说你好", default_value=form_data.get("buttonText", "")),
+            TextInput(label="按钮执行指令", placeholder="例如: say @a 你好", default_value=form_data.get("command", "")),
+            TextInput(label="按钮所需金币", placeholder="例如: 999", default_value=str(form_data.get("money", ""))),
+            TextInput(label="按钮位置(0为首)", placeholder="例如: 0", default_value=str(form_data.get("position", "")))
+        ]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="添加菜单按钮", controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -743,12 +749,14 @@ class MenuAdminHandler:
     def show_edit_menu_info_form(self, player: Player, file_name: str, error: str = None):
         menu_data = self.data_manager.get_menu(file_name)
 
-        form = CustomForm(title="修改菜单: " + file_name)
-        form.add_input("菜单标题", f"当前: {menu_data.get('title', '')}", menu_data.get('title', ''))
-        form.add_input("菜单内容", f"当前: {menu_data.get('content', '')}", menu_data.get('content', ''))
-
+        controls = [
+            TextInput(label="菜单标题", placeholder=f"当前: {menu_data.get('title', '')}", default_value=menu_data.get('title', '')),
+            TextInput(label="菜单内容", placeholder=f"当前: {menu_data.get('content', '')}", default_value=menu_data.get('content', ''))
+        ]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="修改菜单: " + file_name, controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -829,14 +837,16 @@ class MenuAdminHandler:
             raw_type = "comm"
         current_type_index = type_map.index(raw_type) if raw_type in type_map else 0
 
-        form = CustomForm(title="修改按钮: " + button.get("text", ""))
-        form.add_dropdown("按钮类型", button_types, current_type_index)
-        form.add_input("按钮标题", "例如: 说你好", button.get("text", ""))
-        form.add_input("按钮执行指令", "例如: say @a 你好", button.get("command", ""))
-        form.add_input("按钮所需金币", "例如: 999", str(button.get("money", 0)))
-
+        controls = [
+            Dropdown(label="按钮类型", options=button_types, default_index=current_type_index),
+            TextInput(label="按钮标题", placeholder="例如: 说你好", default_value=button.get("text", "")),
+            TextInput(label="按钮执行指令", placeholder="例如: say @a 你好", default_value=button.get("command", "")),
+            TextInput(label="按钮所需金币", placeholder="例如: 999", default_value=str(button.get("money", 0)))
+        ]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="修改按钮: " + button.get("text", ""), controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -875,17 +885,18 @@ class MenuAdminHandler:
         files = MenuUtils.get_menu_files(config_manager=self.config_manager)
         main_file = self.config_manager.get_main()
 
-        form = CustomForm(title="其他设置")
         options = ["不修改"] + [f.replace(".json", "") for f in files]
         default_index = 0
         for i, f in enumerate(files):
             if f.replace(".json", "") == main_file:
                 default_index = i + 1
                 break
-        form.add_dropdown(f"主菜单文件（当前: {main_file}）", options, default_index)
 
+        controls = [Dropdown(label=f"主菜单文件（当前: {main_file}）", options=options, default_index=default_index)]
         if error:
-            form.add_label(error)
+            controls.append(Label(text=error))
+
+        form = ModalForm(title="其他设置", controls=controls)
 
         def on_submit(p, data):
             if not data:

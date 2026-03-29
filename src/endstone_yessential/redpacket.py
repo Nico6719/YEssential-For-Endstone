@@ -5,7 +5,7 @@ import random
 import threading
 from typing import Dict, List, Any, Optional
 from endstone import Player
-from endstone.form import ActionForm, CustomForm
+from endstone.form import ActionForm
 
 class RedpacketDB:
     def __init__(self, plugin):
