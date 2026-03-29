@@ -1,4 +1,5 @@
-from endstone import Player, Location
+from endstone import Player
+from endstone.level import Location
 from endstone.form import ActionForm
 
 class HubSystem:

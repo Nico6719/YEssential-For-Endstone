@@ -1,13 +1,8 @@
 from typing import Optional
-from endstone import Player
-from endstone.command import CommandSender
-import asyncio
 
 class MaintenanceSystem:
     def __init__(self, plugin):
         self.plugin = plugin
-        self._motd_task: Optional[asyncio.Task] = None
-        self._original_motd: Optional[str] = None
     
     @property
     def config(self):
@@ -33,22 +28,15 @@ class MaintenanceSystem:
         self.set_status(new_state)
         return new_state
     
-    async def enable(self):
-        if self._motd_task:
-            self._motd_task.cancel()
-            self._motd_task = None
-        
-        wh_config = self.config
-        self.plugin.server.set_motd(wh_config.get("whmotdmsg", "服务器维护中，请勿进入！"))
-        
+    def enable(self):
         for player in self.plugin.server.online_players:
             if not player.is_op and not player.is_simulated_player():
-                player.kick(wh_config.get("whgamemsg", "服务器正在维护中，请您稍后再来!"))
+                player.kick(self.config.get("whgamemsg", "服务器正在维护中，请您稍后再来!"))
     
-    async def disable(self):
-        self.plugin.motd.start_rotation()
+    def disable(self):
+        pass
     
-    def on_player_pre_join(self, player: Player) -> bool:
+    def on_player_pre_join(self, player) -> bool:
         if player.is_simulated_player():
             return True
         if not self.config.get("EnableModule", True):
@@ -56,7 +44,6 @@ class MaintenanceSystem:
         if player.is_op:
             return True
         if self.is_active:
-            wh_config = self.config
-            player.kick(wh_config.get("whgamemsg", "服务器正在维护中，请您稍后再来!"))
+            player.kick(self.config.get("whgamemsg", "服务器正在维护中，请您稍后再来!"))
             return False
         return True

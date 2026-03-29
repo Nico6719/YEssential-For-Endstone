@@ -4,7 +4,6 @@ from endstone.command import Command, CommandSender
 from endstone import Player
 from typing import List
 import os
-import asyncio
 
 from .config import ConfigManager
 from .economy import EconomySystem
@@ -144,9 +143,7 @@ class YEssentialPlugin(Plugin):
         self.rtp.start_cooltime_task()
         
         if self.maintenance.is_active:
-            asyncio.create_task(self.maintenance.enable())
-        else:
-            self.motd.start_rotation()
+            self.maintenance.enable()
 
     def on_disable(self):
         self.motd.stop_rotation()
@@ -332,10 +329,9 @@ class YEssentialPlugin(Plugin):
             new_state = self.maintenance.toggle()
             if new_state:
                 sender.send_message("§6[YEssential] §c维护模式已开启。")
-                asyncio.create_task(self.maintenance.enable())
+                self.maintenance.enable()
             else:
                 sender.send_message("§6[YEssential] §a维护模式已关闭。")
-                asyncio.create_task(self.maintenance.disable())
             return True
         
         elif cmd == "servers":

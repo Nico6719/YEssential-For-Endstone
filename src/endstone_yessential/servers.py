@@ -39,7 +39,7 @@ class ServersSystem:
             server_port = target_server.get("server_port", 19132)
             
             try:
-                selected_player.transfer_server(server_ip, server_port)
+                selected_player.transfer(server_ip, server_port)
                 self.plugin.server.broadcast_message(f"§6[YEssential] §a{selected_player.name} 前往了 {server_name}")
             except Exception as e:
                 selected_player.send_message(f"§6[YEssential] §c传送失败: {str(e)}")
