@@ -267,18 +267,16 @@ class CleanmgrSystem:
 
         try:
             level = self.plugin.server.level
-            entities = level.get_entities()
-            total = len(entities)
-
-            for entity in entities:
-                if self.should_keep(entity):
-                    kept += 1
-                else:
-                    try:
-                        entity.remove()
-                        removed += 1
-                    except:
-                        pass
+            for dimension in level.dimensions:
+                for entity in dimension.actors:
+                    if self.should_keep(entity):
+                        kept += 1
+                    else:
+                        try:
+                            entity.remove()
+                            removed += 1
+                        except:
+                            pass
         except Exception as e:
             self.plugin.logger.error(f"清理实体失败: {e}")
 
