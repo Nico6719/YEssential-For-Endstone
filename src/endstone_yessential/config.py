@@ -83,6 +83,22 @@ class ConfigManager:
                     "§e欢迎来到 §bMinecraft §a服务器！"
                 ],
                 "interval": 5000
+            },
+            "Fcam": {
+                "EnableModule": False,
+                "CostMoney": 0,
+                "TimeOut": 300
+            },
+            "RedPacket": {
+                "EnabledModule": False,
+                "minAmount": 1,
+                "maxAmount": 10000,
+                "maxCount": 100,
+                "expireTime": 300
+            },
+            "Crash": {
+                "EnabledModule": False,
+                "LogCrashInfo": True
             }
         }
 
@@ -92,3 +108,6 @@ class ConfigManager:
     def set(self, key: str, value: Any):
         self.config_data[key] = value
         self.save_config()
+
+    def get_config(self) -> Dict[str, Any]:
+        return self.config_data

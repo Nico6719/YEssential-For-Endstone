@@ -18,6 +18,11 @@ from .maintenance import MaintenanceSystem
 from .servers import ServersSystem
 from .hub import HubSystem
 from .motd import MotdSystem
+from .cd import CdSystem
+from .fcam import FcamSystem
+from .redpacket import RedpacketSystem
+from .crash import CrashSystem
+from .cleanmgr import CleanmgrSystem
 from .log import plugin_print
 from .constant import *
 
@@ -99,6 +104,41 @@ class YEssentialPlugin(Plugin):
             "usages": ["/sethub"],
             "permissions": ["yessential.command.sethub"],
         },
+        "menu": {
+            "description": "菜单系统",
+            "usages": ["/menu"],
+            "permissions": ["yessential.command.menu"],
+        },
+        "cd": {
+            "description": "菜单设置",
+            "usages": ["/cd", "/cd set"],
+            "permissions": ["yessential.command.cd"],
+        },
+        "getclock": {
+            "description": "获取钟表",
+            "usages": ["/getclock"],
+            "permissions": ["yessential.command.getclock"],
+        },
+        "fcam": {
+            "description": "灵魂出窍",
+            "usages": ["/fcam"],
+            "permissions": ["yessential.command.fcam"],
+        },
+        "rp": {
+            "description": "红包系统",
+            "usages": ["/rp", "/rp send <amount> <count>", "/rp open", "/rp list", "/rp history"],
+            "permissions": ["yessential.command.rp"],
+        },
+        "crash": {
+            "description": "崩溃玩家客户端",
+            "usages": ["/crash"],
+            "permissions": ["yessential.command.crash"],
+        },
+        "clean": {
+            "description": "实体清理系统",
+            "usages": ["/clean", "/clean now", "/clean status", "/clean cancel", "/clean tps", "/clean toast"],
+            "permissions": ["yessential.command.clean"],
+        },
     }
 
     permissions = {
@@ -119,6 +159,13 @@ class YEssentialPlugin(Plugin):
         "yessential.command.servers": {"description": "允许使用跨服传送命令", "default": True},
         "yessential.command.hub": {"description": "允许使用回城命令", "default": True},
         "yessential.command.sethub": {"description": "允许设置回城点", "default": "op"},
+        "yessential.command.menu": {"description": "允许使用菜单命令", "default": True},
+        "yessential.command.cd": {"description": "允许使用菜单设置命令", "default": "op"},
+        "yessential.command.getclock": {"description": "允许领取钟表", "default": True},
+        "yessential.command.fcam": {"description": "允许使用灵魂出窍命令", "default": True},
+        "yessential.command.rp": {"description": "允许使用红包命令", "default": True},
+        "yessential.command.crash": {"description": "允许使用崩溃命令", "default": "op"},
+        "yessential.command.clean": {"description": "允许使用清理命令", "default": True},
     }
 
     def on_enable(self):
@@ -140,6 +187,14 @@ class YEssentialPlugin(Plugin):
         self.hub = HubSystem(self)
         self.motd = MotdSystem(self)
         
+        self.cd = CdSystem(self)
+        self.fcam = FcamSystem(self)
+        self.redpacket = RedpacketSystem(self)
+        self.crash = CrashSystem(self)
+        self.cleanmgr = CleanmgrSystem(self)
+        
+        self.fcam.load_config()
+        
         self.rtp.start_cooltime_task()
         
         if self.maintenance.is_active:
@@ -148,6 +203,12 @@ class YEssentialPlugin(Plugin):
     def on_disable(self):
         self.motd.stop_rotation()
         self.logger.info("§6YEssential (Python) §c已禁用！")
+
+    @event_handler
+    def on_player_quit(self, event):
+        player = event.player
+        if hasattr(self, 'fcam') and self.fcam:
+            self.fcam.on_player_quit(player)
 
     @event_handler
     def on_player_join(self, event: PlayerJoinEvent):
@@ -344,6 +405,40 @@ class YEssentialPlugin(Plugin):
         
         elif cmd == "sethub":
             self.hub.set_hub(sender)
+            return True
+        
+        elif cmd == "menu":
+            self.cd.open_menu(sender)
+            return True
+        
+        elif cmd == "cd":
+            if len(args) > 0 and args[0] == "set":
+                self.cd.open_settings(sender)
+            else:
+                self.cd.open_menu(sender)
+            return True
+        
+        elif cmd == "getclock":
+            self.cd.getclock(sender)
+            return True
+        
+        elif cmd == "fcam":
+            self.fcam.toggle_fcam(sender)
+            return True
+        
+        elif cmd == "rp":
+            self.redpacket.on_command(sender, args)
+            return True
+        
+        elif cmd == "crash":
+            if sender.has_permission("yessential.command.crash"):
+                self.crash.on_command(sender)
+            else:
+                sender.send_message("§6[YEssential] §c你没有权限使用此命令。")
+            return True
+        
+        elif cmd == "clean":
+            self.cleanmgr.handle_command(sender, args[0] if args else "")
             return True
 
         return False
