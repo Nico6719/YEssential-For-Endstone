@@ -1,5 +1,5 @@
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PlayerJoinEvent, PlayerQuitEvent, PlayerDeathEvent, PlayerRespawnEvent, PlayerHurtEvent, PlayerSpawnEvent
+from endstone.event import event_handler, PlayerJoinEvent, PlayerQuitEvent, PlayerDeathEvent, PlayerRespawnEvent, ActorDamageEvent
 from endstone.command import Command, CommandSender
 from endstone import Player
 from typing import List
