@@ -19,9 +19,9 @@ class TPASystem:
         sender_name = sender.name
         target_name = target.name
 
-        # 记录请求
-        self.pending_requests[target_name] = {
-            "sender": sender_name,
+        # 记录请求 - 使用 sender_name 作为 key，这样 tpayes 可以通过发送者的名字找到请求
+        self.pending_requests[sender_name] = {
+            "target": target_name,
             "type": request_type,
             "time": time.time()
         }
@@ -43,29 +43,41 @@ class TPASystem:
         target.send_form(form)
 
     def handle_tpa_response(self, target: Player, sender_name: str, accepted: bool):
-        target_name = target.name
-        if target_name not in self.pending_requests:
+        """
+        处理 TPA 响应
+        :param target: 响应者（接受或拒绝请求的玩家）
+        :param sender_name: 原始请求发送者的名字
+        :param accepted: 是否接受
+        """
+        # pending_requests 使用 sender_name 作为 key
+        if sender_name not in self.pending_requests:
             target.send_message("§c没有待处理的传送请求。")
             return
 
-        request = self.pending_requests.pop(target_name)
+        request = self.pending_requests.pop(sender_name)
         if time.time() - request["time"] > self.timeout:
             target.send_message("§c请求已超时。")
             return
 
+        # 获取原始请求发送者（要传送的玩家）
         sender = self.plugin.server.get_player(sender_name)
         if not sender:
             target.send_message(f"§c玩家 {sender_name} 已离线。")
             return
+
+        target_name = target.name
+        request_type = request["type"]
 
         if accepted:
             target.send_message(f"§6[YEssential] §7您已接受来自 §a{sender_name} §7的传送请求。")
             sender.send_message(f"§6[YEssential] §a{target_name} §7接受了您的传送请求。")
             
             # 执行传送
-            if request["type"] == "to":
+            if request_type == "to":
+                # 发送者传送到目标位置
                 sender.teleport(target.location)
             else:
+                # 目标传送到发送者位置 (tpahere)
                 target.teleport(sender.location)
         else:
             target.send_message(f"§6[YEssential] §7您已拒绝来自 §a{sender_name} §7的传送请求。")

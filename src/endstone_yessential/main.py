@@ -1,9 +1,10 @@
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PlayerJoinEvent, PlayerQuitEvent, PlayerDeathEvent, PlayerRespawnEvent
+from endstone.event import event_handler, PlayerJoinEvent, PlayerQuitEvent, PlayerDeathEvent, PlayerRespawnEvent, PlayerHurtEvent, PlayerSpawnEvent
 from endstone.command import Command, CommandSender
 from endstone import Player
 from typing import List
 import os
+import asyncio
 
 from .config import ConfigManager
 from .economy import EconomySystem
@@ -14,6 +15,10 @@ from .tpa import TPASystem
 from .notice import NoticeSystem
 from .back import BackSystem
 from .pvp import PVPSystem
+from .maintenance import MaintenanceSystem
+from .servers import ServersSystem
+from .hub import HubSystem
+from .motd import MotdSystem
 from .log import plugin_print
 from .constant import *
 
@@ -75,6 +80,26 @@ class YEssentialPlugin(Plugin):
             "usages": ["/pvp", "/pvp on", "/pvp off"],
             "permissions": ["yessential.command.pvp"],
         },
+        "wh": {
+            "description": "维护模式",
+            "usages": ["/wh"],
+            "permissions": ["yessential.command.wh"],
+        },
+        "servers": {
+            "description": "跨服传送",
+            "usages": ["/servers"],
+            "permissions": ["yessential.command.servers"],
+        },
+        "hub": {
+            "description": "回城菜单",
+            "usages": ["/hub"],
+            "permissions": ["yessential.command.hub"],
+        },
+        "sethub": {
+            "description": "设置回城点",
+            "usages": ["/sethub"],
+            "permissions": ["yessential.command.sethub"],
+        },
     }
 
     permissions = {
@@ -91,12 +116,15 @@ class YEssentialPlugin(Plugin):
         "yessential.command.notice.admin": {"description": "允许管理公告", "default": "op"},
         "yessential.command.back": {"description": "允许使用死亡回溯命令", "default": True},
         "yessential.command.pvp": {"description": "允许使用 PVP 设置命令", "default": True},
+        "yessential.command.wh": {"description": "允许使用维护模式命令", "default": "op"},
+        "yessential.command.servers": {"description": "允许使用跨服传送命令", "default": True},
+        "yessential.command.hub": {"description": "允许使用回城命令", "default": True},
+        "yessential.command.sethub": {"description": "允许设置回城点", "default": "op"},
     }
 
     def on_enable(self):
         self.logger.info("§6YEssential (Python) §a已启用！")
         
-        # 初始化各个系统
         self.config_manager = ConfigManager(self)
         self.config_manager.load_config()
         
@@ -105,14 +133,23 @@ class YEssentialPlugin(Plugin):
         self.warp = WarpSystem(self)
         self.rtp = RTPSystem(self)
         self.tpa = TPASystem(self)
-        
-        # 启动RTP冷却时间任务
-        self.rtp.start_cooltime_task()
         self.notice = NoticeSystem(self)
         self.back = BackSystem(self)
         self.pvp = PVPSystem(self)
+        self.maintenance = MaintenanceSystem(self)
+        self.servers = ServersSystem(self)
+        self.hub = HubSystem(self)
+        self.motd = MotdSystem(self)
+        
+        self.rtp.start_cooltime_task()
+        
+        if self.maintenance.is_active:
+            asyncio.create_task(self.maintenance.enable())
+        else:
+            self.motd.start_rotation()
 
     def on_disable(self):
+        self.motd.stop_rotation()
         self.logger.info("§6YEssential (Python) §c已禁用！")
 
     @event_handler
@@ -227,14 +264,25 @@ class YEssentialPlugin(Plugin):
             return True
         
         elif cmd == "tpayes":
-            # 假设 tpayes 接受最近的请求
-            sender.send_message("§6[YEssential] §7正在处理接受请求...")
-            # 实际逻辑需要从 TPA 系统中获取并处理请求
+            # sender is the person who received the request and is accepting it
+            # We need to find the request where this player is the target
+            sender_name = sender.name
+            # Find the request where sender_name is the original requester
+            request = self.tpa.pending_requests.get(sender_name)
+            if not request:
+                sender.send_message("§6[YEssential] §c没有待处理的传送请求。")
+                return True
+            # Handle the response - target is sender (the one accepting), sender_name is the original requester
+            self.tpa.handle_tpa_response(sender, sender_name, True)
             return True
         
         elif cmd == "tpano":
-            sender.send_message("§6[YEssential] §7正在处理拒绝请求...")
-            # 实际逻辑需要从 TPA 系统中获取并处理请求
+            sender_name = sender.name
+            request = self.tpa.pending_requests.get(sender_name)
+            if not request:
+                sender.send_message("§6[YEssential] §c没有待处理的传送请求。")
+                return True
+            self.tpa.handle_tpa_response(sender, sender_name, False)
             return True
             
         elif cmd == "notice":
@@ -271,6 +319,35 @@ class YEssentialPlugin(Plugin):
                 self.pvp.set_pvp(sender, False)
             else:
                 sender.send_message("§c用法: /pvp | /pvp on | /pvp off")
+            return True
+        
+        elif cmd == "wh":
+            if not sender.has_permission("yessential.command.wh"):
+                sender.send_message("§c你没有权限使用此命令。")
+                return True
+            wh_config = self.maintenance.config
+            if not wh_config.get("EnableModule", True):
+                sender.send_message("§6[YEssential] §c该模块未启用。")
+                return True
+            new_state = self.maintenance.toggle()
+            if new_state:
+                sender.send_message("§6[YEssential] §c维护模式已开启。")
+                asyncio.create_task(self.maintenance.enable())
+            else:
+                sender.send_message("§6[YEssential] §a维护模式已关闭。")
+                asyncio.create_task(self.maintenance.disable())
+            return True
+        
+        elif cmd == "servers":
+            self.servers.open_server_list(sender)
+            return True
+        
+        elif cmd == "hub":
+            self.hub.open_hub_gui(sender)
+            return True
+        
+        elif cmd == "sethub":
+            self.hub.set_hub(sender)
             return True
 
         return False

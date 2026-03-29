@@ -56,6 +56,33 @@ class ConfigManager:
                 "cost": 0,
                 "cooldown": 0,
                 "animation": 0
+            },
+            "wh": {
+                "EnableModule": True,
+                "status": 0,
+                "whmotdmsg": "服务器维护中，请勿进入！",
+                "whgamemsg": "服务器正在维护中，请您稍后再来!"
+            },
+            "Hub": {
+                "EnabledModule": True,
+                "x": 0,
+                "y": -60,
+                "z": 0,
+                "dimid": 0
+            },
+            "CrossServerTransfer": {
+                "EnabledModule": True,
+                "servers": [
+                    {"server_name": "生存服", "server_ip": "127.0.0.1", "server_port": 19132}
+                ]
+            },
+            "Motd": {
+                "Enabled": True,
+                "message": [
+                    "§6YEssential §a服务器正在运行中！",
+                    "§e欢迎来到 §bMinecraft §a服务器！"
+                ],
+                "interval": 5000
             }
         }
 
