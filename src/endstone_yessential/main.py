@@ -251,7 +251,7 @@ class YEssentialPlugin(Plugin):
         elif cmd == "tpa":
             if len(args) == 1:
                 target_name = args[0]
-                target = self.plugin.server.get_player(target_name)
+                target = self.server.get_player(target_name)
                 if target:
                     self.tpa.send_tpa_request(sender, target, "to")
                 else:

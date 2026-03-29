@@ -21,9 +21,7 @@ class HubSystem:
     
     def get_hub_location(self) -> Location:
         hub_config = self.config
-        world = self.plugin.server.get_world("default")
-        if world is None:
-            world = self.plugin.server.worlds[0] if self.plugin.server.worlds else None
+        world = self.plugin.server.level
         
         if world is None:
             return None
@@ -79,7 +77,7 @@ class HubSystem:
             "x": round(player.location.x, 1),
             "y": round(player.location.y, 1),
             "z": round(player.location.z, 1),
-            "dimid": self._get_dimension_id(player.location.world)
+            "dimid": self._get_dimension_id(player.location.dimension)
         }
         self.plugin.config_manager.set("Hub", hub_data)
         player.send_message("§6[YEssential] §a回城点已设置为：")
