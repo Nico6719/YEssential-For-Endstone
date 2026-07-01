@@ -258,36 +258,52 @@ class CleanmgrSystem:
 
     def execute_clean(self):
         self.state.phase = "cleaning"
-        removed = 0
-        kept = 0
 
-        self.plugin.server.broadcast_message(
-            self.config.t("prefix", "") + self.config.get_message("cleanup_start")
-        )
+        # 在主线程上执行整个清理过程
+        def do_cleanup():
+            removed = 0
+            kept = 0
 
-        try:
-            level = self.plugin.server.level
-            for dimension in level.dimensions:
-                for entity in dimension.actors:
-                    if self.should_keep(entity):
-                        kept += 1
-                    else:
-                        try:
-                            entity.remove()
-                            removed += 1
-                        except:
-                            pass
-        except Exception as e:
-            self.plugin.logger.error(f"清理实体失败: {e}")
+            # 发送开始清理的消息
+            self.plugin.server.broadcast_message(
+                self.config.t("prefix", "") + self.config.get_message("cleanup_start")
+            )
 
-        self.plugin.server.broadcast_message(
-            self.config.t("prefix", "") + self.config.get_message("cleanup_complete", removed)
-        )
+            # 收集需要移除的实体
+            entities_to_remove = []
+            try:
+                level = self.plugin.server.level
+                for dimension in level.dimensions:
+                    for entity in dimension.actors:
+                        if self.should_keep(entity):
+                            kept += 1
+                        else:
+                            entities_to_remove.append(entity)
+            except Exception as e:
+                self.plugin.logger.error(f"收集实体失败: {e}")
 
-        self.send_toast_to_all(
-            "清理系统",
-            self.config.get_message("cleanup_complete", removed)
-        )
+            # 移除实体
+            for entity in entities_to_remove:
+                try:
+                    entity.remove()
+                    removed += 1
+                except Exception as e:
+                    self.plugin.logger.error(f"移除实体失败: {e}")
+
+            # 发送清理完成的消息和toast通知
+            self.plugin.server.broadcast_message(
+                self.config.t("prefix", "") + self.config.get_message("cleanup_complete", removed)
+            )
+            self.send_toast_to_all(
+                "清理系统",
+                self.config.get_message("cleanup_complete", removed)
+            )
+
+            # 重置状态
+            self.state.phase = "idle"
+            self.state.scheduled_timeouts = []
+
+        self.plugin.server.scheduler.run_task(self.plugin, do_cleanup)
 
         if self.state.is_low_tps_trigger:
             def evaluate():
@@ -311,9 +327,6 @@ class CleanmgrSystem:
 
             thread = threading.Thread(target=evaluate, daemon=True)
             thread.start()
-
-        self.state.phase = "idle"
-        self.state.scheduled_timeouts = []
 
     def schedule_clean(self, is_manual: bool = False, player_name: str = "", is_low_tps: bool = False):
         if self.state.phase != "idle":
@@ -344,19 +357,27 @@ class CleanmgrSystem:
         n2 = notice.get("notice2", 15)
         n3 = notice.get("notice3", 5)
 
-        self.plugin.server.broadcast_message(
-            self.config.t("prefix", "") + self.config.get_message("cleanup_notice", n1)
-        )
-        self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice", n1))
+        # 在主线程上发送第一次通知
+        def send_notice1():
+            self.plugin.server.broadcast_message(
+                self.config.t("prefix", "") + self.config.get_message("cleanup_notice", n1)
+            )
+            self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice", n1))
+
+        self.plugin.server.scheduler.run_task(self.plugin, send_notice1)
 
         if n2 > 0 and n2 < n1:
             def notice2():
                 time.sleep((n1 - n2))
                 if self.state.phase == "scheduled":
-                    self.plugin.server.broadcast_message(
-                        self.config.t("prefix", "") + self.config.get_message("cleanup_notice2", n2)
-                    )
-                    self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice2", n2))
+                    # 在主线程上发送第二次通知
+                    def send_notice2():
+                        self.plugin.server.broadcast_message(
+                            self.config.t("prefix", "") + self.config.get_message("cleanup_notice2", n2)
+                        )
+                        self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice2", n2))
+
+                    self.plugin.server.scheduler.run_task(self.plugin, send_notice2)
             t = threading.Thread(target=notice2, daemon=True)
             t.start()
 
@@ -364,28 +385,37 @@ class CleanmgrSystem:
             def notice3():
                 time.sleep((n1 - n3))
                 if self.state.phase == "scheduled":
-                    self.plugin.server.broadcast_message(
-                        self.config.t("prefix", "") + self.config.get_message("cleanup_notice3", n3)
-                    )
-                    self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice3", n3))
+                    # 在主线程上发送第三次通知
+                    def send_notice3():
+                        self.plugin.server.broadcast_message(
+                            self.config.t("prefix", "") + self.config.get_message("cleanup_notice3", n3)
+                        )
+                        self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice3", n3))
+
+                    self.plugin.server.scheduler.run_task(self.plugin, send_notice3)
             t = threading.Thread(target=notice3, daemon=True)
             t.start()
 
         def do_clean():
             time.sleep(n1)
-            self.execute_clean()
+            # 在主线程上执行清理
+            self.plugin.server.scheduler.run_task(self.plugin, self.execute_clean)
 
         t = threading.Thread(target=do_clean, daemon=True)
         t.start()
 
     def send_toast_to_all(self, title: str, message: str):
-        for player in self.plugin.server.online_players:
-            xuid = player.xuid
-            if self.config.player_settings.get(xuid, True):
-                try:
-                    player.send_toast(title, message)
-                except:
-                    pass
+        def send_toast():
+            for player in self.plugin.server.online_players:
+                xuid = player.xuid
+                if self.config.player_settings.get(xuid, True):
+                    try:
+                        player.send_toast(title, message)
+                    except:
+                        pass
+
+        # 确保在主线程上执行
+        self.plugin.server.scheduler.run_task(self.plugin, send_toast)
 
     def handle_command(self, player: Player, action: str = "") -> bool:
         if not action or action == "help":

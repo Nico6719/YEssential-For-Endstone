@@ -1,5 +1,5 @@
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PlayerJoinEvent, PlayerQuitEvent, PlayerDeathEvent, PlayerRespawnEvent, ActorDamageEvent
+from endstone.event import event_handler, PlayerJoinEvent, PlayerDeathEvent
 from endstone.command import Command, CommandSender
 from endstone import Player
 from typing import List
@@ -23,6 +23,7 @@ from .fcam import FcamSystem
 from .redpacket import RedpacketSystem
 from .crash import CrashSystem
 from .cleanmgr import CleanmgrSystem
+from .suicide import SuicideSystem
 from .log import plugin_print
 from .constant import *
 
@@ -139,6 +140,11 @@ class YEssentialPlugin(Plugin):
             "usages": ["/clean", "/clean now", "/clean status", "/clean cancel", "/clean tps", "/clean toast"],
             "permissions": ["yessential.command.clean"],
         },
+        "suicide": {
+            "description": "自杀系统",
+            "usages": ["/suicide"],
+            "permissions": ["yessential.command.suicide"],
+        },
     }
 
     permissions = {
@@ -166,6 +172,7 @@ class YEssentialPlugin(Plugin):
         "yessential.command.rp": {"description": "允许使用红包命令", "default": True},
         "yessential.command.crash": {"description": "允许使用崩溃命令", "default": "op"},
         "yessential.command.clean": {"description": "允许使用清理命令", "default": True},
+        "yessential.command.suicide": {"description": "允许使用自杀命令", "default": True},
     }
 
     def on_enable(self):
@@ -192,6 +199,7 @@ class YEssentialPlugin(Plugin):
         self.redpacket = RedpacketSystem(self)
         self.crash = CrashSystem(self)
         self.cleanmgr = CleanmgrSystem(self)
+        self.suicide = SuicideSystem(self)
         
         self.fcam.load_config()
         
@@ -220,8 +228,10 @@ class YEssentialPlugin(Plugin):
     @event_handler
     def on_player_death(self, event: PlayerDeathEvent):
         player = event.player
+        self.logger.info(f"[DEBUG] 玩家 {player.name} 死亡，正在记录死亡点...")
         # 记录死亡点
         self.back.record_death(player)
+        self.logger.info(f"[DEBUG] 死亡点记录完成")
 
     def on_command(self, sender: CommandSender, command: Command, args: List[str]) -> bool:
 
@@ -439,6 +449,10 @@ class YEssentialPlugin(Plugin):
         
         elif cmd == "clean":
             self.cleanmgr.handle_command(sender, args[0] if args else "")
+            return True
+
+        elif cmd == "suicide":
+            self.suicide.handle_command(sender)
             return True
 
         return False
