@@ -316,7 +316,7 @@ class YEssentialPlugin(Plugin):
             return True
             
         elif cmd == "rtp":
-            self.rtp.teleport_random(sender)
+            self.rtp.perform_rtp(sender)
             return True
             
         elif cmd == "tpa":
