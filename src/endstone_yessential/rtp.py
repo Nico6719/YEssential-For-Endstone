@@ -6,6 +6,7 @@ from endstone.level import Location
 from endstone.command import CommandSenderWrapper
 
 from .log import plugin_print
+from .i18n import tr
 
 
 class RTPSystem:

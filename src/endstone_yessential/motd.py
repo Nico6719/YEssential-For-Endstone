@@ -1,6 +1,7 @@
 """
 YEssential MOTD System - 服务器标题轮播
 """
+from .i18n import tr
 from endstone.event import event_handler, EventPriority, ServerListPingEvent
 
 

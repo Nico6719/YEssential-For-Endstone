@@ -10,6 +10,7 @@ from endstone.event import event_handler, ActorDamageEvent
 from endstone.form import ActionForm
 
 from .log import plugin_print
+from .i18n import tr
 
 
 class PVPSystem:

@@ -1,5 +1,6 @@
 from typing import List
 from endstone import Player
+from .i18n import tr
 from endstone.form import ActionForm
 
 class CrashSystem:

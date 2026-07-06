@@ -28,6 +28,21 @@ default_translations = {
         "economy.admin_ranking": "全服%s排行榜",
         "economy.player_menu": "使用玩家的金钱菜单",
         "economy.back": "返回",
+        "economy.back_btn": "§c返回",
+        "economy.confirm_btn": "§a确认转账",
+        "economy.confirm_btn2": "§a确认",
+        "economy.cancel_btn": "§c取消",
+        "economy.confirm_title": "§6确认转账",
+        "economy.confirm_offline_title": "§6确认离线转账",
+        "economy.confirm_admin_title": "§6确认操作",
+        "economy.transfer_title": "§6转账%s",
+        "economy.tax_info": "税率: %s",
+        "economy.amount_label": "转账金额",
+        "economy.note_label": "备注(可选)",
+        "economy.add_op": "增加",
+        "economy.reduce_op": "减少",
+        "economy.set_op": "设置",
+        "economy.op_type_label": "操作类型",
         "economy.select_player": "选择玩家",
         "economy.amount": "金额",
         "economy.note": "备注(可选)",
@@ -274,6 +289,21 @@ default_translations = {
         "economy.admin_ranking": "Server %s Leaderboard",
         "economy.player_menu": "Use Player Menu",
         "economy.back": "Back",
+        "economy.back_btn": "§cBack",
+        "economy.confirm_btn": "§aConfirm Transfer",
+        "economy.confirm_btn2": "§aConfirm",
+        "economy.cancel_btn": "§cCancel",
+        "economy.confirm_title": "§6Confirm Transfer",
+        "economy.confirm_offline_title": "§6Confirm Offline Transfer",
+        "economy.confirm_admin_title": "§6Confirm Operation",
+        "economy.transfer_title": "§6Send %s",
+        "economy.tax_info": "Tax: %s",
+        "economy.amount_label": "Amount",
+        "economy.note_label": "Note (optional)",
+        "economy.add_op": "Add",
+        "economy.reduce_op": "Deduct",
+        "economy.set_op": "Set",
+        "economy.op_type_label": "Operation",
         "economy.select_player": "Select Player",
         "economy.amount": "Amount",
         "economy.note": "Note (optional)",
@@ -565,10 +595,10 @@ class I18n:
         if not self._ready:
             return key
 
-        lang_dict = self._translations.get(self._locale, {})
+        lang_dict = self._translations.setdefault(self._locale, {})
         text = lang_dict.get(key)
 
-        # 回退链：当前语言 → en_US → zh_CN → key
+        # 回退链：当前语言 → en_US → zh_CN
         if text is None:
             for fb in ("en_US", "zh_CN"):
                 if fb == self._locale:
@@ -577,7 +607,9 @@ class I18n:
                 if text is not None:
                     break
 
+        # 未找到翻译 → 自动追加到当前语言文件
         if text is None:
+            self._append_missing(key)
             return key
 
         if args:
@@ -586,6 +618,22 @@ class I18n:
             except (TypeError, ValueError):
                 return text
         return text
+
+    def _append_missing(self, key: str):
+        """将缺失的翻译键自动追加到 langs 文件"""
+        self._translations[self._locale][key] = key
+        langs_dir = Path(str(self.plugin.data_folder)) / "langs"
+        lang_file = langs_dir / f"{self._locale}.json"
+        try:
+            existing = {}
+            if lang_file.exists():
+                with open(lang_file, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+            existing.setdefault(self._locale, {})[key] = key
+            with open(lang_file, "w", encoding="utf-8") as f:
+                json.dump(existing, f, indent=4, ensure_ascii=False)
+        except Exception:
+            pass
 
 # ── 全局 ────────────────────────────────────────────────
 

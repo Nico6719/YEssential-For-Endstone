@@ -335,7 +335,7 @@ class EconomySystem:
         names = [pl.name for pl in self.plugin.server.online_players if pl.name != p.name and not pl.name.endswith("_sp")]
         if not names: p.send_message(tr("economy.no_online")); self._gui_player(p); return
         fm = ModalForm(title=tr("economy.transfer_title", coin), controls=[
-            Label(text=tr("economy.balance", my, coin) + f"\n{tr('economy.tax_info').replace('{0}', ti['tip'])}"),
+            Label(text=tr("economy.balance", my, coin) + f"\n{tr("economy.tax_info", ti["tip"])}"),
             Dropdown(label=tr("economy.select_player"), options=names),
             TextInput(label=tr("economy.amount_label"), placeholder="100 / all", default_value=""),
             TextInput(label=tr("economy.note_label"), placeholder="", default_value="")
@@ -357,7 +357,7 @@ class EconomySystem:
                         self.add_money_internal(tg, recv)
                         self.history.add(cp.name, f"→ {tname}: -{amt} {coin} (tax {tax})")
                         self.history.add(tname, f"← {cp.name}: +{recv} {coin}")
-                        cp.send_message(f"§a{tr('economy.send_success').format(amt, '→', tname)}")
+                        cp.send_message(tr("economy.send_success", amt, "→", tname))
                         tg.send_message(tr("economy.receive_from", cp.name, recv, coin)+(f" {tr('economy.transfer_note', note)}" if note else ""))
                         self.ranking.update(cp.name, self.get_money_internal(cp))
                         self.ranking.update(tname, self.get_money_internal(tg))
@@ -371,7 +371,7 @@ class EconomySystem:
         coin = self.config.coin_name; my = int(self.get_money_internal(p))
         tax_cfg = self.config.pay_tax_rate; ti = TaxCalculator.calc(0, my, tax_cfg)
         fm = ModalForm(title=tr("economy.confirm_offline_title"), controls=[
-            Label(text=tr("economy.balance", my, coin)+f"\n{tr('economy.tax_info').replace('{0}', ti['tip'])}"),
+            Label(text=tr("economy.balance", my, coin)+f"\n{tr("economy.tax_info", ti["tip"])}"),
             TextInput(label=tr("economy.offline_target"), placeholder="Steve", default_value=""),
             TextInput(label=tr("economy.amount_label"), placeholder="100 / all", default_value=""),
             TextInput(label=tr("economy.note_label"), placeholder="", default_value="")

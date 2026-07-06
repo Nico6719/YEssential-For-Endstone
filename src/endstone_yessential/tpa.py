@@ -1,6 +1,7 @@
 import time
 from typing import Dict, Any, Optional
 from endstone import Player
+from .i18n import tr
 from endstone.form import ActionForm, MessageForm
 
 class TPASystem:

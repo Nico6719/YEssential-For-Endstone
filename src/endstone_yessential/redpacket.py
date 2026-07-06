@@ -5,6 +5,7 @@ import random
 import threading
 from typing import Dict, List, Any, Optional
 from endstone import Player
+from .i18n import tr
 from endstone.form import ActionForm
 
 class RedpacketDB:

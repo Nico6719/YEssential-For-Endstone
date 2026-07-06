@@ -7,6 +7,7 @@ from endstone.level import Location
 from endstone.form import ActionForm, ModalForm, TextInput
 
 from .log import plugin_print
+from .i18n import tr
 
 class HomeSystem:
     def __init__(self, plugin):

@@ -5,6 +5,7 @@ from endstone import Player
 from endstone.form import ActionForm, ModalForm, TextInput
 
 from .log import plugin_print
+from .i18n import tr
 
 class NoticeSystem:
     def __init__(self, plugin):

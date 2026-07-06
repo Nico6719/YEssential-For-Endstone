@@ -4,7 +4,7 @@ import time
 from typing import Dict, List, Any, Optional
 from endstone import Player
 from endstone.form import ActionForm, ModalForm, Dropdown, TextInput, Label
-from endstone.command import Command, CommandSender
+from .i18n import tr
 
 class MenuConfigManager:
     def __init__(self, plugin):

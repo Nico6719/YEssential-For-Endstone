@@ -213,7 +213,12 @@ class YEssentialPlugin(Plugin):
     def on_load(self):
         """插件加载时调用"""
         from .randomcolor import RandomColor
-        
+
+        # 先加载配置和 I18n，确保 tr() 可用
+        self.config_manager = ConfigManager(self)
+        self.config_manager.load_config()
+        init_i18n(self)
+
         print(RandomColor("██╗   ██╗███████╗███████╗███████╗███████╗███╗   ██╗████████╗██╗ █████╗ ██╗     "))
         print(RandomColor("╚██╗ ██╔╝██╔════╝██╔════╝██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║██╔══██╗██║     "))
         print(RandomColor(" ╚████╔╝ █████╗  ███████╗███████╗█████╗  ██╔██╗ ██║   ██║   ██║███████║██║     "))
@@ -236,11 +241,7 @@ class YEssentialPlugin(Plugin):
     def on_enable(self):
         plugin_print(tr("logo.enabled", plugin_name))
 
-        # 1. 初始化配置
-        self.config_manager = ConfigManager(self)
-        self.config_manager.load_config()
-
-        # 2. 初始化子系统
+        # 1. 初始化子系统
         self.economy = EconomySystem(self)
         self.home = HomeSystem(self)
         self.warp = WarpSystem(self)
@@ -262,16 +263,13 @@ class YEssentialPlugin(Plugin):
         self.suicide = SuicideSystem(self)
         self.sign_system = SignSystem(self)
 
-        # 3. 初始化 I18n
-        self.i18n = init_i18n(self)
-
-        # 4. 初始化更新检查器
+        # 2. 初始化更新检查器
         self.update_checker = UpdateChecker(self)
 
-        # 5. 子系统额外初始化
+        # 3. 子系统额外初始化
         self.rtp.start_cooltime_task()
 
-        # 6. 生命周期逻辑
+        # 4. 生命周期逻辑
         # KeepInventory（静默执行，不输出到控制台）
         if self.config_manager.config_data.get("KeepInventory", True):
             try:
@@ -323,7 +321,7 @@ class YEssentialPlugin(Plugin):
         if _is_simulated(player):
             return
 
-        player.send_message(f"§6[YEssential] §a欢迎回到服务器, {player.name}!")
+        player.send_message(tr("welcome", player.name))
 
         # Fcam 地址映射
         if hasattr(self, 'fcam') and self.fcam:
@@ -412,20 +410,19 @@ class YEssentialPlugin(Plugin):
         if cmd == "yest" or cmd == "yessential":
             if len(args) > 0 and args[0] == "reload":
                 if not sender.has_permission("yessential.command.yest.admin"):
-                    sender.send_message("§c你没有权限重载配置。")
+                    sender.send_message(tr("no_permission_reload"))
                     return True
                 self.config_manager.load_config()
-                self.fcam.load_config()
-                sender.send_message("§6[YEssential] §a配置已重载！")
+                sender.send_message(tr("reload"))
                 return True
             else:
-                sender.send_message(f"§6[YEssential] §7Version {plugin_version} (Python Refactored)")
+                sender.send_message(ftr("version", plugin_version))
                 return True
 
         # ── moneygui ──────────────────────────────────────
         if cmd == "moneygui":
             if not isinstance(sender, Player):
-                sender.send_message("§c该命令只能由玩家执行。")
+                sender.send_message(tr("player_only"))
                 return True
             self.economy.open_money_gui(sender)
             return True
@@ -433,13 +430,13 @@ class YEssentialPlugin(Plugin):
         # ── moneys (admin) ────────────────────────────────
         if cmd == "moneys":
             if not sender.has_permission("yessential.command.money.admin"):
-                sender.send_message("§c你没有权限使用此命令。")
+                sender.send_message(tr("no_permission"))
                 return True
             return self.economy.handle_moneys_command(sender, args)
 
         # ── 玩家专用命令 ──────────────────────────────────
         if not isinstance(sender, Player):
-            sender.send_message("§c该命令只能由玩家执行。")
+            sender.send_message(tr("player_only"))
             return True
 
         # ── money ─────────────────────────────────────────
@@ -584,11 +581,11 @@ class YEssentialPlugin(Plugin):
         # ── wh (maintenance) ───────────────────────────────
         elif cmd == "wh":
             if not sender.has_permission("yessential.command.wh"):
-                sender.send_message("§c你没有权限使用此命令。")
+                sender.send_message(tr("no_permission"))
                 return True
             wh_config = self.maintenance.config
             if not wh_config.get("EnableModule", True):
-                sender.send_message("§6[YEssential] §c该模块未启用。")
+                sender.send_message(tr("module_disabled"))
                 return True
             new_state = self.maintenance.toggle()
             if new_state:

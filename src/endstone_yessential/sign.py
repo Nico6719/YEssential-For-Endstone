@@ -12,6 +12,7 @@ from endstone import Player
 from endstone.form import ActionForm, ModalForm, Dropdown, TextInput, Label, Toggle, Slider
 
 from .log import plugin_print
+from .i18n import tr
 
 
 # ═══════════════════════════════════════════════════════════════

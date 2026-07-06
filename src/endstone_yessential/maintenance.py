@@ -1,4 +1,4 @@
-from typing import Optional
+from .i18n import tr
 
 class MaintenanceSystem:
     def __init__(self, plugin):
@@ -30,14 +30,14 @@ class MaintenanceSystem:
     
     def enable(self):
         for player in self.plugin.server.online_players:
-            if not player.is_op and not player.is_simulated_player():
+            if not player.is_op and not player.name.endswith("_sp"):
                 player.kick(self.config.get("whgamemsg", "服务器正在维护中，请您稍后再来!"))
     
     def disable(self):
         pass
     
     def on_player_pre_join(self, player) -> bool:
-        if player.is_simulated_player():
+        if player.name.endswith("_sp"):
             return True
         if not self.config.get("EnableModule", True):
             return True
