@@ -1,470 +1,288 @@
-import json
-import os
-import re
-import time
-import threading
-from typing import List, Dict, Optional
+"""
+YEssential Cleanmgr - 实体清理系统
+"""
+import json, os, re, time, threading
+from typing import Dict
 from endstone import Player
-from endstone.level import Level
-from endstone.actor import Actor
+from .i18n import tr
 
-class CleanmgrConfig:
+
+class CleanmgrSystem:
     def __init__(self, plugin):
         self.plugin = plugin
         self.config_path = "./plugins/YEssential/config/cleanmgr/config.json"
-        self.lang_path = "./plugins/YEssential/lang/cleanmgr/lang.json"
         self.player_settings_path = "./plugins/YEssential/data/CleanmgrSettingData.json"
         self._config = {}
-        self._lang = {}
         self.player_settings: Dict[str, bool] = {}
-        self.whitelist_regex: List[re.Pattern] = []
-        self.ensure_directories()
-        self.load()
-
-    def ensure_directories(self):
-        os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
-        os.makedirs(os.path.dirname(self.lang_path), exist_ok=True)
-        os.makedirs(os.path.dirname(self.player_settings_path), exist_ok=True)
-
-    def load(self):
-        self._config = self.load_config()
-        self._lang = self.load_lang()
-        self.load_player_settings()
-        self.compile_whitelist()
-
-    def load_lang(self) -> dict:
-        default = {
-            "prefix": "§l§6[-YEST-] §l§e[清理系统] §r",
-            "messages": {
-                "system_starting": "§a清理系统正在启动...",
-                "system_started": "§a清理系统已启动",
-                "cleanup_start": "§a开始清理实体...",
-                "cleanup_complete": "§a已清理 {0} 个实体",
-                "low_tps_clean": "§cTPS 过低({0})，已自动清理",
-                "manual_trigger": "§6玩家触发了手动清理",
-                "cancel_success": "§c已取消计划清理",
-                "status_idle": "§a当前没有清理任务在进行",
-                "status_scheduled": "§a计划清理将在 {0} 秒后执行",
-                "status_cleaning": "§c正在清理实体...",
-                "tps_info": "§a当前TPS: §e{0}§a / 20.00",
-                "help_message": "§e用法:\n§a/clean §7- 触发清理\n§a/clean status §7- 查询状态\n§a/clean cancel §7- 取消清理\n§a/clean tps §7- 查询TPS\n§a/clean toast §7- 开关顶部弹窗"
-            }
-        }
-
-        if not os.path.exists(self.lang_path):
-            try:
-                with open(self.lang_path, 'w', encoding='utf-8') as f:
-                    json.dump(default, f, indent=2, ensure_ascii=False)
-            except:
-                pass
-            return default
-
-        try:
-            with open(self.lang_path, 'r', encoding='utf-8') as f:
-                loaded = json.load(f)
-                return self.merge(default, loaded)
-        except:
-            return default
-
-    def load_config(self) -> dict:
-        default = {
-            "cleanmgr": {
-                "enable": True,
-                "interval": 600,
-                "debug": False,
-                "whitelist": [
-                    "^minecraft:netherite_", "^minecraft:ancient_debris$", "^minecraft:dragon_egg$",
-                    "^minecraft:nether_star$", "^minecraft:elytra$", "^minecraft:emerald$",
-                    "^minecraft:beacon$", "^minecraft:ender_eye$", "^minecraft:shulker_box$",
-                    "^minecraft:sea_lantern$", "^minecraft:enchanted_book$", "^minecraft:diamond",
-                    "^minecraft:totem_of_undying$", "^minecraft:ender_pearl$", "^minecraft:villager_v2$",
-                    "^minecraft:ender_crystal$", "^minecraft:ender_dragon$", "^minecraft:parrot$",
-                    "^minecraft:chest_minecart$", "^minecraft:minecart$", "^minecraft:hopper_minecart$",
-                    "^minecraft:armor_stand$", "^minecraft:boat$", "^minecraft:sheep$", "^minecraft:leash_knot$",
-                    "^minecraft:cow$", "^minecraft:pig$", "^minecraft:painting$"
-                ],
-                "notice": {"notice1": 30, "notice2": 15, "notice3": 5},
-                "LowTpsClean": {
-                    "enable": True,
-                    "minimum": 15,
-                    "maxConsecutiveCleans": 2,
-                    "longCooldown": 450
-                },
-                "playerCooldown": 300
-            }
-        }
-
-        if not os.path.exists(self.config_path):
-            try:
-                with open(self.config_path, 'w', encoding='utf-8') as f:
-                    json.dump(default, f, indent=2, ensure_ascii=False)
-            except:
-                pass
-            return default.get("cleanmgr", {})
-
-        try:
-            with open(self.config_path, 'r', encoding='utf-8') as f:
-                raw = json.load(f)
-                return raw.get("cleanmgr", {})
-        except:
-            return default.get("cleanmgr", {})
-
-    def load_player_settings(self):
-        if os.path.exists(self.player_settings_path):
-            try:
-                with open(self.player_settings_path, 'r', encoding='utf-8') as f:
-                    self.player_settings = json.load(f)
-            except:
-                self.player_settings = {}
-        else:
-            self.player_settings = {}
-
-    def save_player_settings(self):
-        try:
-            with open(self.player_settings_path, 'w', encoding='utf-8') as f:
-                json.dump(self.player_settings, f, indent=2)
-        except:
-            pass
-
-    def compile_whitelist(self):
-        self.whitelist_regex = []
-        whitelist = self._config.get("whitelist", [])
-        for pattern in whitelist:
-            try:
-                self.whitelist_regex.append(re.compile(pattern))
-            except:
-                pass
-
-    def merge(self, default: dict, loaded: dict) -> dict:
-        result = default.copy()
-        for key, value in loaded.items():
-            if isinstance(value, dict) and key in result and isinstance(result[key], dict):
-                result[key] = self.merge(result[key], value)
-            else:
-                result[key] = value
-        return result
-
-    def t(self, key: str, *args) -> str:
-        keys = key.split(".")
-        obj = self._lang
-        for k in keys:
-            if isinstance(obj, dict):
-                obj = obj.get(k, key)
-            else:
-                return key
-        if not isinstance(obj, str):
-            return key
-        for i, arg in enumerate(args):
-            obj = obj.replace(f"{{{i}}}", str(arg))
-        return obj
-
-    def get(self, key: str, default=None):
-        return self._config.get(key, default)
-
-    def get_message(self, key: str, *args) -> str:
-        msg = self._lang.get("messages", {}).get(key, key)
-        for i, arg in enumerate(args):
-            msg = msg.replace(f"{{{i}}}", str(arg))
-        return msg
-
-
-class CleanmgrState:
-    def __init__(self):
-        self.phase = "idle"
+        self.whitelist_regex: list = []
+        self.state_phase = "idle"
         self.scheduled_timeouts: list = []
         self.last_player_clean: Dict[str, float] = {}
         self.low_tps_clean_count = 0
         self.low_tps_retry_time = 0
         self.tps_before_clean = 20.0
         self.is_low_tps_trigger = False
-
-
-class CleanmgrSystem:
-    def __init__(self, plugin):
-        self.plugin = plugin
-        self.config = CleanmgrConfig(plugin)
-        self.state = CleanmgrState()
         self.current_tps = 20.0
-        self.timers: list = []
+        self._ensure_dirs()
+        self._load_config()
+        self._load_player_settings()
+        self._compile_whitelist()
+        self._start_tps_sampler()
+        self._start_timers()
 
-        self.start_tps_sampler()
-        self.start_timers()
+    def _ensure_dirs(self):
+        for p in (self.config_path, self.player_settings_path):
+            os.makedirs(os.path.dirname(p), exist_ok=True)
 
-    def start_tps_sampler(self):
+    def _load_config(self):
+        default = {
+            "enable": True, "interval": 600, "debug": False,
+            "whitelist": [
+                "^minecraft:netherite_", "^minecraft:dragon_egg$", "^minecraft:nether_star$",
+                "^minecraft:elytra$", "^minecraft:emerald$", "^minecraft:beacon$",
+                "^minecraft:ender_eye$", "^minecraft:shulker_box$", "^minecraft:enchanted_book$",
+                "^minecraft:diamond", "^minecraft:totem_of_undying$", "^minecraft:ender_pearl$",
+                "^minecraft:ender_crystal$", "^minecraft:ender_dragon$", "^minecraft:armor_stand$",
+                "^minecraft:boat$", "^minecraft:painting$"
+            ],
+            "notice": {"notice1": 30, "notice2": 15, "notice3": 5},
+            "LowTpsClean": {"enable": True, "minimum": 15, "maxConsecutiveCleans": 2, "longCooldown": 450},
+            "playerCooldown": 300
+        }
+        try:
+            if os.path.exists(self.config_path):
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    raw = json.load(f)
+                self._config = raw.get("cleanmgr", default)
+            else:
+                self._config = default
+                with open(self.config_path, 'w', encoding='utf-8') as f:
+                    json.dump({"cleanmgr": default}, f, indent=2, ensure_ascii=False)
+        except Exception:
+            self._config = default
+
+    def _load_player_settings(self):
+        try:
+            if os.path.exists(self.player_settings_path):
+                with open(self.player_settings_path, 'r', encoding='utf-8') as f:
+                    self.player_settings = json.load(f)
+        except Exception:
+            self.player_settings = {}
+
+    def _save_player_settings(self):
+        try:
+            with open(self.player_settings_path, 'w', encoding='utf-8') as f:
+                json.dump(self.player_settings, f, indent=2)
+        except Exception:
+            pass
+
+    def _compile_whitelist(self):
+        self.whitelist_regex = []
+        for pat in self._config.get("whitelist", []):
+            try:
+                self.whitelist_regex.append(re.compile(pat))
+            except Exception:
+                pass
+
+    def _start_tps_sampler(self):
         def sample():
             while True:
                 time.sleep(1)
                 try:
                     self.current_tps = self.plugin.server.current_tps
-                except:
+                except Exception:
                     pass
+        threading.Thread(target=sample, daemon=True).start()
 
-        thread = threading.Thread(target=sample, daemon=True)
-        thread.start()
-
-    def start_tps_cleanup_checker(self):
-        def check():
-            while True:
-                time.sleep(5)
-                if not self.config.get("LowTpsClean", {}).get("enable", True):
-                    continue
-
-                now = time.time() * 1000
-                if now < self.state.low_tps_retry_time:
-                    continue
-
-                if self.current_tps <= self.config.get("LowTpsClean", {}).get("minimum", 15):
-                    if self.state.phase == "idle":
-                        self.state.tps_before_clean = self.current_tps
-                        self.plugin.server.broadcast_message(
-                            self.config.t("prefix", "") + 
-                            self.config.get_message("low_tps_clean", f"{self.current_tps:.2f}")
-                        )
-                        self.schedule_clean(is_manual=False, player_name="", is_low_tps=True)
-
-        thread = threading.Thread(target=check, daemon=True)
-        thread.start()
-
-    def start_timers(self):
-        interval = self.config.get("interval", 600)
+    def _start_timers(self):
+        interval = self._config.get("interval", 600)
 
         def scheduled_clean():
             while True:
                 time.sleep(interval)
-                if self.config.get("enable", True) and self.state.phase == "idle":
-                    self.schedule_clean(is_manual=False, player_name="", is_low_tps=False)
+                if self._config.get("enable", True) and self.state_phase == "idle":
+                    self.schedule_clean(False, "", False)
 
-        thread = threading.Thread(target=scheduled_clean, daemon=True)
-        thread.start()
+        threading.Thread(target=scheduled_clean, daemon=True).start()
 
-        self.start_tps_cleanup_checker()
+        def tps_check():
+            while True:
+                time.sleep(5)
+                cfg = self._config.get("LowTpsClean", {})
+                if not cfg.get("enable", True):
+                    continue
+                if time.time() * 1000 < self.low_tps_retry_time:
+                    continue
+                if self.current_tps <= cfg.get("minimum", 15) and self.state_phase == "idle":
+                    self.tps_before_clean = self.current_tps
+                    self.plugin.server.broadcast_message(
+                        tr("cleanmgr.prefix") + tr("cleanmgr.low_tps_clean", f"{self.current_tps:.2f}")
+                    )
+                    self.schedule_clean(False, "", True)
 
-    def should_keep(self, entity: Actor) -> bool:
+        threading.Thread(target=tps_check, daemon=True).start()
+
+    def _should_keep(self, entity) -> bool:
         try:
             if entity.type == "minecraft:player":
                 return True
-        except:
+        except Exception:
             pass
-
         try:
-            entity_type = entity.type
-            for regex in self.config.whitelist_regex:
-                if regex.search(entity_type):
+            for rgx in self.whitelist_regex:
+                if rgx.search(entity.type):
                     return True
-        except:
+        except Exception:
             pass
-
         return False
 
-    def execute_clean(self):
-        self.state.phase = "cleaning"
+    def _execute_clean(self):
+        self.state_phase = "cleaning"
 
-        # 在主线程上执行整个清理过程
         def do_cleanup():
             removed = 0
-            kept = 0
-
-            # 发送开始清理的消息
             self.plugin.server.broadcast_message(
-                self.config.t("prefix", "") + self.config.get_message("cleanup_start")
+                tr("cleanmgr.prefix") + tr("cleanmgr.cleanup_start")
             )
-
-            # 收集需要移除的实体
             entities_to_remove = []
             try:
-                level = self.plugin.server.level
-                for dimension in level.dimensions:
-                    for entity in dimension.actors:
-                        if self.should_keep(entity):
-                            kept += 1
-                        else:
+                for dim in self.plugin.server.level.dimensions:
+                    for entity in dim.actors:
+                        if not self._should_keep(entity):
                             entities_to_remove.append(entity)
             except Exception as e:
-                self.plugin.logger.error(f"收集实体失败: {e}")
+                self.plugin.logger.error(f"cleanmgr: {e}")
 
-            # 移除实体
             for entity in entities_to_remove:
                 try:
                     entity.remove()
                     removed += 1
-                except Exception as e:
-                    self.plugin.logger.error(f"移除实体失败: {e}")
+                except Exception:
+                    pass
 
-            # 发送清理完成的消息和toast通知
             self.plugin.server.broadcast_message(
-                self.config.t("prefix", "") + self.config.get_message("cleanup_complete", removed)
+                tr("cleanmgr.prefix") + tr("cleanmgr.cleanup_complete", removed)
             )
-            self.send_toast_to_all(
-                "清理系统",
-                self.config.get_message("cleanup_complete", removed)
-            )
-
-            # 重置状态
-            self.state.phase = "idle"
-            self.state.scheduled_timeouts = []
+            self._send_toast(tr("cleanmgr.toast_title"), tr("cleanmgr.cleanup_complete", removed))
+            self.state_phase = "idle"
 
         self.plugin.server.scheduler.run_task(self.plugin, do_cleanup)
 
-        if self.state.is_low_tps_trigger:
+        if self.is_low_tps_trigger:
             def evaluate():
                 time.sleep(5)
-                improved = self.current_tps > (self.state.tps_before_clean + 2.0)
-
+                improved = self.current_tps > (self.tps_before_clean + 2.0)
+                cfg = self._config.get("LowTpsClean", {})
                 if improved:
-                    self.state.low_tps_clean_count = 0
+                    self.low_tps_clean_count = 0
                 else:
-                    self.state.low_tps_clean_count += 1
-                    if self.state.low_tps_clean_count >= self.config.get("LowTpsClean", {}).get("maxConsecutiveCleans", 2):
-                        cool_min = round(self.config.get("LowTpsClean", {}).get("longCooldown", 450) / 60)
+                    self.low_tps_clean_count += 1
+                    if self.low_tps_clean_count >= cfg.get("maxConsecutiveCleans", 2):
+                        cool = round(cfg.get("longCooldown", 450) / 60)
                         self.plugin.server.broadcast_message(
-                            self.config.t("prefix", "") + 
-                            self.config.get_message("low_tps_ineffective", cool_min)
+                            tr("cleanmgr.prefix") + tr("cleanmgr.low_tps_ineffective", cool)
                         )
-                        self.state.low_tps_retry_time = (time.time() * 1000) + (self.config.get("LowTpsClean", {}).get("longCooldown", 450) * 1000)
-                        self.state.low_tps_clean_count = 0
+                        self.low_tps_retry_time = time.time() * 1000 + cfg.get("longCooldown", 450) * 1000
+                        self.low_tps_clean_count = 0
+                self.is_low_tps_trigger = False
+            threading.Thread(target=evaluate, daemon=True).start()
 
-                self.state.is_low_tps_trigger = False
-
-            thread = threading.Thread(target=evaluate, daemon=True)
-            thread.start()
-
-    def schedule_clean(self, is_manual: bool = False, player_name: str = "", is_low_tps: bool = False):
-        if self.state.phase != "idle":
+    def schedule_clean(self, is_manual=False, player_name="", is_low_tps=False):
+        if self.state_phase != "idle":
             return
 
         if is_manual and player_name:
             now = time.time()
-            last = self.state.last_player_clean.get(player_name, 0)
-            cooldown = self.config.get("playerCooldown", 300)
-            if (now - last) < cooldown:
-                player = self.plugin.server.get_player(player_name)
-                if player:
-                    player.send_message(
-                        self.config.t("prefix", "") + "§c触发清理冷却中，请稍后再试"
-                    )
+            last = self.last_player_clean.get(player_name, 0)
+            if (now - last) < self._config.get("playerCooldown", 300):
+                p = self.plugin.server.get_player(player_name)
+                if p:
+                    p.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.cooldown_msg"))
                 return
-
-            self.state.last_player_clean[player_name] = now
+            self.last_player_clean[player_name] = now
             self.plugin.server.broadcast_message(
-                self.config.t("prefix", "") + self.config.get_message("manual_trigger")
+                tr("cleanmgr.prefix") + tr("cleanmgr.manual_trigger")
             )
 
-        self.state.phase = "scheduled"
-        self.state.is_low_tps_trigger = is_low_tps
+        self.state_phase = "scheduled"
+        self.is_low_tps_trigger = is_low_tps
+        notice = self._config.get("notice", {})
+        n1, n2, n3 = notice.get("notice1", 30), notice.get("notice2", 15), notice.get("notice3", 5)
 
-        notice = self.config.get("notice", {})
-        n1 = notice.get("notice1", 30)
-        n2 = notice.get("notice2", 15)
-        n3 = notice.get("notice3", 5)
-
-        # 在主线程上发送第一次通知
-        def send_notice1():
+        def send1():
             self.plugin.server.broadcast_message(
-                self.config.t("prefix", "") + self.config.get_message("cleanup_notice", n1)
+                tr("cleanmgr.prefix") + tr("cleanmgr.cleanup_notice", n1)
             )
-            self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice", n1))
-
-        self.plugin.server.scheduler.run_task(self.plugin, send_notice1)
+            self._send_toast(tr("cleanmgr.toast_title"), tr("cleanmgr.cleanup_notice", n1))
+        self.plugin.server.scheduler.run_task(self.plugin, send1)
 
         if n2 > 0 and n2 < n1:
             def notice2():
-                time.sleep((n1 - n2))
-                if self.state.phase == "scheduled":
-                    # 在主线程上发送第二次通知
-                    def send_notice2():
+                time.sleep(n1 - n2)
+                if self.state_phase == "scheduled":
+                    def s2():
                         self.plugin.server.broadcast_message(
-                            self.config.t("prefix", "") + self.config.get_message("cleanup_notice2", n2)
+                            tr("cleanmgr.prefix") + tr("cleanmgr.cleanup_notice2", n2)
                         )
-                        self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice2", n2))
-
-                    self.plugin.server.scheduler.run_task(self.plugin, send_notice2)
-            t = threading.Thread(target=notice2, daemon=True)
-            t.start()
+                        self._send_toast(tr("cleanmgr.toast_title"), tr("cleanmgr.cleanup_notice2", n2))
+                    self.plugin.server.scheduler.run_task(self.plugin, s2)
+            threading.Thread(target=notice2, daemon=True).start()
 
         if n3 > 0 and n3 < n2:
             def notice3():
-                time.sleep((n1 - n3))
-                if self.state.phase == "scheduled":
-                    # 在主线程上发送第三次通知
-                    def send_notice3():
+                time.sleep(n1 - n3)
+                if self.state_phase == "scheduled":
+                    def s3():
                         self.plugin.server.broadcast_message(
-                            self.config.t("prefix", "") + self.config.get_message("cleanup_notice3", n3)
+                            tr("cleanmgr.prefix") + tr("cleanmgr.cleanup_notice3", n3)
                         )
-                        self.send_toast_to_all("清理系统", self.config.get_message("cleanup_notice3", n3))
-
-                    self.plugin.server.scheduler.run_task(self.plugin, send_notice3)
-            t = threading.Thread(target=notice3, daemon=True)
-            t.start()
+                        self._send_toast(tr("cleanmgr.toast_title"), tr("cleanmgr.cleanup_notice3", n3))
+                    self.plugin.server.scheduler.run_task(self.plugin, s3)
+            threading.Thread(target=notice3, daemon=True).start()
 
         def do_clean():
             time.sleep(n1)
-            # 在主线程上执行清理
-            self.plugin.server.scheduler.run_task(self.plugin, self.execute_clean)
+            self.plugin.server.scheduler.run_task(self.plugin, self._execute_clean)
+        threading.Thread(target=do_clean, daemon=True).start()
 
-        t = threading.Thread(target=do_clean, daemon=True)
-        t.start()
-
-    def send_toast_to_all(self, title: str, message: str):
-        def send_toast():
-            for player in self.plugin.server.online_players:
-                xuid = player.xuid
-                if self.config.player_settings.get(xuid, True):
+    def _send_toast(self, title: str, msg: str):
+        def st():
+            for p in self.plugin.server.online_players:
+                if self.player_settings.get(p.xuid, True):
                     try:
-                        player.send_toast(title, message)
-                    except:
+                        p.send_toast(title, msg)
+                    except Exception:
                         pass
-
-        # 确保在主线程上执行
-        self.plugin.server.scheduler.run_task(self.plugin, send_toast)
+        self.plugin.server.scheduler.run_task(self.plugin, st)
 
     def handle_command(self, player: Player, action: str = "") -> bool:
         if not action or action == "help":
-            player.send_message(self.config.t("prefix", "") + self.config.get_message("help_message"))
+            player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.help"))
             return True
-
         if action == "tps":
-            player.send_message(
-                self.config.t("prefix", "") + self.config.get_message("tps_info", f"{self.current_tps:.2f}")
-            )
+            player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.tps_info", f"{self.current_tps:.2f}"))
             return True
-
         if action == "status":
-            status = self.state.phase
-            if self.state.low_tps_retry_time > time.time() * 1000:
-                status += " (TPS清理长冷却中)"
-            player.send_message(self.config.t("prefix", "") + "状态: " + status)
+            s = self.state_phase
+            if self.low_tps_retry_time > time.time() * 1000:
+                s += " (TPS清理长冷却中)"
+            player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.status", s))
             return True
-
         if action == "cancel":
-            if self.state.phase == "scheduled":
-                self.state.phase = "idle"
-                self.plugin.server.broadcast_message(
-                    self.config.t("prefix", "") + self.config.get_message("cancel_success")
-                )
+            if self.state_phase == "scheduled":
+                self.state_phase = "idle"
+                self.plugin.server.broadcast_message(tr("cleanmgr.prefix") + tr("cleanmgr.cancel_success"))
             else:
-                player.send_message(
-                    self.config.t("prefix", "") + "§c当前没有计划清理可取消"
-                )
+                player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.no_scheduled"))
             return True
-
         if action == "now":
-            self.schedule_clean(is_manual=True, player_name=player.name, is_low_tps=False)
+            self.schedule_clean(True, player.name)
             return True
-
         if action == "toast":
             xuid = player.xuid
-            current = self.config.player_settings.get(xuid, True)
-            self.config.player_settings[xuid] = not current
-            self.config.save_player_settings()
-
-            if self.config.player_settings[xuid]:
-                player.send_message(
-                    self.config.t("prefix", "") + self.config.get_message("toast_enabled", "§a您已开启清理系统的顶部弹窗通知")
-                )
-            else:
-                player.send_message(
-                    self.config.t("prefix", "") + self.config.get_message("toast_disabled", "§c您已关闭清理系统的顶部弹窗通知")
-                )
+            cur = self.player_settings.get(xuid, True)
+            self.player_settings[xuid] = not cur
+            self._save_player_settings()
+            player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.toast_toggle", "§a已开启" if self.player_settings[xuid] else "§c已关闭"))
             return True
-
         return False

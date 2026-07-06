@@ -2,6 +2,7 @@ from typing import Dict, List
 from endstone import Player, ColorFormat
 from endstone.level import Location
 from endstone.form import ActionForm
+from .i18n import tr
 import time
 
 class BackSystem:
@@ -44,7 +45,7 @@ class BackSystem:
             return
 
         if index < 0 or index >= len(self.death_points[player.unique_id]):
-            player.send_message("§c无效的死亡点索引。")
+            player.send_message(tr("back.invalid_index"))
             return
 
         death_point = self.death_points[player.unique_id][index]
@@ -55,7 +56,7 @@ class BackSystem:
 
     def open_back_gui(self, player: Player):
         """打开返回死亡点 GUI"""
-        form = ActionForm(title="§6死亡回溯")
+        form = ActionForm(title=tr("back.title"))
 
         if player.unique_id in self.death_points and self.death_points[player.unique_id]:
             # 显示所有记录的死亡点

@@ -1,230 +1,225 @@
-import time
-import threading
-from typing import Dict, Optional
-from endstone import Player
-from endstone.boss import BossBar, BarColor, BarStyle
+"""
+YEssential Fcam System - 灵魂出窍
+发包实现: CameraInstruction + AddPlayer + SetPlayerGameType + 拦截移动
+"""
+import struct
+import uuid
+
+from endstone import Player, GameMode
+from endstone.level import Location
+from bedrock_protocol.packets import MinecraftPackets, MinecraftPacketIds
+from .i18n import tr
+
+FAKE_PLAYER_OFFSET = 114514
+
 
 class FcamSystem:
     def __init__(self, plugin):
         self.plugin = plugin
-        self.fcam_boss_bars: Dict[str, Dict] = {}
-        self.fcam_players: Dict[str, str] = {}  # player_name -> simulated_player_name
+        self.fcam_players: dict[str, dict] = {}
+        self._address_map: dict = {}  # address -> player
         self.info_prefix = "§l§6[-YEST-] §r"
-        self.timeout = 300  # 默认5分钟超时
-        self.cost_money = 0
-
-    def load_config(self):
-        config = self.plugin.config_manager.get_config()
-        fcam_config = config.get("Fcam", {})
-        self.cost_money = fcam_config.get("CostMoney", 0)
-        self.timeout = fcam_config.get("TimeOut", 300)
 
     def is_enabled(self) -> bool:
-        config = self.plugin.config_manager.get_config()
-        return config.get("Fcam", {}).get("EnableModule", False)
+        return self.plugin.config_manager.config_data.get("Fcam", {}).get("EnableModule", False)
 
     def is_in_fcam(self, player: Player) -> bool:
         return player.name in self.fcam_players
 
+    # ═══════════════════════════════════════════════════════
+    # 数据包
+    # ═══════════════════════════════════════════════════════
+
+    def _pkt(self, pid, **kwargs):
+        """创建并序列化数据包"""
+        pkt = MinecraftPackets.create_packet(pid)
+        for k, v in kwargs.items():
+            setattr(pkt, k, v)
+        return pkt.serialize()
+
+    def _send_camera_set(self, p: Player):
+        p.send_packet(MinecraftPacketIds.CameraInstruction, _encode_camera_set(
+            p.location.x, p.location.y + 2, p.location.z, 0, p.location.yaw,
+        ))
+
+    def _send_camera_clear(self, p: Player):
+        p.send_packet(MinecraftPacketIds.CameraInstruction, _encode_camera_clear())
+
+    def _send_set_gamemode(self, p: Player, gm: GameMode):
+        try:
+            data = self._pkt(MinecraftPacketIds.SetPlayerGameType, gamemode=gm.value)
+            p.send_packet(MinecraftPacketIds.SetPlayerGameType, data)
+        except Exception:
+            p.send_packet(MinecraftPacketIds.SetPlayerGameType, struct.pack('<i', gm.value))
+
+    def _send_add_player(self, p: Player, fake_uuid: uuid.UUID, fake_eid: int):
+        loc = p.location
+        try:
+            data = self._pkt(
+                MinecraftPacketIds.AddPlayer,
+                uuid=fake_uuid,
+                name=p.name,
+                entity_id=fake_eid,
+                position=(loc.x, loc.y, loc.z),
+                velocity=(0, 0, 0),
+                pitch=loc.pitch,
+                yaw=loc.yaw,
+                gamemode=0,
+            )
+            p.send_packet(MinecraftPacketIds.AddPlayer, data)
+        except Exception:
+            # fallback: struct 编码
+            self.plugin.logger.warning("[Fcam] AddPlayer fallback, 假身体可能不可见")
+            p.send_packet(MinecraftPacketIds.AddPlayer, _encode_add_player(
+                fake_uuid, p.name, fake_eid,
+                loc.x, loc.y, loc.z, loc.pitch, loc.yaw,
+            ))
+
+    def _send_remove_actor(self, p: Player, fake_eid: int):
+        try:
+            data = self._pkt(MinecraftPacketIds.RemoveActor, entity_id=fake_eid)
+            p.send_packet(MinecraftPacketIds.RemoveActor, data)
+        except Exception:
+            p.send_packet(MinecraftPacketIds.RemoveActor, struct.pack('<q', fake_eid))
+
+    # ═══════════════════════════════════════════════════════
+    # 进入 / 退出
+    # ═══════════════════════════════════════════════════════
+
     def enter_fcam(self, player: Player) -> bool:
         if not self.is_enabled():
-            player.send_message(self.info_prefix + "§c该模块未启用")
+            player.send_message(self.info_prefix + tr("fcam.disabled"))
             return False
-
-        player_name = player.name
-        player_pos = player.location
-
         if self.is_in_fcam(player):
-            player.send_message(self.info_prefix + "§c你已经在灵魂出窍状态")
+            player.send_message(self.info_prefix + tr("fcam.already"))
             return False
 
-        if self.cost_money > 0:
-            if hasattr(self.plugin, 'economy') and self.plugin.economy:
-                balance = self.plugin.economy.get_money(player_name)
-                if balance < self.cost_money:
-                    player.send_message(self.info_prefix + "§c金币不足")
-                    return False
-                self.plugin.economy.reduce_money(player_name, self.cost_money)
-            else:
-                player.send_message(self.info_prefix + "§c经济系统未初始化")
-                return False
+        pn = player.name
+        loc = player.location
+        fake_uuid = uuid.uuid4()
+        fake_eid = player.runtime_id + FAKE_PLAYER_OFFSET
 
-        simulated_name = player_name + "_sp"
+        self.fcam_players[pn] = {
+            "x": loc.x, "y": loc.y, "z": loc.z,
+            "dimension": loc.dimension,
+            "original_gamemode": player.game_mode,
+            "fake_uuid": fake_uuid,
+            "fake_eid": fake_eid,
+        }
 
-        try:
-            self.plugin.server.dispatch_command(
-                self.plugin.server.command_sender,
-                f"spawnsimulatedplayer {simulated_name} {player_pos.x} {player_pos.y} {player_pos.z}"
-            )
-        except Exception as e:
-            self.plugin.logger.error(f"生成模拟玩家失败: {e}")
-            player.send_message(self.info_prefix + "§c灵魂出窍失败")
-            return False
+        # 1. 切旁观者
+        self._send_set_gamemode(player, GameMode.SPECTATOR)
+        # 2. 生成假身体
+        self._send_add_player(player, fake_uuid, fake_eid)
+        # 3. 自由相机
+        self._send_camera_set(player)
 
-        try:
-            self.plugin.server.dispatch_command(
-                self.plugin.server.command_sender,
-                f"gamemode spectator {simulated_name}"
-            )
-        except:
-            pass
-
-        try:
-            player.game_mode = 6  # Spectator mode
-        except:
-            pass
-
-        self.fcam_players[player_name] = simulated_name
-        player.send_message(self.info_prefix + f"§a已进入灵魂出窍模式，扣除 {self.cost_money} 金币")
-
-        if self.timeout > 0:
-            self.start_fcam_boss_bar(player, player_name, self.timeout)
-
+        player.send_message(self.info_prefix + tr("fcam.entered"))
         return True
 
     def exit_fcam(self, player: Player) -> bool:
-        player_name = player.name
-
+        pn = player.name
         if not self.is_in_fcam(player):
-            player.send_message(self.info_prefix + "§c你不在灵魂出窍状态")
             return False
 
-        self.cleanup_fcam_boss_bar(player_name)
+        data = self.fcam_players.pop(pn)
 
-        simulated_name = self.fcam_players.pop(player_name)
+        self._send_camera_clear(player)
+        self._send_set_gamemode(player, data["original_gamemode"])
+        self._send_remove_actor(player, data["fake_eid"])
+        player.teleport(Location(data["dimension"], data["x"], data["y"], data["z"]))
 
-        try:
-            player.game_mode = 0  # Survival mode
-        except:
-            pass
-
-        try:
-            self.plugin.server.dispatch_command(
-                self.plugin.server.command_sender,
-                f"tp {player_name} {simulated_name}"
-            )
-        except:
-            pass
-
-        try:
-            self.plugin.server.dispatch_command(
-                self.plugin.server.command_sender,
-                f"removesimulatedplayer {simulated_name}"
-            )
-        except:
-            pass
-
-        player.send_message(self.info_prefix + "§a已退出灵魂出窍模式")
+        player.send_message(self.info_prefix + tr("fcam.exited"))
         return True
 
     def toggle_fcam(self, player: Player) -> bool:
         if self.is_in_fcam(player):
             return self.exit_fcam(player)
-        else:
-            return self.enter_fcam(player)
+        return self.enter_fcam(player)
 
-    def start_fcam_boss_bar(self, player: Player, player_name: str, timeout: int):
-        remaining = timeout
+    # ═══════════════════════════════════════════════════════
+    # 事件
+    # ═══════════════════════════════════════════════════════
 
-        try:
-            boss_bar = self.plugin.server.create_boss_bar(
-                f"§e灵魂出窍剩余 §c{remaining} §e秒",
-                BarColor.YELLOW,
-                BarStyle.SOLID
-            )
-            boss_bar.add_player(player)
-            boss_bar.progress = 1.0
-        except Exception as e:
-            self.plugin.logger.error(f"创建BossBar失败: {e}")
-            boss_bar = None
-
-        self.fcam_boss_bars[player_name] = {
-            "boss_bar": boss_bar,
-            "timer": None,
-            "remaining": remaining,
-            "total_time": timeout
-        }
-
-        def update_boss_bar():
-            nonlocal remaining
-            while remaining > 0 and player_name in self.fcam_players:
-                time.sleep(1)
-                remaining -= 1
-
-                current_player = self.plugin.server.get_player(player_name)
-                if not current_player:
-                    self.cleanup_fcam_boss_bar(player_name)
-                    return
-
-                if current_player.game_mode.value != 6:
-                    self.cleanup_fcam_boss_bar(player_name)
-                    return
-
-                data = self.fcam_boss_bars.get(player_name)
-                if not data:
-                    return
-
-                data["remaining"] = remaining
-
-                if remaining <= 0:
-                    self.cleanup_fcam_boss_bar(player_name)
-                    try:
-                        current_player.game_mode = 0
-                        self.plugin.server.dispatch_command(
-                            self.plugin.server.command_sender,
-                            f"tp {player_name} {player_name}_sp"
-                        )
-                        self.plugin.server.dispatch_command(
-                            self.plugin.server.command_sender,
-                            f"removesimulatedplayer {player_name}_sp"
-                        )
-                        if player_name in self.fcam_players:
-                            self.fcam_players.pop(player_name)
-                        current_player.send_message(self.info_prefix + "§c灵魂出窍时间已到")
-                    except Exception as e:
-                        self.plugin.logger.error(f"灵魂出窍超时处理失败: {e}")
-                    return
-
-                progress = remaining / data["total_time"]
-                color = BarColor.YELLOW
-                if remaining <= 10:
-                    color = BarColor.RED
-                elif remaining <= 5:
-                    color = BarColor.GREEN
-
-                if data["boss_bar"]:
-                    try:
-                        data["boss_bar"].title = f"§e灵魂出窍剩余 §c{remaining} §e秒"
-                        data["boss_bar"].progress = progress
-                        data["boss_bar"].color = color
-                    except Exception as e:
-                        self.plugin.logger.error(f"更新BossBar失败: {e}")
-
-        timer_thread = threading.Thread(target=update_boss_bar, daemon=True)
-        timer_thread.start()
-
-        if player_name in self.fcam_boss_bars:
-            self.fcam_boss_bars[player_name]["timer"] = timer_thread
-
-    def cleanup_fcam_boss_bar(self, player_name: str):
-        if player_name in self.fcam_boss_bars:
-            data = self.fcam_boss_bars.pop(player_name)
-            if data.get("boss_bar"):
-                try:
-                    data["boss_bar"].remove_all()
-                except:
-                    pass
+    def on_player_join(self, player: Player):
+        self._address_map[player.address] = player
 
     def on_player_quit(self, player: Player):
-        player_name = player.name
-        self.cleanup_fcam_boss_bar(player_name)
+        self._address_map.pop(player.address, None)
+        if player.name in self.fcam_players:
+            data = self.fcam_players.pop(player.name)
+            self._send_remove_actor(player, data["fake_eid"])
 
-        if player_name in self.fcam_players:
-            simulated_name = self.fcam_players.pop(player_name)
-            try:
-                self.plugin.server.dispatch_command(
-                    self.plugin.server.command_sender,
-                    f"removesimulatedplayer {simulated_name}"
-                )
-            except:
-                pass
+    def on_packet_receive(self, event):
+        """拦截 PlayerAuthInputPacket → 防止服务端处理灵魂出窍玩家的移动"""
+        if event.packet_id == MinecraftPacketIds.PlayerAuthInput:
+            player = self._address_map.get(event.address)
+            if player and player.name in self.fcam_players:
+                event.cancel()
+
+    def on_damage(self, player: Player):
+        if player.name in self.fcam_players:
+            self.exit_fcam(player)
+            player.send_message(self.info_prefix + "§c受到伤害，已退出灵魂出窍模式")
+
+    def on_death(self, player: Player):
+        if player.name in self.fcam_players:
+            self.fcam_players.pop(player.name, None)
+
+
+# ═══════════════════════════════════════════════════════════
+# CameraInstruction 编码 (struct 手写)
+# ═══════════════════════════════════════════════════════════
+
+def _encode_camera_set(x, y, z, pitch, yaw, preset=0, ease=0.5):
+    return (
+        b'\x01' + struct.pack('<I', preset)
+        + b'\x01' + struct.pack('<B', 0) + struct.pack('<f', ease)
+        + b'\x01' + struct.pack('<fff', x, y, z)
+        + b'\x01' + struct.pack('<ff', pitch, yaw)
+        + b'\x00' * 13
+    )
+
+
+def _encode_camera_clear():
+    return b'\x00' + b'\x01' + b'\x00' * 8
+
+
+def _write_varint(value: int) -> bytes:
+    result = bytearray()
+    value &= 0xFFFFFFFF
+    while True:
+        byte = value & 0x7F
+        value >>= 7
+        if value:
+            result.append(byte | 0x80)
+        else:
+            result.append(byte)
+            break
+    return bytes(result)
+
+
+def _write_string(s: str) -> bytes:
+    data = s.encode("utf-8")
+    return _write_varint(len(data)) + data
+
+
+def _encode_add_player(u, name, eid, x, y, z, pitch, yaw):
+    bs = bytearray()
+    bs.extend(u.bytes)
+    bs.extend(_write_string(name))
+    bs.extend(struct.pack('<q', eid))
+    bs.extend(_write_string(""))  # platform chat id
+    bs.extend(struct.pack('<fff', x, y, z))
+    bs.extend(struct.pack('<fff', 0, 0, 0))  # velocity
+    bs.extend(struct.pack('<f', pitch))
+    bs.extend(struct.pack('<f', yaw))
+    bs.extend(struct.pack('<f', yaw))  # head yaw
+    bs.extend(_write_varint(0))  # held item
+    bs.extend(_write_varint(0))  # gametype (survival)
+    bs.extend(_write_varint(0))  # metadata count
+    bs.extend(b'\x00' * 16)  # adventure settings
+    bs.extend(_write_varint(0))  # links
+    bs.extend(_write_string(""))  # device id
+    bs.extend(struct.pack('<i', 0))  # build platform
+    return bytes(bs)

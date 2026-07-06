@@ -11,7 +11,7 @@ class HubSystem:
         return self.plugin.config_manager.get("Hub", {
             "EnabledModule": True,
             "x": 0,
-            "y": -60,
+            "y": 0,
             "z": 0,
             "dimid": 0
         })
@@ -19,15 +19,19 @@ class HubSystem:
     def is_enabled(self) -> bool:
         return self.config.get("EnabledModule", True)
     
-    def get_hub_location(self) -> Location:
+    def get_hub_location(self):
         hub_config = self.config
-        world = self.plugin.server.level
-        
-        if world is None:
+        level = self.plugin.server.level
+        if level is None:
             return None
-        
+
+        dimid = hub_config.get("dimid", 0)
+        dimension = self._get_dimension(level, dimid)
+        if dimension is None:
+            return None
+
         return Location(
-            world,
+            dimension,
             hub_config.get("x", 0),
             hub_config.get("y", -60),
             hub_config.get("z", 0)
@@ -86,9 +90,23 @@ class HubSystem:
         player.send_message(f"§bZ: §f{round(player.location.z, 1)}")
         player.send_message(f"§b维度: §f{self._get_dimension_name(hub_data['dimid'])}")
     
+    def _get_dimension(self, level, dimid: int):
+        """根据 dimid 获取 Dimension 对象"""
+        names = {0: "Overworld", 1: "Nether", 2: "The End"}
+        dim_name = names.get(dimid, "Overworld")
+        try:
+            return level.get_dimension(dim_name)
+        except Exception:
+            # 回退：用第一个可用的 dimension
+            dims = level.dimensions
+            return dims[0] if dims else None
+
     def _get_dimension_name(self, dimid: int) -> str:
         names = {0: "主世界", 1: "下界", 2: "末地"}
         return names.get(dimid, "未知")
-    
-    def _get_dimension_id(self, world) -> int:
-        return 0
+
+    def _get_dimension_id(self, dim) -> int:
+        """从 Dimension 对象获取 dimid"""
+        dim_name = getattr(dim, 'name', '')
+        name_map = {"Overworld": 0, "Nether": 1, "The End": 2}
+        return name_map.get(dim_name, 0)
