@@ -8,6 +8,7 @@ from typing import Any, Dict
 
 from .log import plugin_print
 from .constant import plugin_version
+from .i18n import tr
 
 
 class ConfigManager:
@@ -40,7 +41,7 @@ class ConfigManager:
             self.config_data = self.get_default_config()
             self.config_data["config_version"] = plugin_version
             self.save_config()
-            plugin_print(f"[Config] 已创建默认配置 ({plugin_version})")
+            plugin_print(tr("config.created", plugin_version))
         else:
             try:
                 with open(self.config_path, "r", encoding="utf-8") as f:
@@ -49,9 +50,7 @@ class ConfigManager:
                 old_ver = loaded.get("config_version", "0")
                 if self._parse_version(old_ver) < self._parse_version(plugin_version):
                     self.config_data = self._migrate(loaded, old_ver)
-                    plugin_print(
-                        f"[Config] 配置已从 {old_ver} 迁移到 {plugin_version}"
-                    )
+                    plugin_print(tr("config.migrated", old_ver, plugin_version))
                 else:
                     self.config_data = self._deep_merge(
                         self.get_default_config(), loaded
@@ -68,7 +67,7 @@ class ConfigManager:
             with open(self.config_path, "w", encoding="utf-8") as f:
                 json.dump(self.config_data, f, indent=4, ensure_ascii=False)
         except Exception as e:
-            plugin_print(f"Failed to save config: {e}")
+            plugin_print(tr("config.save_failed", str(e)))
 
     def _migrate(self, loaded: dict, old_version: str) -> dict:
         """

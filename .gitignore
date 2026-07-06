@@ -165,8 +165,6 @@ wheelhouse/
 # API documentation
 api.txt
 
-# Original YEssential source (for reference only)
-YEssential.js
-modules/
-manifest.json
-tooth.json
+# DIY
+.claude
+YEssential-main

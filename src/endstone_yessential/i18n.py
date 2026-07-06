@@ -12,7 +12,6 @@ from pathlib import Path
 
 default_translations = {
     "zh_CN": {
-        "prefix": "§l§6[-YEST-] §r",
         "economy.coin": "金币",
         "economy.query": "查询%s",
         "economy.transfer": "转账%s",
@@ -245,9 +244,20 @@ default_translations = {
 
         "logo.author": "作者：",
         "logo.version": "版本：",
+        "logo.thanks": "感谢您使用Easy系列插件！",
+        "logo.license": "本插件使用 %s 许可证协议进行发布",
+        "logo.github": "GitHub 仓库：%s",
+        "logo.minebbs": "插件MineBBS资源帖：%s",
+        "logo.qq_group": "Easy系列插件交流群：%s",
+        "logo.enabled": "%s 已启用！",
+        "logo.disabling": "%s 正在禁用...",
+        "logo.disabled": "%s 已禁用!",
+        "config.created": "已创建默认配置 (%s)",
+        "config.migrated": "配置已从 %s 迁移到 %s",
+        "config.load_failed": "加载配置失败: %s",
+        "config.save_failed": "保存配置失败: %s",
     },
     "en_US": {
-        "prefix": "§l§6[-YEST-] §r",
         "economy.coin": "Coins",
         "economy.query": "Check %s",
         "economy.transfer": "Send %s",
@@ -480,6 +490,18 @@ default_translations = {
 
         "logo.author": "Author: ",
         "logo.version": "Version: ",
+        "logo.thanks": "Thank you for using Easy Series Plugin!",
+        "logo.license": "Licensed under %s",
+        "logo.github": "GitHub: %s",
+        "logo.minebbs": "MineBBS: %s",
+        "logo.qq_group": "Easy Series QQ Group: %s",
+        "logo.enabled": "%s enabled!",
+        "logo.disabling": "%s disabling...",
+        "logo.disabled": "%s disabled!",
+        "config.created": "Default config created (%s)",
+        "config.migrated": "Config migrated from %s to %s",
+        "config.load_failed": "Failed to load config: %s",
+        "config.save_failed": "Failed to save config: %s",
     }
 }
 
@@ -564,10 +586,6 @@ class I18n:
             except (TypeError, ValueError):
                 return text
         return text
-
-    def prefix(self) -> str:
-        return self.translate("prefix")
-
 
 # ── 全局 ────────────────────────────────────────────────
 

@@ -28,7 +28,7 @@ from .crash import CrashSystem
 from .cleanmgr import CleanmgrSystem
 from .suicide import SuicideSystem
 from .sign import SignSystem
-from .i18n import init_i18n, get_i18n
+from .i18n import init_i18n, get_i18n, tr
 from .update_checker import UpdateChecker
 from .log import plugin_print
 from .constant import *
@@ -225,16 +225,16 @@ class YEssentialPlugin(Plugin):
 
         plugin_print("=" * 80, "INFO")
         plugin_print(f"{plugin_name} - {plugin_description}", "INFO")
-        plugin_print("感谢您使用Easy系列插件！", "INFO")
-        plugin_print(f"本插件使用 {plugin_license} 许可证协议进行发布", "INFO")
-        plugin_print(f"GitHub 仓库：{plugin_github_link}", "INFO")
-        plugin_print(f"插件MineBBS资源帖：{plugin_minebbs_link}", "INFO")
-        plugin_print(f"Easy系列插件交流群：1083195477", "INFO")
-        plugin_print(f"作者：{plugin_author[0]} | 版本：{plugin_version}", "INFO")
+        plugin_print(tr("logo.thanks"), "INFO")
+        plugin_print(tr("logo.license", plugin_license), "INFO")
+        plugin_print(tr("logo.github", plugin_github_link), "INFO")
+        plugin_print(tr("logo.minebbs", plugin_minebbs_link), "INFO")
+        plugin_print(tr("logo.qq_group", "1083195477"), "INFO")
+        plugin_print(f"{tr('logo.author')}{plugin_author[0]} | {tr('logo.version')}{plugin_version}", "INFO")
         plugin_print("=" * 80, "INFO")
 
     def on_enable(self):
-        plugin_print(f"{plugin_name} 已启用！")
+        plugin_print(tr("logo.enabled", plugin_name))
 
         # 1. 初始化配置
         self.config_manager = ConfigManager(self)
@@ -294,9 +294,9 @@ class YEssentialPlugin(Plugin):
             self.maintenance.enable()
 
     def on_disable(self):
-        plugin_print(f"{plugin_name} 正在禁用...")
+        plugin_print(tr("logo.disabling", plugin_name))
         self.motd.stop_rotation()
-        plugin_print(f"{plugin_name} 已禁用!")
+        plugin_print(tr("logo.disabled", plugin_name))
 
     # ══════════════════════════════════════════════════════════
     # Event Handlers
