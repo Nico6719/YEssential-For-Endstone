@@ -48,8 +48,7 @@ class PVPSystem:
         """设置玩家 PVP 状态"""
         self.pvp_settings[player.name] = enabled
         self.save_pvp_settings()
-        status = "§a开启" if enabled else "§c关闭"
-        player.send_message(f"§6[YEssential] §7PVP 状态: {status}§7。")
+        player.send_message(tr("pvp.set_on") if enabled else tr("pvp.set_off"))
 
     def init_player_default(self, player: Player):
         """初始化玩家默认PVP设置 (join时调用)"""
@@ -112,10 +111,10 @@ class PVPSystem:
     def open_pvp_gui(self, player: Player):
         current_status = self.is_pvp_enabled(player.name)
         form = ActionForm(
-            title="§6PVP 设置",
-            content=f"§7当前状态: {'§a开启' if current_status else '§c关闭'}"
+            title=tr("pvp.title"),
+            content=tr("pvp.status", tr("pvp.enabled") if current_status else tr("pvp.disabled"))
         )
-        form.add_button("§a开启 PVP", on_click=lambda p: self.set_pvp(p, True))
-        form.add_button("§c关闭 PVP", on_click=lambda p: self.set_pvp(p, False))
-        form.add_button("§c关闭")
+        form.add_button(tr("pvp.on_btn"), on_click=lambda p: self.set_pvp(p, True))
+        form.add_button(tr("pvp.off_btn"), on_click=lambda p: self.set_pvp(p, False))
+        form.add_button(tr("pvp.close"))
         player.send_form(form)

@@ -265,7 +265,7 @@ class CleanmgrSystem:
         if action == "status":
             s = self.state_phase
             if self.low_tps_retry_time > time.time() * 1000:
-                s += " (TPS清理长冷却中)"
+                s += tr("cleanmgr.tps_cooldown")
             player.send_message(tr("cleanmgr.prefix") + tr("cleanmgr.status", s))
             return True
         if action == "cancel":

@@ -247,10 +247,10 @@ class SignSystem:
         form.on_submit=lambda _,__: self.open_settings(p); p.send_form(form)
 
     def _gui_params(self, p: Player):
-        sc=self.cfg._get(); sign_cfg=sc.get("sign",{"switch":True,"gui_arrange":3})
+        sc=self.cfg._get()
         rm=sc.get("random_money",{"min_money":1000,"max_money":10000})
         re=sc.get("random_exp",{"min_exp":100,"max_exp":1000})
-        sw=sign_cfg.get('switch',True)
+        sw=sc.get("enable",True)
         form=ModalForm(title=tr("sign.gui_params_title"), controls=[
             Toggle(label=tr("sign.gui_params_switch", tr("sign.gui_on") if sw else tr("sign.gui_off")), default_value=sw),
             Label(text=tr("sign.gui_params_money_label")),
@@ -260,13 +260,14 @@ class SignSystem:
             TextInput(label=tr("sign.gui_params_exp_min", re['min_exp']), placeholder="100", default_value=str(re['min_exp'])),
             TextInput(label=tr("sign.gui_params_exp_max", re['max_exp']), placeholder="1000", default_value=str(re['max_exp'])),
             Label(text=tr("sign.gui_params_layout_label")),
-            TextInput(label=tr("sign.gui_params_layout", sign_cfg.get('gui_arrange',3)), placeholder="3", default_value=str(sign_cfg.get('gui_arrange',3)))
+            TextInput(label=tr("sign.gui_params_layout", sc.get("gui_arrange",3)), placeholder="3", default_value=str(sc.get("gui_arrange",3)))
         ])
         def cb(_, data):
             if not data: self.open_settings(p); return
+            data = json.loads(data) if isinstance(data, str) else data
             try:
                 cur=self.plugin.config_manager.config_data
-                cur["Sign"]={**sc, "sign":{"switch":data[0],"gui_arrange":max(1,min(10,int(data[7]) if data[7].strip() else 3))},
+                cur["Sign"]={**sc, "enable":data[0],"gui_arrange":max(1,min(10,int(data[7]) if data[7].strip() else 3)),
                     "random_money":{"min_money":int(data[2]) if data[2].strip() else rm["min_money"],"max_money":int(data[3]) if data[3].strip() else rm["max_money"]},
                     "random_exp":{"min_exp":int(data[5]) if data[5].strip() else re["min_exp"],"max_exp":int(data[6]) if data[6].strip() else re["max_exp"]}}
                 self.plugin.config_manager.save_config(); p.send_message(self.prefix+tr("sign.gui_updated")); self.open_settings(p)
@@ -291,6 +292,7 @@ class SignSystem:
         ])
         def cb(_, data):
             if not data: self._gui_daily(p); return
+            data = json.loads(data) if isinstance(data, str) else data
             typ=int(data[0]); amt=int(data[1]) if data[1].strip() else 1000
             token={"0":"random_item","1":"random_money","2":"random_exp"}.get(str(typ),f"money_{amt}")
             cur=self.plugin.config_manager.config_data; sc=cur.get("Sign",{})
@@ -330,6 +332,7 @@ class SignSystem:
         ])
         def cb(_, data):
             if not data: self._gui_addition_list(p); return
+            data = json.loads(data) if isinstance(data, str) else data
             try:
                 day=int(data[0].strip()); typ=int(data[1]); amt=int(data[2]) if data[2].strip() else 1000
                 token={"0":"random_item","1":"random_money","2":"random_exp"}.get(str(typ),f"money_{amt}")

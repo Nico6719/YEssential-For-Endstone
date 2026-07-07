@@ -507,6 +507,7 @@ class EconomySystem:
             if tg: self.add_money_internal(tg, amt); sender.send_message(tr("economy.admin_give", tname, amt, coin)); self.history.add(tname, f"admin +{amt}"); tg.send_message(tr("economy.admin_give", tname, amt, coin)); self.ranking.update(tname, self.get_money_internal(tg))
             else: self.offline_cache.add(tname, "add", amt); sender.send_message(tr("economy.offline_cached", tname))
         elif op == "del":
+            if amt <= 0: sender.send_message(tr("economy.must_positive")); return True
             if tg:
                 if self.reduce_money_internal(tg, amt): sender.send_message(tr("economy.admin_take", tname, amt, coin)); self.history.add(tname, f"admin -{amt}"); tg.send_message(tr("economy.admin_take", tname, amt, coin)); self.ranking.update(tname, self.get_money_internal(tg))
                 else: sender.send_message(tr("economy.not_enough"))

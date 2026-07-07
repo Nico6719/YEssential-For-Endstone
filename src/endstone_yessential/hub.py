@@ -40,7 +40,7 @@ class HubSystem:
     
     def open_hub_gui(self, player: Player):
         if not self.is_enabled():
-            player.send_message("§6[YEssential] §c该模块未启用。")
+            player.send_message(tr("hub.disabled"))
             return
         
         hub_config = self.config
@@ -50,11 +50,11 @@ class HubSystem:
         dimid = hub_config.get("dimid", 0)
         dim_name = self._get_dimension_name(dimid)
         
-        form = ActionForm(title="§6回城菜单")
+        form = ActionForm(title=tr("hub.title"))
         form.content = f"§e目标位置：\n§bX: §f{x}\n§bY: §f{y}\n§bZ: §f{z}\n§b维度: §f{dim_name}"
         
-        form.add_button("§a立即传送")
-        form.add_button("§c取消")
+        form.add_button(tr("hub.teleport_now"))
+        form.add_button(tr("hub.cancel"))
         
         def on_submit(selected_player, selected_id):
             if selected_id == 0:
@@ -66,15 +66,15 @@ class HubSystem:
     def teleport_to_hub(self, player: Player):
         location = self.get_hub_location()
         if location is None:
-            player.send_message("§6[YEssential] §c无法获取传送位置。")
+            player.send_message(tr("hub.no_location"))
             return
         
         player.teleport(location)
-        player.send_message("§6[YEssential] §a已传送至回城点。")
+        player.send_message(tr("hub.teleported"))
     
     def set_hub(self, player: Player):
         if not player.is_op:
-            player.send_message("§6[YEssential] §c你没有权限设置回城点。")
+            player.send_message(tr("hub.no_perm"))
             return
         
         hub_data = {
@@ -85,7 +85,7 @@ class HubSystem:
             "dimid": self._get_dimension_id(player.location.dimension)
         }
         self.plugin.config_manager.set("Hub", hub_data)
-        player.send_message("§6[YEssential] §a回城点已设置为：")
+        player.send_message(tr("hub.set"))
         player.send_message(f"§bX: §f{round(player.location.x, 1)}")
         player.send_message(f"§bY: §f{round(player.location.y, 1)}")
         player.send_message(f"§bZ: §f{round(player.location.z, 1)}")
@@ -98,13 +98,13 @@ class HubSystem:
         try:
             return level.get_dimension(dim_name)
         except Exception:
-            # 回退：用第一个可用的 dimension
+            self.plugin.logger.warning(f"Hub: dimension lookup failed for dimid={dimid}, falling back to first dimension")
             dims = level.dimensions
             return dims[0] if dims else None
 
     def _get_dimension_name(self, dimid: int) -> str:
-        names = {0: "主世界", 1: "下界", 2: "末地"}
-        return names.get(dimid, "未知")
+        names = {0: tr("hub.dim_overworld"), 1: tr("hub.dim_nether"), 2: tr("hub.dim_end")}
+        return names.get(dimid, tr("hub.dim_unknown"))
 
     def _get_dimension_id(self, dim) -> int:
         """从 Dimension 对象获取 dimid"""

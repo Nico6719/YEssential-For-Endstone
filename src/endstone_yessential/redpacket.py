@@ -29,7 +29,7 @@ class RedpacketDB:
                     if "nextId" not in self.data:
                         self.data["nextId"] = 1
         except Exception as e:
-            self.plugin.logger.error(f"[红包] 数据加载失败: {e}")
+            self.plugin.logger.error(tr("redpacket.log_load_fail", e))
             self.data = {"nextId": 1, "packets": {}}
 
     def save(self):
@@ -38,7 +38,7 @@ class RedpacketDB:
             with open(self.data_path, 'w', encoding='utf-8') as f:
                 json.dump(self.data, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            self.plugin.logger.error(f"[红包] 数据保存失败: {e}")
+            self.plugin.logger.error(tr("redpacket.log_save_fail", e))
 
     def get_packet(self, packet_id: str):
         return self.data["packets"].get(packet_id)
@@ -154,12 +154,12 @@ class RedpacketSystem:
 
     def send_redpacket(self, player: Player, amount: int, count: int, target_player: str = "", message: str = "", packet_type: str = "random") -> bool:
         if not self.is_enabled():
-            player.send_message(self.info_prefix + "§c该模块未启用")
+            player.send_message(self.info_prefix + tr("redpacket.disabled"))
             return False
 
         cfg = self.get_config()
         if not cfg:
-            player.send_message(self.info_prefix + "§c该模块未启用")
+            player.send_message(self.info_prefix + tr("redpacket.disabled"))
             return False
 
         max_amount = cfg.get("maxAmount", 10000)
@@ -168,20 +168,20 @@ class RedpacketSystem:
         expire_time = cfg.get("expireTime", 300)
 
         if amount < min_amount or amount > max_amount:
-            player.send_message(self.info_prefix + f"§c总金额需在 {min_amount}~{max_amount} 之间")
+            player.send_message(self.info_prefix + tr("redpacket.amount_range", min_amount, max_amount))
             return False
 
         if count < 1 or count > max_count:
-            player.send_message(self.info_prefix + f"§c个数需在 1~{max_count} 之间")
+            player.send_message(self.info_prefix + tr("redpacket.count_range", max_count))
             return False
 
         if amount < count:
-            player.send_message(self.info_prefix + f"§c总金额({amount})不能少于红包个数({count})")
+            player.send_message(self.info_prefix + tr("redpacket.amount_less_count", amount, count))
             return False
 
         balance = self.economy.get(player)
         if balance < amount:
-            player.send_message(self.info_prefix + "§c余额不足")
+            player.send_message(self.info_prefix + tr("economy.not_enough"))
             return False
 
         self.economy.reduce(player, amount)
@@ -209,18 +209,18 @@ class RedpacketSystem:
         self.expiry_queue.append({"id": str(packet_id), "expireAt": packet["expireAt"]})
         self.expiry_queue.sort(key=lambda x: x["expireAt"])
 
-        type_name = "拼手气" if packet_type == "random" else "普通"
+        type_name = tr("redpacket.random") if packet_type == "random" else tr("redpacket.normal")
 
         if is_specific:
             target = self.plugin.server.get_player(packet["targetPlayer"])
             if target:
-                target.send_message(self.info_prefix + f"{player.name} 给你发了一个{type_name}红包！")
+                target.send_message(self.info_prefix + tr("redpacket.private_send", player.name, type_name))
             player.send_message(self.info_prefix + f"已向 {packet['targetPlayer']} 发送 {type_name}红包：{amount} × {count}")
         else:
             self.plugin.server.broadcast_message(
-                self.info_prefix + f"{player.name} 发了一个{type_name}红包，快来抢！"
+                self.info_prefix + tr("redpacket.public_send", player.name, type_name)
             )
-            player.send_message(self.info_prefix + f"{type_name}红包发送成功：{amount} × {count}")
+            player.send_message(self.info_prefix + tr("redpacket.send_success", type_name, amount, count))
 
         return True
 
@@ -244,7 +244,7 @@ class RedpacketSystem:
             available.append(packet)
 
         if not available:
-            player.send_message(self.info_prefix + "§c当前没有可领取的红包")
+            player.send_message(self.info_prefix + tr("redpacket.no_available"))
             return False
 
         available.sort(key=lambda x: x.get("createdAt", 0))
@@ -269,7 +269,7 @@ class RedpacketSystem:
 
         self.economy.add(player, amount)
 
-        type_name = "拼手气" if packet.get("packetType") == "random" else "普通"
+        type_name = tr("redpacket.random") if packet.get("packetType") == "random" else tr("redpacket.normal")
         player.send_message(
             self.info_prefix + f"恭喜你领取到 {packet['sender']} 的{type_name}红包，获得 {amount} 金币！"
         )
@@ -277,7 +277,7 @@ class RedpacketSystem:
         sender = self.plugin.server.get_player(packet["sender"])
         if sender and sender.name != player.name:
             sender.send_message(
-                self.info_prefix + f"{player.name} 领取了你的红包，获得 {amount} 金币"
+                self.info_prefix + tr("redpacket.claimed", player.name, amount)
             )
 
         return True
@@ -300,13 +300,13 @@ class RedpacketSystem:
             available.append(packet)
 
         if not available:
-            player.send_message(self.info_prefix + "§c暂无可领红包")
+            player.send_message(self.info_prefix + tr("redpacket.no_available"))
             return
 
         available.sort(key=lambda x: x.get("createdAt", 0))
 
-        form = ActionForm(title="可领红包")
-        form.content = "点击红包立即领取"
+        form = ActionForm(title=tr("redpacket.available"))
+        form.content = tr("redpacket.click_to_open")
 
         for packet in available:
             sec = max(0, (packet.get("expireAt", 0) - now) // 1000)
@@ -331,13 +331,13 @@ class RedpacketSystem:
         ]
 
         if not history:
-            player.send_message(self.info_prefix + "§c暂无红包历史")
+            player.send_message(self.info_prefix + tr("redpacket.no_history"))
             return
 
         history.sort(key=lambda x: x.get("createdAt", 0), reverse=True)
 
-        form = ActionForm(title="红包历史")
-        form.content = "最近 10 条"
+        form = ActionForm(title=tr("redpacket.history"))
+        form.content = tr("redpacket.recent_10")
 
         for packet in history[:10]:
             is_sender = packet.get("sender") == player.name
@@ -357,18 +357,18 @@ class RedpacketSystem:
         player.send_form(form)
 
     def show_help(self, player: Player):
-        form = ActionForm(title="红包帮助")
-        form.content = "选择查看详情:"
-        form.add_button("发送红包")
-        form.add_button("领取红包")
-        form.add_button("红包列表")
-        form.add_button("红包历史")
+        form = ActionForm(title=tr("redpacket.help"))
+        form.content = tr("redpacket.select_detail")
+        form.add_button(tr("redpacket.send_btn"))
+        form.add_button(tr("redpacket.open_btn"))
+        form.add_button(tr("redpacket.list_btn"))
+        form.add_button(tr("redpacket.history"))
 
         def on_submit(p, selected):
             if selected == 0:
-                p.send_message(self.info_prefix + "§a用法: /rp send <金额> <个数> [玩家] [留言]")
+                p.send_message(self.info_prefix + tr("redpacket.help_send"))
             elif selected == 1:
-                p.send_message(self.info_prefix + "§a用法: /rp open 领取红包")
+                p.send_message(self.info_prefix + tr("redpacket.help_open"))
             elif selected == 2:
                 self.show_redpacket_list(p)
             elif selected == 3:
@@ -386,7 +386,7 @@ class RedpacketSystem:
 
         if sub == "send":
             if len(args) < 3:
-                player.send_message(self.info_prefix + "§c用法: /rp send <金额> <个数> [玩家] [留言]")
+                player.send_message(self.info_prefix + tr("redpacket.usage_send"))
                 return True
             try:
                 amount = int(args[1])
@@ -395,7 +395,7 @@ class RedpacketSystem:
                 message = args[4] if len(args) > 4 else ""
                 self.send_redpacket(player, amount, count, target, message)
             except ValueError:
-                player.send_message(self.info_prefix + "§c金额和个数必须是数字")
+                player.send_message(self.info_prefix + tr("redpacket.need_number"))
             return True
 
         elif sub == "open":

@@ -123,6 +123,7 @@ default_translations = {
         "tpa.rejected": "§7您已拒绝来自 §a%s §7的传送请求。",
         "tpa.sender_rejected": "§a%s §7拒绝了您的传送请求。",
         "tpa.no_pending": "§c没有待处理的传送请求。",
+        "tpa.already_pending": "§c你已有待处理的传送请求，请等待对方回应。",
         "tpa.timeout": "§c请求已超时。",
         "tpa.offline": "§c玩家 %s 已离线。",
         "tpa.no_target": "§c玩家 %s 不在线。",
@@ -281,7 +282,6 @@ default_translations = {
         "rtp.error": "§c传送错误",
         "rtp.refund": "§a已退还 %s 金币",
 
-        "suicide.killed": "§c你选择了结束自己的生命",
         "suicide.cooldown": "§c请等待 %s 秒后再试",
         "suicide.disabled": "§c自杀功能已禁用",
 
@@ -450,6 +450,7 @@ default_translations = {
         "tpa.rejected": "§7Rejected §a%s§7's request.",
         "tpa.sender_rejected": "§a%s §7rejected your request.",
         "tpa.no_pending": "§cNo pending teleport requests.",
+        "tpa.already_pending": "§cYou already have a pending request, wait for a response.",
         "tpa.timeout": "§cRequest timed out.",
         "tpa.offline": "§cPlayer %s is offline.",
         "tpa.no_target": "§cPlayer %s is not online.",

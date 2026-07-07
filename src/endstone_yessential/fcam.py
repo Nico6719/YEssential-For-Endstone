@@ -69,7 +69,7 @@ class FcamSystem:
             p.send_packet(MinecraftPacketIds.AddPlayer, data)
         except Exception:
             # fallback: struct 编码
-            self.plugin.logger.warning("[Fcam] AddPlayer fallback, 假身体可能不可见")
+            self.plugin.logger.warning("[Fcam] AddPlayer fallback")
             p.send_packet(MinecraftPacketIds.AddPlayer, _encode_add_player(
                 fake_uuid, p.name, fake_eid,
                 loc.x, loc.y, loc.z, loc.pitch, loc.yaw,
@@ -160,7 +160,7 @@ class FcamSystem:
     def on_damage(self, player: Player):
         if player.name in self.fcam_players:
             self.exit_fcam(player)
-            player.send_message(self.info_prefix + "§c受到伤害，已退出灵魂出窍模式")
+            player.send_message(self.info_prefix + tr("fcam.damage_exit"))
 
     def on_death(self, player: Player):
         if player.name in self.fcam_players:

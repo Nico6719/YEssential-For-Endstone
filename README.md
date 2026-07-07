@@ -39,30 +39,30 @@
 |功能  	 |描述	                      |状态 |
 |--------|----------------------------|-------------|
 |Modules|多模块支持！|✅|
- |Economic	 |经济核心|	✅|
- |菜单	 |菜单功能，兼容[PMenu](https://www.minebbs.com/resources/pmenu.4277/)的配置文件！！|	✅|
+ |Economic	 |经济核心|	🚧 开发中|
+ |菜单	 |菜单功能，兼容[PMenu](https://www.minebbs.com/resources/pmenu.4277/)的配置文件！！|	🚧 开发中|
  |Hub	 |一键回城，可通过指令设置传送点。 |	✅|
  |Rtp	 |随机传送，附带动画。	 |✅|
- |Tpa	 |传送系统，借鉴了子邪大佬写的 TeleportMaster。 |	✅|
+ |Tpa	 |传送系统，借鉴了子邪大佬写的 TeleportMaster。 |	🚧 开发中|
 |Home&Warp	 |家系统和公共传送点系统。 |	✅|
-|Fcam	 |灵魂出窍（旁观者）。 |✅|
+|Fcam	 |灵魂出窍（旁观者）。 |🚧 开发中|
 |Back&DeathLog |回死亡点以及记录玩家死亡点。 |	✅|
 |DMotd	 |动态 Motd 功能。	 |✅|
-|WeiHu |	维护服务器功能，禁止其他非管理成员进入服务器。	 |✅|
-|Clean	 |自动清理掉落物和实体，掉落物过多时 & 定时自动清理，支持白名单。	 |✅|
+|WeiHu |	维护服务器功能，禁止其他非管理成员进入服务器。	 |🚧 开发中|
+|Clean	 |自动清理掉落物和实体，掉落物过多时 & 定时自动清理，支持白名单。	 |🚧 开发中|
 |Suicide	 |玩家紫砂（kill myself）。	 |✅|
 |BetterStopMsg |	自定义关服提示。	 |✅|
-|MoreLangSupport |	多语言支持。	 |✅|
+|i18n Support |	多语言支持。	 |🚧 开发中|
 |Notice |	自定义公告，支持颜色符号，\n换行，支持游戏内在线编辑！	 |✅|
-|FixExpLag	 |防止经验球卡服。 |	✅|
-|Crash	 |崩溃玩家客户端（慎用！）。	 |✅|
-|RedPacket |	玩家可以自行发红包。	 |✅|
-|ServersTP |	一键传送到其他服务器。 |	✅|
-|PVP	PVP 功能， |防止玩家恶意攻击。	 |✅|
-|Keepinventory	 |开服自动开启死亡不掉落。 |	✅|
-|AutoUpdate	 |自动更新插件本体并重载。	 |✅|
-|Bstats统计	 |统计BDS信息和在线人数（可在Config内关闭） |	✅|
-|Gui修改插件配置	 |网页编辑器。 |	✅|
+|FixExpLag	 |防止经验球卡服。 |🚧 开发中|
+|Crash	 |崩溃玩家客户端（慎用！）。	 |🚧 开发中|
+|RedPacket |	玩家可以自行发红包。	 |🚧 开发中|
+|ServersTP |	一键传送到其他服务器。 |✅️|
+|PVP	PVP 功能， |防止玩家恶意攻击。	 |🚧 开发中|
+|Keepinventory	 |开服自动开启死亡不掉落。 |✅️|
+|AutoUpdate	 |自动更新插件本体并重载。	 |🚧 开发中|
+|Bstats统计	 |统计BDS信息和在线人数（可在Config内关闭） |	🚧 开发中|
+|Gui修改插件配置	 |网页编辑器。 |🚧 开发中|
 |Plugin for Endstone	|Endstone 版本的 YEssential。|	🚧 开发中|
 |SideBar|	支持自定义侧边栏以及支持 PAPI 变量。|	📅 计划中|
 ### 相关PAPI变量

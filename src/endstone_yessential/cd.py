@@ -168,22 +168,22 @@ class MenuDataManager:
     @staticmethod
     def get_default_main_menu() -> dict:
         return {
-            "title": "服务器菜单",
-            "content": "选择:",
+            "title": tr("cd.server_menu"),
+            "content": tr("cd.select"),
             "buttons": [
                 {"images": True, "image": "textures/items/apple", "money": 0, "text": "获取一个苹果", "command": "give @s apple", "type": "comm"},
                 {"images": False, "image": "textures/items/apple", "money": 0, "text": "发送一句你好", "command": "msg @a 你好", "type": "comm"},
-                {"images": False, "image": "textures/items/apple", "money": 0, "text": "管理员菜单", "command": "admin", "type": "form", "oplist": []}
+                {"images": False, "image": "textures/items/apple", "money": 0, "text": tr("cd.admin_menu"), "command": "admin", "type": "form", "oplist": []}
             ]
         }
 
     @staticmethod
     def get_default_admin_menu() -> dict:
         return {
-            "title": "管理员菜单",
-            "content": "选择:",
+            "title": tr("cd.admin_menu"),
+            "content": tr("cd.select"),
             "buttons": [
-                {"images": False, "image": "textures/items/apple", "money": 0, "text": "菜单设置", "command": "cd set", "type": "comm", "oplist": []},
+                {"images": False, "image": "textures/items/apple", "money": 0, "text": tr("cd.menu_settings"), "command": "cd set", "type": "comm", "oplist": []},
                 {"images": False, "image": "textures/items/apple", "money": 0, "text": "返回", "command": "main", "type": "form", "oplist": []}
             ]
         }
@@ -191,8 +191,8 @@ class MenuDataManager:
     @staticmethod
     def get_default_sub_menu() -> dict:
         return {
-            "title": "初始菜单",
-            "content": "选择:",
+            "title": tr("cd.default_menu"),
+            "content": tr("cd.select"),
             "buttons": [{"images": True, "image": "textures/items/apple", "money": 0, "text": "返回", "command": "main", "type": "form"}]
         }
 
@@ -319,10 +319,10 @@ class MenuPlayerHandler:
         menu_data = self.data_manager.filter_buttons_for_player(player, menu_data)
 
         if not menu_data.get("title") or not menu_data.get("content") or not menu_data.get("buttons"):
-            player.send_message(self.config_manager.prefix + "菜单配置错误")
+            player.send_message(self.config_manager.prefix + tr("cd.config_error"))
             return
         if len(menu_data["buttons"]) == 0:
-            player.send_message(self.config_manager.prefix + "菜单按钮为空")
+            player.send_message(self.config_manager.prefix + tr("cd.empty_buttons"))
             return
 
         form = ActionForm(title=self.config_manager.prefix + menu_data["title"])
@@ -347,7 +347,7 @@ class MenuPlayerHandler:
         required_money = button.get("money", 0)
         if required_money > 0 and self.economy_manager.get(player) < required_money:
             self.show_menu(player, current_menu)
-            player.send_message(self.config_manager.prefix + "金币不足")
+            player.send_message(self.config_manager.prefix + tr("economy.not_enough"))
             return
 
         btn_type = button.get("type", "form")
@@ -361,7 +361,7 @@ class MenuPlayerHandler:
             self.handle_op_command(player, button, current_menu)
         else:
             self.show_menu(player, current_menu)
-            player.send_message(self.config_manager.prefix + "按钮类型错误")
+            player.send_message(self.config_manager.prefix + tr("cd.button_type_error"))
             return
 
         if required_money > 0:
@@ -371,7 +371,7 @@ class MenuPlayerHandler:
         op_list = button.get("oplist", [])
         if not player.is_op and op_list and player.name not in op_list:
             self.show_menu(player, current_menu)
-            player.send_message(self.config_manager.prefix + "此功能仅限管理员使用")
+            player.send_message(self.config_manager.prefix + tr("cd.op_only"))
             return
         self.show_menu(player, button.get("command", "main"))
 
@@ -384,7 +384,7 @@ class MenuPlayerHandler:
         op_list = button.get("oplist", [])
         if not player.is_op and op_list and player.name not in op_list:
             self.show_menu(player, current_menu)
-            player.send_message(self.config_manager.prefix + "此功能仅限管理员使用")
+            player.send_message(self.config_manager.prefix + tr("cd.op_only"))
             return
         self.execute_command(player, button.get("command", ""))
 
@@ -397,13 +397,13 @@ class MenuAdminHandler:
         self.player_handler = player_handler
 
     def show_main_settings(self, player: Player):
-        form = ActionForm(title=self.config_manager.prefix + "菜单设置")
-        form.content = "选择:"
-        form.add_button("经济设置")
-        form.add_button("添加菜单")
-        form.add_button("删除菜单")
-        form.add_button("修改菜单")
-        form.add_button("修改其他")
+        form = ActionForm(title=self.config_manager.prefix + tr("cd.menu_settings"))
+        form.content = tr("cd.select")
+        form.add_button(tr("cd.economy_settings"))
+        form.add_button(tr("cd.add_menu"))
+        form.add_button(tr("cd.delete_menu"))
+        form.add_button(tr("cd.modify_menu"))
+        form.add_button(tr("cd.modify_other"))
 
         def on_submit(p, selected):
             if selected == 0:
@@ -425,18 +425,20 @@ class MenuAdminHandler:
         current_score = self.config_manager.get_score()
 
         controls = [
-            Dropdown(label="选择经济模式", options=["计分板", "LLMoney"], default_index=money_type if money_type is not None else current_money_type),
+            Dropdown(label=tr("cd.select_economy_mode"), options=[tr("cd.scoreboard"), "LLMoney"], default_index=money_type if money_type is not None else current_money_type),
             TextInput(label="输入计分板项", placeholder=f"当前: {current_score}", default_value=score_name if score_name else "")
         ]
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="设置经济参数", controls=controls)
+        form = ModalForm(title=tr("cd.set_economy_params"), controls=controls)
 
         def on_submit(p, data):
             if not data:
                 self.show_main_settings(player)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
+            data = json.loads(data) if isinstance(data, str) else data
             selected_money_type = int(data[0])
             input_score = data[1].strip() if data[1] else ""
 
@@ -456,11 +458,11 @@ class MenuAdminHandler:
 
     def show_add_menu(self, player: Player, menu_type: str = None):
         if menu_type is None:
-            form = ActionForm(title="添加菜单")
-            form.content = "选择操作:"
-            form.add_button("添加二级菜单")
-            form.add_button("添加菜单按钮")
-            form.add_button("返回上级")
+            form = ActionForm(title=tr("cd.add_menu"))
+            form.content = tr("cd.select_action")
+            form.add_button(tr("cd.add_submenu"))
+            form.add_button(tr("cd.add_button"))
+            form.add_button(tr("cd.back"))
 
             def on_submit(p, selected):
                 if selected == 0:
@@ -490,20 +492,21 @@ class MenuAdminHandler:
             return
 
         controls = [
-            Dropdown(label="选择上级菜单", options=file_options, default_index=form_data.get("parentIndex", 0)),
-            TextInput(label="二级菜单文件名称", placeholder="例如: aaa", default_value=form_data.get("fileName", "")),
-            TextInput(label="二级菜单标题", placeholder="例如: 二级菜单", default_value=form_data.get("title", "")),
-            TextInput(label="二级菜单提示", placeholder="例如: 选择:", default_value=form_data.get("content", ""))
+            Dropdown(label=tr("cd.select_parent_menu"), options=file_options, default_index=form_data.get("parentIndex", 0)),
+            TextInput(label=tr("cd.submenu_filename"), placeholder="例如: aaa", default_value=form_data.get("fileName", "")),
+            TextInput(label=tr("cd.submenu_title"), placeholder="例如: 二级菜单", default_value=form_data.get("title", "")),
+            TextInput(label=tr("cd.submenu_content"), placeholder="例如: 选择:", default_value=form_data.get("content", ""))
         ]
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="添加二级菜单", controls=controls)
+        form = ModalForm(title=tr("cd.add_submenu"), controls=controls)
 
         def on_submit(p, data):
             if not data:
                 self.show_add_menu(player)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
             parent_index = data[0]
             file_name = data[1].strip()
             title = data[2].strip()
@@ -517,7 +520,7 @@ class MenuAdminHandler:
                 self.show_add_sub_menu(player, "§l§c文件已存在", form_data)
                 return
 
-            MenuDataManager.add_button(self.config_manager, menu_files[parent_index], {
+            self.data_manager.add_button( menu_files[parent_index], {
                 "images": True,
                 "image": "textures/items/apple",
                 "money": 0,
@@ -525,9 +528,9 @@ class MenuAdminHandler:
                 "command": file_name,
                 "type": "form"
             })
-            MenuDataManager.set_menu(self.config_manager, file_name, {
+            self.data_manager.set_menu( file_name, {
                 "title": title,
-                "content": content or "选择:",
+                "content": content or tr("cd.select"),
                 "buttons": MenuDataManager.get_default_sub_menu()["buttons"]
             })
             player.send_message(self.config_manager.prefix + "§2添加成功")
@@ -545,25 +548,26 @@ class MenuAdminHandler:
             return
 
         file_options = [MenuDataManager.get_default_sub_menu().get("title", "菜单") + " | " + f for f in menu_files]
-        button_types = ["玩家二级菜单", "管理员二级菜单", "玩家执行指令", "管理员执行指令"]
+        button_types = [tr("cd.player_submenu"), tr("cd.admin_submenu"), tr("cd.player_command"), tr("cd.admin_command")]
 
         controls = [
-            Dropdown(label="选择菜单文件", options=file_options, default_index=form_data.get("fileIndex", 0)),
-            Dropdown(label="选择按钮类型", options=button_types, default_index=form_data.get("buttonType", 0)),
-            TextInput(label="按钮标题", placeholder="例如: 说你好", default_value=form_data.get("buttonText", "")),
-            TextInput(label="按钮执行指令", placeholder="例如: say @a 你好", default_value=form_data.get("command", "")),
-            TextInput(label="按钮所需金币", placeholder="例如: 999", default_value=str(form_data.get("money", ""))),
-            TextInput(label="按钮位置(0为首)", placeholder="例如: 0", default_value=str(form_data.get("position", "")))
+            Dropdown(label=tr("cd.select_menu_file"), options=file_options, default_index=form_data.get("fileIndex", 0)),
+            Dropdown(label=tr("cd.select_button_type"), options=button_types, default_index=form_data.get("buttonType", 0)),
+            TextInput(label=tr("cd.button_text"), placeholder="例如: 说你好", default_value=form_data.get("buttonText", "")),
+            TextInput(label=tr("cd.button_command"), placeholder="例如: say @a 你好", default_value=form_data.get("command", "")),
+            TextInput(label=tr("cd.button_money"), placeholder="例如: 999", default_value=str(form_data.get("money", ""))),
+            TextInput(label=tr("cd.button_position"), placeholder="例如: 0", default_value=str(form_data.get("position", "")))
         ]
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="添加菜单按钮", controls=controls)
+        form = ModalForm(title=tr("cd.add_button"), controls=controls)
 
         def on_submit(p, data):
             if not data:
                 self.show_add_menu(player)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
             file_index = data[0]
             type_index = data[1]
             button_text = data[2].strip()
@@ -587,7 +591,7 @@ class MenuAdminHandler:
             if "op" in type_map[type_index]:
                 new_button["oplist"] = []
 
-            MenuDataManager.add_button(self.config_manager, menu_files[file_index], new_button, int(position) if position.isdigit() else None)
+            self.data_manager.add_button( menu_files[file_index], new_button, int(position) if position.isdigit() else None)
             player.send_message(self.config_manager.prefix + "§2添加成功")
             self.show_add_menu(player, "add_button")
 
@@ -596,11 +600,11 @@ class MenuAdminHandler:
 
     def show_delete_menu(self, player: Player, delete_type: str = None):
         if delete_type is None:
-            form = ActionForm(title="删除菜单")
-            form.content = "选择操作:"
-            form.add_button("删除二级菜单")
-            form.add_button("删除菜单按钮")
-            form.add_button("返回上级")
+            form = ActionForm(title=tr("cd.delete_menu"))
+            form.content = tr("cd.select_action")
+            form.add_button(tr("cd.delete_submenu"))
+            form.add_button(tr("cd.delete_button"))
+            form.add_button(tr("cd.back"))
 
             def on_submit(p, selected):
                 if selected == 0:
@@ -621,8 +625,8 @@ class MenuAdminHandler:
                 self.show_delete_menu(player)
                 return
 
-            form = ActionForm(title="删除二级菜单")
-            form.content = "选择要删除的菜单:"
+            form = ActionForm(title=tr("cd.delete_submenu"))
+            form.content = tr("cd.select_menu_delete")
             for f in files:
                 menu_data = self.data_manager.get_menu(f)
                 form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
@@ -634,8 +638,8 @@ class MenuAdminHandler:
                     return
                 if 0 <= selected < len(files):
                     deleted = files[selected]
-                    MenuDataManager.delete_menu(self.config_manager, deleted)
-                    MenuDataManager.remove_orphan_buttons(self.config_manager, deleted)
+                    self.data_manager.delete_menu( deleted)
+                    self.data_manager.remove_orphan_buttons( deleted)
                     player.send_message(self.config_manager.prefix + "§2删除成功: " + deleted)
                     self.show_delete_menu(player, delete_type)
 
@@ -649,8 +653,8 @@ class MenuAdminHandler:
                 self.show_delete_menu(player)
                 return
 
-            form = ActionForm(title="删除菜单按钮")
-            form.content = "选择菜单:"
+            form = ActionForm(title=tr("cd.delete_button"))
+            form.content = tr("cd.select_menu")
             for f in files:
                 menu_data = self.data_manager.get_menu(f)
                 form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
@@ -674,7 +678,7 @@ class MenuAdminHandler:
             return
 
         form = ActionForm(title="删除按钮 - " + menu_data.get("title", "菜单"))
-        form.content = "选择要删除的按钮:"
+        form.content = tr("cd.select_button_delete")
         for btn in menu_data["buttons"]:
             t = btn.get("text", "") + " [" + btn.get("type", "") + "]"
             if btn.get("money", 0) > 0:
@@ -688,7 +692,7 @@ class MenuAdminHandler:
                 return
             if 0 <= selected < len(menu_data["buttons"]):
                 deleted_btn = menu_data["buttons"][selected]
-                if MenuDataManager.delete_button(self.config_manager, file_name, selected):
+                if self.data_manager.delete_button( file_name, selected):
                     player.send_message(self.config_manager.prefix + "§2删除成功: " + deleted_btn.get("text", ""))
                 else:
                     player.send_message(self.config_manager.prefix + "§c删除失败")
@@ -699,11 +703,11 @@ class MenuAdminHandler:
 
     def show_edit_menu(self, player: Player, edit_type: str = None):
         if edit_type is None:
-            form = ActionForm(title="修改菜单")
-            form.content = "选择操作:"
-            form.add_button("修改菜单信息")
-            form.add_button("修改菜单按钮")
-            form.add_button("返回上级")
+            form = ActionForm(title=tr("cd.modify_menu"))
+            form.content = tr("cd.select_action")
+            form.add_button(tr("cd.edit_menu_info"))
+            form.add_button(tr("cd.edit_button"))
+            form.add_button(tr("cd.back"))
 
             def on_submit(p, selected):
                 if selected == 0:
@@ -729,8 +733,8 @@ class MenuAdminHandler:
             self.show_edit_menu(player)
             return
 
-        form = ActionForm(title="修改菜单信息")
-        form.content = "选择要修改的菜单:"
+        form = ActionForm(title=tr("cd.edit_menu_info"))
+        form.content = tr("cd.select_menu_edit")
         for f in files:
             menu_data = self.data_manager.get_menu(f)
             form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
@@ -750,8 +754,8 @@ class MenuAdminHandler:
         menu_data = self.data_manager.get_menu(file_name)
 
         controls = [
-            TextInput(label="菜单标题", placeholder=f"当前: {menu_data.get('title', '')}", default_value=menu_data.get('title', '')),
-            TextInput(label="菜单内容", placeholder=f"当前: {menu_data.get('content', '')}", default_value=menu_data.get('content', ''))
+            TextInput(label=tr("cd.menu_title"), placeholder=f"当前: {menu_data.get('title', '')}", default_value=menu_data.get('title', '')),
+            TextInput(label=tr("cd.menu_content"), placeholder=f"当前: {menu_data.get('content', '')}", default_value=menu_data.get('content', ''))
         ]
         if error:
             controls.append(Label(text=error))
@@ -762,6 +766,7 @@ class MenuAdminHandler:
             if not data:
                 self.show_edit_menu_info(player)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
             new_title = data[0].strip()
             new_content = data[1].strip()
             if not new_title or not new_content:
@@ -769,7 +774,7 @@ class MenuAdminHandler:
                 return
             menu_data["title"] = new_title
             menu_data["content"] = new_content
-            MenuDataManager.set_menu(self.config_manager, file_name, menu_data)
+            self.data_manager.set_menu( file_name, menu_data)
             player.send_message(self.config_manager.prefix + "§2修改成功")
             self.show_edit_menu_info(player)
 
@@ -783,8 +788,8 @@ class MenuAdminHandler:
             self.show_edit_menu(player)
             return
 
-        form = ActionForm(title="修改菜单按钮")
-        form.content = "选择菜单:"
+        form = ActionForm(title=tr("cd.edit_button"))
+        form.content = tr("cd.select_menu")
         for f in files:
             menu_data = self.data_manager.get_menu(f)
             form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
@@ -808,7 +813,7 @@ class MenuAdminHandler:
             return
 
         form = ActionForm(title="修改按钮 - " + menu_data.get("title", "菜单"))
-        form.content = "选择要修改的按钮:"
+        form.content = tr("cd.select_button_edit")
         for btn in menu_data["buttons"]:
             form.add_button(btn.get("text", "") + " [" + btn.get("type", "") + "]")
         form.add_button("§c返回上级")
@@ -828,7 +833,7 @@ class MenuAdminHandler:
         button = menu_data["buttons"][button_index]
 
         type_map = ["form", "opfm", "comm", "opcm"]
-        button_types = ["玩家二级菜单", "管理员二级菜单", "玩家执行指令", "管理员执行指令"]
+        button_types = [tr("cd.player_submenu"), tr("cd.admin_submenu"), tr("cd.player_command"), tr("cd.admin_command")]
 
         raw_type = button.get("type", "form")
         if raw_type == "vipfm":
@@ -839,9 +844,9 @@ class MenuAdminHandler:
 
         controls = [
             Dropdown(label="按钮类型", options=button_types, default_index=current_type_index),
-            TextInput(label="按钮标题", placeholder="例如: 说你好", default_value=button.get("text", "")),
-            TextInput(label="按钮执行指令", placeholder="例如: say @a 你好", default_value=button.get("command", "")),
-            TextInput(label="按钮所需金币", placeholder="例如: 999", default_value=str(button.get("money", 0)))
+            TextInput(label=tr("cd.button_text"), placeholder="例如: 说你好", default_value=button.get("text", "")),
+            TextInput(label=tr("cd.button_command"), placeholder="例如: say @a 你好", default_value=button.get("command", "")),
+            TextInput(label=tr("cd.button_money"), placeholder="例如: 999", default_value=str(button.get("money", 0)))
         ]
         if error:
             controls.append(Label(text=error))
@@ -852,6 +857,7 @@ class MenuAdminHandler:
             if not data:
                 self.show_edit_button_list(player, file_name)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
             type_index = data[0]
             button_text = data[1].strip()
             command = data[2].strip()
@@ -872,7 +878,7 @@ class MenuAdminHandler:
             if "op" in type_map[type_index]:
                 new_button["oplist"] = button.get("oplist", [])
 
-            if MenuDataManager.update_button(self.config_manager, file_name, button_index, new_button):
+            if self.data_manager.update_button( file_name, button_index, new_button):
                 player.send_message(self.config_manager.prefix + "§2修改成功")
             else:
                 player.send_message(self.config_manager.prefix + "§c修改失败")
@@ -885,7 +891,7 @@ class MenuAdminHandler:
         files = MenuUtils.get_menu_files(config_manager=self.config_manager)
         main_file = self.config_manager.get_main()
 
-        options = ["不修改"] + [f.replace(".json", "") for f in files]
+        options = [tr("cd.no_change")] + [f.replace(".json", "") for f in files]
         default_index = 0
         for i, f in enumerate(files):
             if f.replace(".json", "") == main_file:
@@ -902,6 +908,7 @@ class MenuAdminHandler:
             if not data:
                 self.show_main_settings(player)
                 return
+            data = json.loads(data) if isinstance(data, str) else data
             if data[0] > 0:
                 self.config_manager.set({"main": files[data[0] - 1].replace(".json", "")})
                 self.show_other_settings(player, "§2修改成功")

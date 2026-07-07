@@ -1,5 +1,5 @@
 from typing import Dict, List
-from endstone import Player
+from endstone import Player, ColorFormat
 from endstone.level import Location
 from endstone.form import ActionForm
 from .i18n import tr

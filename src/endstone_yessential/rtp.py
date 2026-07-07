@@ -20,7 +20,7 @@ class RTPSystem:
         try:
             return self.plugin.server.dispatch_command(self._silent, command)
         except Exception as e:
-            plugin_print(f"[RTP] cmd失败: {e} | {command[:80]}")
+            plugin_print(f"[RTP] cmd fail: {e}")
             return False
 
     def get_config(self):
@@ -46,7 +46,7 @@ class RTPSystem:
     def _rtp(self, player: Player, anim: bool):
         x, z = self._random_xy()
         dist = math.floor(math.sqrt(x * x + z * z))
-        player.send_message(f"§6[YEssential] §7随机传送 X:{x}, Z:{z} (距离:{dist}格)")
+        player.send_message(tr("rtp.random_pos", x, z, dist))
 
         if anim:
             self._rtp_anim(player, x, z)
@@ -55,13 +55,13 @@ class RTPSystem:
 
     def _rtp_plain(self, player, x, z):
         """无动画：直接 spreadplayers"""
-        player.send_message("§6[YEssential] §7正在搜索安全位置...")
+        player.send_message(tr("rtp.searching"))
         if self._spread(player, x, z):
             l = player.location
-            player.send_message(f"§6[YEssential] §a传送成功！位置: {int(l.x)}, {int(l.y)}, {int(l.z)}")
-            player.send_message(f"§6[YEssential] §e距离出生点: §f{math.floor(math.sqrt(l.x**2+l.z**2))} 格")
+            player.send_message(tr("rtp.success", int(l.x), int(l.y), int(l.z)))
+            player.send_message(tr("rtp.distance", math.floor(math.sqrt(l.x**2+l.z**2))))
         else:
-            player.send_message("§6[YEssential] §c/spreadplayers 失败，使用备用方案...")
+            player.send_message(tr("rtp.spread_fail"))
             self._fallback(player)
 
     def _rtp_anim(self, player, x, z):
@@ -72,7 +72,7 @@ class RTPSystem:
         self._dispatch(f'camera {pn} set minecraft:free ease 3 in_out_sine pos {op.x:.1f} {op.y+75:.1f} {op.z:.1f} rot 90 {op.yaw:.1f}')
         self._dispatch(f'hud {pn} hide all')
         self._dispatch(f'effect "{pn}" resistance 30 255 true')
-        player.send_message("§6[YEssential] §7正在搜索安全位置...")
+        player.send_message(tr("rtp.searching"))
 
         def do():
             if self._spread(player, x, z):
@@ -90,9 +90,9 @@ class RTPSystem:
                     self._dispatch(f'hud {pn} reset all')
                     self._dispatch(f'playsound random.levelup "{pn}"')
                     d = math.floor(math.sqrt(l.x**2+l.z**2))
-                    player.send_message(f"§6[YEssential] §a传送成功！位置: {int(l.x)}, {int(l.y)}, {int(l.z)}")
-                    player.send_message(f"§6[YEssential] §e距离出生点: §f{d} 格")
-                    player.send_message("§6[YEssential] §b传送完成！")
+                    player.send_message(tr("rtp.success", int(l.x), int(l.y), int(l.z)))
+                    player.send_message(tr("rtp.distance", d))
+                    player.send_message(tr("rtp.done"))
                 self.plugin.server.scheduler.run_task(self.plugin, cl, 140)
             else:
                 self._dispatch(f'camera "{pn}" clear')
@@ -109,18 +109,18 @@ class RTPSystem:
         pn = player.name
         try:
             if pn in self.cooltime and self.cooltime[pn] > 0:
-                return player.send_message(f"§6[YEssential] §c传送冷却中，剩余时间：{self.cooltime[pn]}秒")
+                return player.send_message(tr("rtp.cooldown", self.cooltime[pn]))
             if cost > 0 and self.plugin.economy.get_money(pn) < cost:
-                return player.send_message(f"§6[YEssential] §c您需要 {cost} 金币")
+                return player.send_message(tr("rtp.need_money", cost))
             if cd > 0:
                 self.cooltime[pn] = cd
             if cost > 0:
                 self.plugin.economy.reduce_money(pn, cost)
-                player.send_message(f"§6[YEssential] §e花费 {cost} 金币")
+                player.send_message(tr("rtp.cost", cost))
             self._rtp(player, c.get("animation", 0))
         except Exception as e:
-            plugin_print(f"[RTP] 失败: {e}")
-            player.send_message("§6[YEssential] §c传送错误")
+            plugin_print(f"[RTP] fail: {e}")
+            player.send_message(tr("rtp.error"))
             self._refund(player, cost, cd)
 
     def _fallback(self, player):
@@ -128,17 +128,17 @@ class RTPSystem:
             x, z = self._random_xy()
             self._dispatch(f'effect "{player.name}" slow_falling 30 1 true')
             player.teleport(Location(player.location.dimension, x, 320, z))
-            player.send_message(f"§6[YEssential] §a备用传送 X:{x} Y:320 Z:{z}")
+            player.send_message(tr("rtp.fallback", x, 320, z))
         except Exception as e:
-            plugin_print(f"[RTP] 备用失败: {e}")
+            plugin_print(f"[RTP] fallback fail: {e}")
 
     def _refund(self, player, cost, cd):
         if cost > 0:
             try:
                 self.plugin.economy.add_money(player.name, cost)
-                player.send_message(f"§6[YEssential] §a已退还 {cost} 金币")
+                player.send_message(tr("rtp.refund", cost))
             except Exception as e:
-                plugin_print(f"退款失败: {e}")
+                plugin_print(f"Refund fail: {e}")
         if cd > 0 and player.name in self.cooltime:
             del self.cooltime[player.name]
 

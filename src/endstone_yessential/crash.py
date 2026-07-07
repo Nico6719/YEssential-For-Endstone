@@ -18,21 +18,21 @@ class CrashSystem:
 
     def show_crash_menu(self, player: Player):
         if not player.is_op:
-            player.send_message(self.info_prefix + "§c你不是管理员")
+            player.send_message(self.info_prefix + tr("crash.no_perm"))
             return
 
         if not self.is_enabled():
-            player.send_message(self.info_prefix + "§c该模块未启用")
+            player.send_message(self.info_prefix + tr("crash.disabled"))
             return
 
         online_players = [p for p in self.plugin.server.online_players if p.name != player.name]
 
         if not online_players:
-            player.send_message(self.info_prefix + "§c当前没有其他在线玩家")
+            player.send_message(self.info_prefix + tr("crash.no_players"))
             return
 
-        form = ActionForm(title="§c使玩家客户端崩溃")
-        form.content = "选择要崩溃的玩家:"
+        form = ActionForm(title=tr("crash.title"))
+        form.content = tr("crash.select")
 
         for p in online_players:
             form.add_button(f"§c{p.name}")
@@ -49,16 +49,16 @@ class CrashSystem:
 
     def crash_player(self, operator: Player, target: Player):
         try:
-            target.kick("§c客户端崩溃")
+            target.kick(tr("crash.kick_msg"))
             
-            operator.send_message(self.info_prefix + f"§a已使 {target.name} 客户端崩溃")
+            operator.send_message(self.info_prefix + tr("crash.crashed", target.name))
 
             if self.should_log():
-                self.plugin.logger.warning(f"[Crash] {operator.name} 对 {target.name} 执行了 crash 操作")
+                self.plugin.logger.warning(f"Crash: {operator.name} -> {target.name}")
 
         except Exception as e:
-            operator.send_message(self.info_prefix + "§c崩溃操作失败")
-            self.plugin.logger.error(f"崩溃玩家失败: {e}")
+            operator.send_message(self.info_prefix + tr("crash.fail"))
+            self.plugin.logger.error(f"Crash player failed: {e}")
 
     def on_command(self, player: Player) -> bool:
         self.show_crash_menu(player)

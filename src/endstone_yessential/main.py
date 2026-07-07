@@ -3,7 +3,7 @@ YEssential Plugin - 主入口
 基岩版多功能基础插件, 基于 Endstone 框架
 """
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PacketReceiveEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
+from endstone.event import event_handler, PacketReceiveEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerQuitEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
 from endstone.command import Command, CommandSender, CommandSenderWrapper
 from endstone import Player
 from typing import List
@@ -30,7 +30,7 @@ from .suicide import SuicideSystem
 from .sign import SignSystem
 from .i18n import init_i18n, get_i18n, tr
 from .update_checker import UpdateChecker
-from .log import plugin_print
+from .log import plugin_print, set_debug, debug
 from .constant import *
 
 
@@ -243,6 +243,10 @@ class YEssentialPlugin(Plugin):
     def on_enable(self):
         plugin_print(tr("logo.enabled", plugin_name))
 
+        # Debug 开关
+        set_debug(self.config_manager.config_data.get("Debug", False))
+        debug("Plugin enabling...")
+
         # 1. 初始化子系统
         self.economy = EconomySystem(self)
         self.home = HomeSystem(self)
@@ -306,7 +310,7 @@ class YEssentialPlugin(Plugin):
     # ══════════════════════════════════════════════════════════
 
     @event_handler
-    def on_player_quit(self, event):
+    def on_player_quit(self, event: PlayerQuitEvent):
         player = event.player
         if _is_simulated(player):
             return
@@ -678,8 +682,3 @@ class YEssentialPlugin(Plugin):
 
         return False
 
-    # ══════════════════════════════════════════════════════════
-    # Helpers
-    # ══════════════════════════════════════════════════════════
-
-    pass

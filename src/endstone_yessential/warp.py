@@ -37,7 +37,7 @@ class WarpSystem:
 
     def set_warp(self, player: Player, warp_name: str):
         if not player.is_op:
-            player.send_message("§c只有管理员可以设置传送点。")
+            player.send_message(tr("warp.admin_only", tr("warp.admin_set")))
             return
 
         loc = player.location
@@ -50,36 +50,44 @@ class WarpSystem:
             "yaw": loc.yaw
         }
         self.save_warps()
-        player.send_message(f"§6[YEssential] §a传送点 §e{warp_name} §a已设置。")
+        player.send_message(tr("warp.set", warp_name))
 
     def del_warp(self, player: Player, warp_name: str):
         if not player.is_op:
-            player.send_message("§c只有管理员可以删除传送点。")
+            player.send_message(tr("warp.admin_only", tr("warp.admin_del")))
             return
 
         if warp_name in self.warp_data:
             del self.warp_data[warp_name]
             self.save_warps()
-            player.send_message(f"§6[YEssential] §c传送点 §e{warp_name} §c已删除。")
+            player.send_message(tr("warp.deleted", warp_name))
         else:
-            player.send_message(f"§c传送点 §e{warp_name} §c不存在。")
+            player.send_message(tr("warp.not_found", warp_name))
 
     def teleport_warp(self, player: Player, warp_name: str):
         if warp_name in self.warp_data:
             data = self.warp_data[warp_name]
-            # 获取玩家当前位置的 dimension
-            current_loc = player.location
-            loc = Location(current_loc.dimension, data["x"], data["y"], data["z"], data["pitch"], data["yaw"])
+            dim = self._resolve_dimension(data.get("dimension", "Overworld"))
+            if dim is None:
+                dim = player.location.dimension
+            loc = Location(dim, data["x"], data["y"], data["z"], data["pitch"], data["yaw"])
             player.teleport(loc)
-            player.send_message(f"§6[YEssential] §a已传送到传送点 §e{warp_name}§a。")
+            player.send_message(tr("warp.teleported", warp_name))
         else:
-            player.send_message(f"§c传送点 §e{warp_name} §c不存在。")
+            player.send_message(tr("warp.not_found", warp_name))
+
+    def _resolve_dimension(self, dim_name: str):
+        try:
+            return self.plugin.server.level.get_dimension(dim_name)
+        except Exception:
+            dims = self.plugin.server.level.dimensions
+            return dims[0] if dims else None
 
     def open_warp_gui(self, player: Player):
-        form = ActionForm(title="§6传送点系统")
+        form = ActionForm(title=tr("warp.title"))
         
         if player.is_op:
-            form.add_button("§a设置新传送点", on_click=lambda p: self.open_set_warp_gui(p))
+            form.add_button(tr("warp.set_new"), on_click=lambda p: self.open_set_warp_gui(p))
         
         for warp_name in self.warp_data.keys():
             form.add_button(f"§e{warp_name}", on_click=lambda p, w=warp_name: self.teleport_warp(p, w))
@@ -88,8 +96,8 @@ class WarpSystem:
 
     def open_set_warp_gui(self, player: Player):
         form = ModalForm(
-            title="§6设置传送点",
-            controls=[TextInput(label="请输入传送点名称", placeholder="例如: spawn", default_value="spawn")],
+            title=tr("warp.set_title"),
+            controls=[TextInput(label=tr("warp.name_label"), placeholder="spawn", default_value="spawn")],
             on_submit=lambda p, data: self.set_warp(p, data[0])
         )
         player.send_form(form)

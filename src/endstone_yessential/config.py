@@ -266,6 +266,7 @@ class ConfigManager:
             # ═══════════════════════════════════════════════════
             # Settings — 全局设置
             # ═══════════════════════════════════════════════════
+            "Debug": False,
             "KeepInventory": True,
             "BackTipAfterDeath": True,
             "CustomStopMessage": True,
