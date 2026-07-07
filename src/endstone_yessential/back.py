@@ -1,5 +1,5 @@
 from typing import Dict, List
-from endstone import Player, ColorFormat
+from endstone import Player
 from endstone.level import Location
 from endstone.form import ActionForm
 from .i18n import tr
@@ -36,7 +36,7 @@ class BackSystem:
             self.death_points[player.unique_id] = self.death_points[player.unique_id][:self.max_death_points]
 
         self.plugin.logger.info(f"[DEBUG] 当前记录的死亡点数量: {len(self.death_points[player.unique_id])}")
-        player.send_message(f"§6[YEssential] §c死亡点已记录，输入 /back 返回。当前记录了 {len(self.death_points[player.unique_id])} 个死亡点。")
+        player.send_message(tr("back.recorded", len(self.death_points[player.unique_id])))
 
     def teleport_back(self, player: Player, index: int = 0):
         """传送到指定索引的死亡点"""
@@ -50,7 +50,7 @@ class BackSystem:
 
         death_point = self.death_points[player.unique_id][index]
         player.teleport(death_point["location"])
-        player.send_message(ColorFormat.GREEN + "You have been teleported to the last place of death")
+        player.send_message(tr("back.teleported"))
         # 传送后移除该死亡点
         del self.death_points[player.unique_id][index]
 
@@ -66,20 +66,20 @@ class BackSystem:
 
                 # 格式化时间
                 if death_time < 60:
-                    time_str = f"{int(death_time)}秒前"
+                    time_str = tr("back.sec_ago", int(death_time))
                 elif death_time < 3600:
-                    time_str = f"{int(death_time / 60)}分钟前"
+                    time_str = tr("back.min_ago", int(death_time / 60))
                 elif death_time < 86400:
-                    time_str = f"{int(death_time / 3600)}小时前"
+                    time_str = tr("back.hour_ago", int(death_time / 3600))
                 else:
-                    time_str = f"{int(death_time / 86400)}天前"
+                    time_str = tr("back.day_ago", int(death_time / 86400))
 
-                button_text = f"§a死亡点 {i + 1}: §e({int(loc.x)}, {int(loc.y)}, {int(loc.z)}) §7- {time_str}"
+                button_text = f"§aDeath {i + 1}: §e({int(loc.x)}, {int(loc.y)}, {int(loc.z)}) §7- {time_str}"
                 form.add_button(button_text, on_click=lambda p, idx=i: self.teleport_back(p, idx))
 
-            form.content = f"§7您共有 {len(self.death_points[player.unique_id])} 个记录的死亡点。"
+            form.content = tr("back.count", len(self.death_points[player.unique_id]))
         else:
-            form.content = "§c当前没有记录的死亡点。"
+            form.content = tr("back.empty")
 
-        form.add_button("§c关闭")
+        form.add_button(tr("back.close"))
         player.send_form(form)

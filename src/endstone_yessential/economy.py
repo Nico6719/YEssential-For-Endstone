@@ -275,12 +275,12 @@ class EconomySystem:
     def _gui_player(self, p: Player):
         coin = self.config.coin_name
         f = ActionForm(title=f"§6{coin}")
-        f.add_button(f"§a{tr('economy.query', coin)}")
-        f.add_button(f"§a{tr('economy.transfer', coin)}")
-        f.add_button(f"§a{tr('economy.transfer_offline')}")
-        f.add_button(f"§a{tr('economy.history', coin)}")
-        f.add_button(f"§a{tr('economy.ranking', coin)}")
-        if self._rp_enabled(): f.add_button(f"§a{tr('economy.redpacket')}")
+        f.add_button(f"§a{tr('economy.query', coin)}", icon="textures/ui/MCoin")
+        f.add_button(f"§a{tr('economy.transfer', coin)}", icon="textures/ui/trade_icon")
+        f.add_button(f"§a{tr('economy.transfer_offline')}", icon="textures/ui/FriendsDiversity")
+        f.add_button(f"§a{tr('economy.history', coin)}", icon="textures/ui/book_addtextpage_default")
+        f.add_button(f"§a{tr('economy.ranking', coin)}", icon="textures/ui/icon_book_writable")
+        if self._rp_enabled(): f.add_button(f"§a{tr('economy.redpacket')}", icon="textures/ui/gift_square")
         def cb(_, idx):
             if idx is None: return
             rp = self._rp_enabled()
@@ -296,15 +296,15 @@ class EconomySystem:
     def _gui_op(self, p: Player):
         coin = self.config.coin_name
         f = ActionForm(title=f"§6(OP) {coin}")
-        f.add_button(f"§a{tr('economy.admin_add', coin)}")
-        f.add_button(f"§a{tr('economy.admin_reduce', coin)}")
-        f.add_button(f"§a{tr('economy.admin_set', coin)}")
-        f.add_button(f"§a{tr('economy.admin_offline')}")
-        f.add_button(f"§a{tr('economy.admin_look', coin)}")
-        f.add_button(f"§a{tr('economy.admin_history', coin)}")
-        f.add_button(f"§a{tr('economy.admin_ranking', coin)}")
-        if self._rp_enabled(): f.add_button(f"§a{tr('economy.redpacket')}")
-        f.add_button(f"§a{tr('economy.player_menu')}")
+        f.add_button(f"§a{tr('economy.admin_add', coin)}", icon="textures/ui/icon_best3")
+        f.add_button(f"§a{tr('economy.admin_reduce', coin)}", icon="textures/ui/redX1")
+        f.add_button(f"§a{tr('economy.admin_set', coin)}", icon="textures/ui/gear")
+        f.add_button(f"§a{tr('economy.admin_offline')}", icon="textures/ui/FriendsDiversity")
+        f.add_button(f"§a{tr('economy.admin_look', coin)}", icon="textures/ui/MCoin")
+        f.add_button(f"§a{tr('economy.admin_history', coin)}", icon="textures/ui/book_addtextpage_default")
+        f.add_button(f"§a{tr('economy.admin_ranking', coin)}", icon="textures/ui/icon_book_writable")
+        if self._rp_enabled(): f.add_button(f"§a{tr('economy.redpacket')}", icon="textures/ui/gift_square")
+        f.add_button(f"§a{tr('economy.player_menu')}", icon="textures/ui/icon_multiplayer")
         def cb(_, idx):
             if idx is None: return
             rp = self._rp_enabled()
@@ -342,8 +342,9 @@ class EconomySystem:
         ])
         def cb(_, data):
             if not data: self._gui_player(p); return
+            data = json.loads(data) if isinstance(data, str) else data
             try:
-                tname = names[int(data[0])]; amt_s = data[1].strip().lower(); note = data[2].strip()
+                tname = names[int(data[0])]; amt_s = str(data[1]).strip().lower(); note = str(data[2]).strip()
                 myb = int(self.get_money_internal(p))
                 amt = myb if amt_s == "all" else (int(amt_s) if amt_s.isdigit() else 0)
                 if amt <= 0: p.send_message(tr("economy.must_positive")); return
@@ -378,7 +379,8 @@ class EconomySystem:
         ])
         def cb(_, data):
             if not data: self._gui_player(p); return
-            tname = data[0].strip(); amt_s = data[1].strip().lower(); note = data[2].strip()
+            data = json.loads(data) if isinstance(data, str) else data
+            tname = str(data[0]).strip(); amt_s = str(data[1]).strip().lower(); note = str(data[2]).strip()
             if not tname: p.send_message(tr("economy.need_player_name")); return
             if tname == p.name: p.send_message(tr("economy.cannot_self")); return
             if self.plugin.server.get_player(tname): p.send_message(tr("economy.offline_target_online")); return
@@ -443,17 +445,18 @@ class EconomySystem:
             fm = ModalForm(title=f"§6{label}", controls=[Dropdown(label=tr("economy.select_player"), options=names), TextInput(label=tr("economy.amount_label"), placeholder="0", default_value="")])
             def cb(_, data):
                 if not data: self._gui_op(admin); return
-                t = pls[int(data[0])]; amt_s = data[1].strip()
+                data = json.loads(data) if isinstance(data, str) else data
+                t = pls[int(data[0])]; amt_s = str(data[1]).strip()
                 if not amt_s.isdigit(): admin.send_message(tr("economy.need_valid_number")); return
                 amt = int(amt_s)
                 if op != "set" and amt <= 0: admin.send_message(tr("economy.must_positive")); return
                 if op == "set" and amt < 0: admin.send_message(tr("economy.must_nonneg")); return
                 coin = self.config.coin_name
-                if op == "add": self.add_money_internal(t, amt); admin.send_message(tr("economy.admin_give", t.name, amt, coin)); self.history.add(t.name, f"admin +{amt}"); self.notify.send(t, tr("economy.admin_give", t.name, amt, coin).replace("§a",""))
+                if op == "add": self.add_money_internal(t, amt); admin.send_message(tr("economy.admin_give", t.name, amt, coin)); self.history.add(t.name, f"admin +{amt}"); t.send_message(tr("economy.admin_give", t.name, amt, coin))
                 elif op == "reduce":
-                    if self.reduce_money_internal(t, amt): admin.send_message(tr("economy.admin_take", t.name, amt, coin)); self.history.add(t.name, f"admin -{amt}"); self.notify.send(t, tr("economy.admin_take", t.name, amt, coin).replace("§a",""))
+                    if self.reduce_money_internal(t, amt): admin.send_message(tr("economy.admin_take", t.name, amt, coin)); self.history.add(t.name, f"admin -{amt}"); t.send_message(tr("economy.admin_take", t.name, amt, coin))
                     else: admin.send_message(tr("economy.not_enough"))
-                elif op == "set": self.set_money_internal(t, amt); admin.send_message(tr("economy.admin_set_to", t.name, coin, amt)); self.history.add(t.name, f"admin ={amt}"); self.notify.send(t, tr("economy.admin_set_to", t.name, coin, amt).replace("§a",""))
+                elif op == "set": self.set_money_internal(t, amt); admin.send_message(tr("economy.admin_set_to", t.name, coin, amt)); self.history.add(t.name, f"admin ={amt}"); t.send_message(tr("economy.admin_set_to", t.name, coin, amt))
                 self.ranking.update(t.name, self.get_money_internal(t)); self._gui_op(admin)
             fm.on_submit = cb; admin.send_form(fm)
 
@@ -467,7 +470,8 @@ class EconomySystem:
         ])
         def cb(_, data):
             if not data: self._gui_op(admin); return
-            tname = data[0].strip(); op_idx = int(data[1]); amt_s = data[2].strip(); note = data[3].strip()
+            data = json.loads(data) if isinstance(data, str) else data
+            tname = str(data[0]).strip(); op_idx = int(data[1]); amt_s = str(data[2]).strip(); note = str(data[3]).strip()
             if not tname: admin.send_message(tr("economy.need_player_name")); return
             if not amt_s.isdigit(): admin.send_message(tr("economy.need_valid_number")); return
             amt = int(amt_s)
@@ -500,15 +504,15 @@ class EconomySystem:
         try: amt = int(args[2])
         except: sender.send_message(tr("economy.need_number")); return True
         if op == "add":
-            if tg: self.add_money_internal(tg, amt); sender.send_message(tr("economy.admin_give", tname, amt, coin)); self.history.add(tname, f"admin +{amt}"); self.notify.send(tg, tr("economy.admin_give", tname, amt, coin).replace("§a","")); self.ranking.update(tname, self.get_money_internal(tg))
+            if tg: self.add_money_internal(tg, amt); sender.send_message(tr("economy.admin_give", tname, amt, coin)); self.history.add(tname, f"admin +{amt}"); tg.send_message(tr("economy.admin_give", tname, amt, coin)); self.ranking.update(tname, self.get_money_internal(tg))
             else: self.offline_cache.add(tname, "add", amt); sender.send_message(tr("economy.offline_cached", tname))
         elif op == "del":
             if tg:
-                if self.reduce_money_internal(tg, amt): sender.send_message(tr("economy.admin_take", tname, amt, coin)); self.history.add(tname, f"admin -{amt}"); self.notify.send(tg, tr("economy.admin_take", tname, amt, coin).replace("§a","")); self.ranking.update(tname, self.get_money_internal(tg))
+                if self.reduce_money_internal(tg, amt): sender.send_message(tr("economy.admin_take", tname, amt, coin)); self.history.add(tname, f"admin -{amt}"); tg.send_message(tr("economy.admin_take", tname, amt, coin)); self.ranking.update(tname, self.get_money_internal(tg))
                 else: sender.send_message(tr("economy.not_enough"))
             else: self.offline_cache.add(tname, "reduce", amt); sender.send_message(tr("economy.offline_cached", tname))
         elif op == "set":
             if amt < 0: sender.send_message(tr("economy.must_nonneg")); return True
-            if tg: self.set_money_internal(tg, amt); sender.send_message(tr("economy.admin_set_to", tname, coin, amt)); self.history.add(tname, f"admin ={amt}"); self.notify.send(tg, tr("economy.admin_set_to", tname, coin, amt).replace("§a","")); self.ranking.update(tname, amt)
+            if tg: self.set_money_internal(tg, amt); sender.send_message(tr("economy.admin_set_to", tname, coin, amt)); self.history.add(tname, f"admin ={amt}"); tg.send_message(tr("economy.admin_set_to", tname, coin, amt)); self.ranking.update(tname, amt)
             else: self.offline_cache.add(tname, "set", amt); sender.send_message(tr("economy.offline_cached", tname))
         return True

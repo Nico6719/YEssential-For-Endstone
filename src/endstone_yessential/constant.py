@@ -3,7 +3,7 @@ from pathlib import Path
 # 插件全局常量
 plugin_name = "YEssential"
 plugin_name_smallest = "yessential"
-plugin_description = "基于 Endstone 的 YEssential"
+plugin_description = "基于 Endstone 的Y系列基础插件 \ A Y series essential plugin based on Endstone"
 plugin_version = "0.1.0"
 plugin_author = ["Nico6719", "梦涵LOVE"]
 plugin_license = "AGPL-3.0"

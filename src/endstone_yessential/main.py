@@ -214,10 +214,12 @@ class YEssentialPlugin(Plugin):
         """插件加载时调用"""
         from .randomcolor import RandomColor
 
-        # 先加载配置和 I18n，确保 tr() 可用
+        # 1. 先加载配置
         self.config_manager = ConfigManager(self)
         self.config_manager.load_config()
-        init_i18n(self)
+
+        # 2. 初始化语言（读取 config 中的 Language 设置）
+        self.i18n = init_i18n(self)
 
         print(RandomColor("██╗   ██╗███████╗███████╗███████╗███████╗███╗   ██╗████████╗██╗ █████╗ ██╗     "))
         print(RandomColor("╚██╗ ██╔╝██╔════╝██╔════╝██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║██╔══██╗██║     "))
@@ -226,7 +228,7 @@ class YEssentialPlugin(Plugin):
         print(RandomColor("   ██║   ███████╗███████║███████║███████╗██║ ╚████║   ██║   ██║██║  ██║███████╗"))
         print(RandomColor("   ╚═╝   ╚══════╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═╝╚══════╝"))
         print("                                                                               ")
-        print(RandomColor(f"  {plugin_author[0]}  {plugin_version}"))
+        print(RandomColor(f"  {", ".join(plugin_author)}  {plugin_version}"))
 
         plugin_print("=" * 80, "INFO")
         plugin_print(f"{plugin_name} - {plugin_description}", "INFO")
@@ -235,7 +237,7 @@ class YEssentialPlugin(Plugin):
         plugin_print(tr("logo.github", plugin_github_link), "INFO")
         plugin_print(tr("logo.minebbs", plugin_minebbs_link), "INFO")
         plugin_print(tr("logo.qq_group", "1083195477"), "INFO")
-        plugin_print(f"{tr('logo.author')}{plugin_author[0]} | {tr('logo.version')}{plugin_version}", "INFO")
+        plugin_print(f"{tr('logo.author')}{", ".join(plugin_author)} | {tr('logo.version')}{plugin_version}", "INFO")
         plugin_print("=" * 80, "INFO")
 
     def on_enable(self):
@@ -281,6 +283,9 @@ class YEssentialPlugin(Plugin):
         # 7. MOTD 轮播启动(维护模式除外)
         if not self.maintenance.is_active:
             self.motd.start_rotation()
+
+        # 预取跨服 MOTD + 定时刷新
+        self.servers.start_prefetch()
 
         # 8. 更新检查 (延迟)
         def start_update_check():
@@ -413,6 +418,7 @@ class YEssentialPlugin(Plugin):
                     sender.send_message(tr("no_permission_reload"))
                     return True
                 self.config_manager.load_config()
+                self.i18n.init()  # 重新读取 Language 设置
                 sender.send_message(tr("reload"))
                 return True
             else:

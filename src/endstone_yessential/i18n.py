@@ -182,6 +182,13 @@ default_translations = {
         "servers.title": "§6跨服传送",
         "servers.disabled": "§c该模块未启用。",
         "servers.empty": "§c服务器列表为空。",
+        "servers.unknown": "未知服务器",
+        "servers.no_motd": "暂无描述",
+        "servers.confirm_title": "确认要传送到以下服务器吗？",
+        "servers.server_name_label": "服务器名：",
+        "servers.confirm_warn": "⚠ 传送后将从当前服务器断开",
+        "servers.confirm_yes": "§a确认传送",
+        "servers.confirm_no": "§c取消",
         "servers.transferred": "§a%s 前往了 %s",
         "servers.fail": "§c传送失败: %s",
 
@@ -205,6 +212,64 @@ default_translations = {
         "sign.signed_btn": "§8§l今日已签到",
         "sign.admin_title": "§3签到管理后台",
         "sign.admin_only": "§c仅管理员可用",
+        "sign.admin_content": "§7当前服务器签到系统配置中心，请选择要管理的模块：",
+        "sign.admin_economy": "§e§l经济参数查看\n§8查看当前经济模式与计分板",
+        "sign.admin_params": "§a§l签到参数设置\n§8开关、随机范围、列数",
+        "sign.admin_reward": "§6§l每日奖励序列\n§8配置每天的签到奖励",
+        "sign.admin_items": "§d§l奖励物品库\n§8管理可用的物品奖励列表",
+        "sign.admin_addition": "§b§l连续签到奖励\n§8设置连续打卡里程碑奖励",
+        "sign.item": "物品",
+        "sign.none": "无",
+        "sign.random_item": "随机物品",
+        "sign.random_money": "随机金币",
+        "sign.random_exp": "随机经验",
+        "sign.money_fmt": "%sx%s",
+        "sign.exp_fmt": "经验x%s",
+        "sign.monthly_title": "§7── 本月奖励一览 ──",
+        "sign.prompt_sign": "§a▶ 点击按钮立即签到并领取今日奖励！",
+        "sign.prompt_done": "§7今日已完成签到，明天再来吧~",
+        "sign.gui_back": "§c返回",
+        "sign.gui_on": "§a开启",
+        "sign.gui_off": "§c关闭",
+        "sign.gui_updated": "§a参数已更新",
+        "sign.gui_economy_title": "§l§e经济参数概览",
+        "sign.gui_economy_mode": "§e当前经济模式  §f%s",
+        "sign.gui_economy_sb": "§e计分板名称    §f%s",
+        "sign.gui_economy_coin": "§e货币单位名称  §f%s",
+        "sign.gui_economy_note": "§7以上参数在 YEssential 主配置 Economy 块统一管理，此处仅供查看。",
+        "sign.gui_params_title": "§l§a签到参数设置",
+        "sign.gui_params_switch": "§l签到功能总开关§r §7(当前: %s§7)",
+        "sign.gui_params_money_label": "§6§l随机金币范围",
+        "sign.gui_params_money_min": "§e最小值§7 (当前: %s)",
+        "sign.gui_params_money_max": "§e最大值§7 (当前: %s)",
+        "sign.gui_params_exp_label": "§b§l随机经验范围",
+        "sign.gui_params_exp_min": "§3最小值§7 (当前: %s)",
+        "sign.gui_params_exp_max": "§3最大值§7 (当前: %s)",
+        "sign.gui_params_layout_label": "§d§l界面布局",
+        "sign.gui_params_layout": "§5每行列数§7 (当前: %s，范围 1~10)",
+        "sign.gui_daily_title": "§6每日奖励序列",
+        "sign.gui_daily_content": "§7共 %s 天\n选择要修改的天数：",
+        "sign.gui_daily_day": "§e第%s天 §f%s",
+        "sign.gui_day_edit_title": "修改第%s天奖励",
+        "sign.gui_day_edit_type": "奖励类型",
+        "sign.gui_day_edit_amount": "金币/经验数量(仅指定类型)",
+        "sign.gui_day_updated": "§a第%s天奖励已更新",
+        "sign.gui_items_title": "§d奖励物品库",
+        "sign.gui_items_content": "§7共 %s 种物品\n§e管理物品库（影响随机物品和指定物品奖励）：",
+        "sign.gui_addition_title": "§b连续签到附加奖励",
+        "sign.gui_addition_list_title": "§l连续签到里程碑奖励：§r",
+        "sign.gui_addition_item": "  §6第 §e%s §6天 → §a%s",
+        "sign.gui_addition_empty": "  §7(暂未配置)",
+        "sign.gui_addition_add": "§a添加/修改里程碑",
+        "sign.gui_addition_del": "§c删除里程碑",
+        "sign.gui_addition_none": "§c没有可删除的里程碑",
+        "sign.gui_addition_edit_title": "添加/修改连续签到奖励",
+        "sign.gui_addition_days": "连续天数(如: 7)",
+        "sign.gui_addition_set": "§a连续签到第%s天奖励已设置",
+        "sign.gui_addition_del_title": "删除里程碑",
+        "sign.gui_addition_del_content": "选择要删除的：",
+        "sign.gui_addition_day": "第%s天: %s",
+        "sign.gui_addition_deleted": "§a已删除第%s天里程碑",
 
         "rtp.cooldown": "§c传送冷却中，剩余时间：%s秒",
         "rtp.cost": "§e花费 %s 金币",
@@ -271,6 +336,7 @@ default_translations = {
         "config.migrated": "配置已从 %s 迁移到 %s",
         "config.load_failed": "加载配置失败: %s",
         "config.save_failed": "保存配置失败: %s",
+        "config.recovering": "配置已损坏(%s)，已自动重建",
     },
     "en_US": {
         "economy.coin": "Coins",
@@ -443,6 +509,13 @@ default_translations = {
         "servers.title": "§6Server Transfer",
         "servers.disabled": "§cModule not enabled.",
         "servers.empty": "§cServer list empty.",
+        "servers.unknown": "Unknown Server",
+        "servers.no_motd": "No description",
+        "servers.confirm_title": "Confirm transfer to this server?",
+        "servers.server_name_label": "Server: ",
+        "servers.confirm_warn": "⚠ You will be disconnected from this server",
+        "servers.confirm_yes": "§aTransfer",
+        "servers.confirm_no": "§cCancel",
         "servers.transferred": "§a%s went to %s",
         "servers.fail": "§cTransfer failed: %s",
 
@@ -466,6 +539,64 @@ default_translations = {
         "sign.signed_btn": "§8§lAlready Signed",
         "sign.admin_title": "§3Sign-in Admin",
         "sign.admin_only": "§cAdmin only",
+        "sign.admin_content": "§7Sign-in system configuration, select a module:",
+        "sign.admin_economy": "§e§lEconomy Info\n§8View economy mode & scoreboard",
+        "sign.admin_params": "§a§lSign-in Settings\n§8Toggle, random range, columns",
+        "sign.admin_reward": "§6§lDaily Reward List\n§8Edit daily rewards",
+        "sign.admin_items": "§d§lItem Library\n§8Manage reward items",
+        "sign.admin_addition": "§b§lStreak Rewards\n§8Set milestone bonuses",
+        "sign.item": "Item",
+        "sign.none": "None",
+        "sign.random_item": "Random Item",
+        "sign.random_money": "Random Coins",
+        "sign.random_exp": "Random EXP",
+        "sign.money_fmt": "%sx%s",
+        "sign.exp_fmt": "EXP x%s",
+        "sign.monthly_title": "§7── Monthly Rewards ──",
+        "sign.prompt_sign": "§a▶ Click to sign in and claim today's reward!",
+        "sign.prompt_done": "§7Already signed in today, come back tomorrow~",
+        "sign.gui_back": "§cBack",
+        "sign.gui_on": "§aON",
+        "sign.gui_off": "§cOFF",
+        "sign.gui_updated": "§aSettings updated",
+        "sign.gui_economy_title": "§l§eEconomy Info",
+        "sign.gui_economy_mode": "§eMode  §f%s",
+        "sign.gui_economy_sb": "§eScoreboard  §f%s",
+        "sign.gui_economy_coin": "§eCoin Name  §f%s",
+        "sign.gui_economy_note": "§7These settings are in YEssential main config Economy section. Read-only.",
+        "sign.gui_params_title": "§l§aSign-in Settings",
+        "sign.gui_params_switch": "§lSign-in Switch§r §7(Current: %s§7)",
+        "sign.gui_params_money_label": "§6§lRandom Money Range",
+        "sign.gui_params_money_min": "§eMin§7 (Current: %s)",
+        "sign.gui_params_money_max": "§eMax§7 (Current: %s)",
+        "sign.gui_params_exp_label": "§b§lRandom EXP Range",
+        "sign.gui_params_exp_min": "§3Min§7 (Current: %s)",
+        "sign.gui_params_exp_max": "§3Max§7 (Current: %s)",
+        "sign.gui_params_layout_label": "§d§lLayout",
+        "sign.gui_params_layout": "§5Columns per row§7 (Current: %s, range 1~10)",
+        "sign.gui_daily_title": "§6Daily Reward List",
+        "sign.gui_daily_content": "§7%s days total\nSelect day to edit:",
+        "sign.gui_daily_day": "§eDay %s §f%s",
+        "sign.gui_day_edit_title": "Edit Day %s Reward",
+        "sign.gui_day_edit_type": "Reward Type",
+        "sign.gui_day_edit_amount": "Coin/EXP amount (specified type only)",
+        "sign.gui_day_updated": "§aDay %s reward updated",
+        "sign.gui_items_title": "§dItem Library",
+        "sign.gui_items_content": "§7%s items\n§eItem library (affects random & specified item rewards):",
+        "sign.gui_addition_title": "§bStreak Rewards",
+        "sign.gui_addition_list_title": "§lStreak Milestone Rewards:§r",
+        "sign.gui_addition_item": "  §6Day §e%s §6→ §a%s",
+        "sign.gui_addition_empty": "  §7(None configured)",
+        "sign.gui_addition_add": "§aAdd/Edit Milestone",
+        "sign.gui_addition_del": "§cDelete Milestone",
+        "sign.gui_addition_none": "§cNo milestones to delete",
+        "sign.gui_addition_edit_title": "Add/Edit Streak Reward",
+        "sign.gui_addition_days": "Consecutive days (e.g. 7)",
+        "sign.gui_addition_set": "§aStreak day %s reward set",
+        "sign.gui_addition_del_title": "Delete Milestone",
+        "sign.gui_addition_del_content": "Select to delete:",
+        "sign.gui_addition_day": "Day %s: %s",
+        "sign.gui_addition_deleted": "§aDay %s milestone deleted",
 
         "rtp.cooldown": "§cRTP cooldown: %ss",
         "rtp.cost": "§eCost %s coins",
@@ -532,6 +663,7 @@ default_translations = {
         "config.migrated": "Config migrated from %s to %s",
         "config.load_failed": "Failed to load config: %s",
         "config.save_failed": "Failed to save config: %s",
+        "config.recovering": "Config corrupted(%s), auto-recovered",
     }
 }
 
@@ -544,8 +676,12 @@ class I18n:
         self._ready = False
 
     def init(self):
-        cfg = self.plugin.config_manager.config_data
-        self._locale = cfg.get("Language", "zh_CN")
+        # 语言设置（配置可能尚未加载，默认 zh_CN）
+        try:
+            cfg = self.plugin.config_manager.config_data
+            self._locale = cfg.get("Language", "zh_CN")
+        except Exception:
+            self._locale = "zh_CN"
 
         # 数据目录: plugins/YEssential/
         data_dir = Path(str(self.plugin.data_folder))
@@ -556,7 +692,38 @@ class I18n:
         for lang, trans in default_translations.items():
             self._translations.setdefault(lang, {}).update(trans)
 
-        # 2) 首次运行：写出默认语言文件到 langs/ 供用户自定义
+        # 2) 补齐缺失键值 + 清理旧版 key-as-value 残留
+        for f in langs_dir.glob("*.json"):
+            try:
+                with open(f, "r", encoding="utf-8") as fh:
+                    data = json.load(fh)
+                updated = False
+                for lang, trans in data.items():
+                    if lang in default_translations:
+                        defaults = default_translations[lang]
+                        for k, v in list(trans.items()):
+                            # 删除旧版自动追加的 key-as-value（键值相同的无效翻译）
+                            if v == k and k in defaults:
+                                trans[k] = defaults[k]
+                                updated = True
+                            # 补齐默认值
+                            elif k not in trans or trans.get(k) == k:
+                                if k in defaults:
+                                    trans[k] = defaults[k]
+                                    updated = True
+                        # 补充缺失的键
+                        for k, v in defaults.items():
+                            if k not in trans:
+                                trans[k] = v
+                                updated = True
+                    self._translations.setdefault(lang, {}).update(trans)
+                if updated:
+                    with open(f, "w", encoding="utf-8") as fh:
+                        json.dump(data, fh, indent=4, ensure_ascii=False)
+            except Exception:
+                pass
+
+        # 3) 首次运行：写出默认语言文件
         for lang, trans in default_translations.items():
             lang_file = langs_dir / f"{lang}.json"
             if not lang_file.exists():
@@ -566,17 +733,7 @@ class I18n:
                 except Exception:
                     pass
 
-        # 3) JSON 文件覆盖用户自定义
-        for f in langs_dir.glob("*.json"):
-            try:
-                with open(f, "r", encoding="utf-8") as fh:
-                    data = json.load(fh)
-                for lang, trans in data.items():
-                    self._translations.setdefault(lang, {}).update(trans)
-            except Exception:
-                pass
-
-        # 4) 回退：配的语言不存在就用 zh_CN
+        # 4) 回退
         if self._locale not in self._translations:
             self._locale = "zh_CN" if "zh_CN" in self._translations else list(self._translations.keys())[0]
 
@@ -620,8 +777,16 @@ class I18n:
         return text
 
     def _append_missing(self, key: str):
-        """将缺失的翻译键自动追加到 langs 文件"""
-        self._translations[self._locale][key] = key
+        """将缺失的翻译键自动追加到 langs 文件，优先用默认翻译"""
+        # 查找默认翻译值
+        value = key
+        for loc in (self._locale, "zh_CN"):
+            dv = default_translations.get(loc, {}).get(key)
+            if dv is not None:
+                value = dv
+                break
+
+        self._translations[self._locale][key] = value
         langs_dir = Path(str(self.plugin.data_folder)) / "langs"
         lang_file = langs_dir / f"{self._locale}.json"
         try:
@@ -629,7 +794,7 @@ class I18n:
             if lang_file.exists():
                 with open(lang_file, "r", encoding="utf-8") as f:
                     existing = json.load(f)
-            existing.setdefault(self._locale, {})[key] = key
+            existing.setdefault(self._locale, {})[key] = value
             with open(lang_file, "w", encoding="utf-8") as f:
                 json.dump(existing, f, indent=4, ensure_ascii=False)
         except Exception:

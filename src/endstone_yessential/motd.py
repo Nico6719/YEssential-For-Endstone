@@ -28,7 +28,7 @@ class MotdSystem:
 
     @event_handler(priority=EventPriority.HIGHEST)
     def on_server_list_ping(self, event: ServerListPingEvent):
-        if not self.config.get("Enabled", True):
+        if not self.config.get("EnabledModule", True):
             return
         if self._paused:
             wh = self.plugin.config_manager.config_data.get("wh", {})
