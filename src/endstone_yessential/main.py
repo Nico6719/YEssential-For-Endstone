@@ -422,7 +422,7 @@ class YEssentialPlugin(Plugin):
                 sender.send_message(tr("reload"))
                 return True
             else:
-                sender.send_message(ftr("version", plugin_version))
+                sender.send_message(tr("version", plugin_version))
                 return True
 
         # ── moneygui ──────────────────────────────────────
