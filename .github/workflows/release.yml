@@ -100,15 +100,18 @@ jobs:
           ' CHANGELOG.md 2>/dev/null || echo "## YEssential v${VERSION}")
 
           # 逐条 commit 并获取作者 GitHub 用户名
-          PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
+          git fetch --tags --force
+          VERSION="${{ steps.version.outputs.version }}"
+          ALL_TAGS=$(git tag --sort=-v:refname | grep -v "v${VERSION}")
+          PREV_TAG=$(echo "$ALL_TAGS" | head -n1)
 
-          # 一次 API 调用获取所有提交和作者
+          # 一次 API 调用获取当前版本范围的提交和作者
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
             COMMITS=$(echo "$RESPONSE" | jq -r '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")')
             AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login // empty] | unique | map(select(. != "github-actions[bot]")) | map("@" + .) | join(" ")')
           else
-            COMMITS=$(git log HEAD~50..HEAD --format="- %s" 2>/dev/null)
+            COMMITS="🚀 YEssential v${VERSION} 首次发布"
             AUTHORS=""
           fi
           COMMITS="${COMMITS:-详见 CHANGELOG.md}"
