@@ -32,7 +32,7 @@ class MenuConfigManager:
             else:
                 self._config = {}
         except Exception as e:
-            self.plugin.logger.error(f"菜单配置文件加载失败: {e}")
+            self.plugin.logger.error(f"CD config load fail: {e}")
             self._config = {}
         self.validate()
 
@@ -42,7 +42,7 @@ class MenuConfigManager:
             with open(self.config_path, 'w', encoding='utf-8') as f:
                 json.dump(self._config, f, indent=4, ensure_ascii=False)
         except Exception as e:
-            self.plugin.logger.error(f"菜单配置文件保存失败: {e}")
+            self.plugin.logger.error(f"CD config save fail: {e}")
 
     def get(self) -> dict:
         return self._config
@@ -219,7 +219,7 @@ class MenuDataManager:
             with open(menu_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=4, ensure_ascii=False)
         except Exception as e:
-            self.plugin.logger.error(f"保存菜单失败: {e}")
+            self.plugin.logger.error(f"CD menu save fail: {e}")
 
     def delete_menu(self, file_name: str):
         if not file_name.endswith(".json"):
@@ -426,7 +426,7 @@ class MenuAdminHandler:
 
         controls = [
             Dropdown(label=tr("cd.select_economy_mode"), options=[tr("cd.scoreboard"), "LLMoney"], default_index=money_type if money_type is not None else current_money_type),
-            TextInput(label="输入计分板项", placeholder=f"当前: {current_score}", default_value=score_name if score_name else "")
+            TextInput(label=tr("cd.input_scoreboard"), placeholder=f"当前: {current_score}", default_value=score_name if score_name else "")
         ]
         if error:
             controls.append(Label(text=error))
@@ -438,19 +438,18 @@ class MenuAdminHandler:
                 self.show_main_settings(player)
                 return
             data = json.loads(data) if isinstance(data, str) else data
-            data = json.loads(data) if isinstance(data, str) else data
             selected_money_type = int(data[0])
             input_score = data[1].strip() if data[1] else ""
 
             if selected_money_type == current_money_type and input_score == "":
-                self.show_money_settings(player, "§l§c你好像什么都没有操作", selected_money_type, input_score)
+                self.show_money_settings(player, tr("cd.no_operation"), selected_money_type, input_score)
                 return
 
             self.config_manager.set({"money": selected_money_type})
             if input_score:
                 self.config_manager.set({"score": input_score})
 
-            player.send_message(self.config_manager.prefix + "§2修改成功")
+            player.send_message(self.config_manager.prefix + tr("cd.edit_success"))
             self.show_main_settings(player)
 
         form.on_submit = on_submit
@@ -487,7 +486,7 @@ class MenuAdminHandler:
         file_options = [MenuDataManager.get_default_sub_menu().get("title", "菜单") + " | " + f for f in menu_files]
 
         if not file_options:
-            player.send_message(self.config_manager.prefix + "§c没有可用的菜单文件")
+            player.send_message(self.config_manager.prefix + tr("cd.no_menu_files"))
             self.show_add_menu(player)
             return
 
@@ -507,17 +506,17 @@ class MenuAdminHandler:
                 self.show_add_menu(player)
                 return
             data = json.loads(data) if isinstance(data, str) else data
-            parent_index = data[0]
+            parent_index = int(data[0])
             file_name = data[1].strip()
             title = data[2].strip()
             content = data[3].strip()
 
             if not MenuUtils.is_valid_file_name(file_name):
-                self.show_add_sub_menu(player, "§l§c文件名称不合法", form_data)
+                self.show_add_sub_menu(player, tr("cd.invalid_filename"), form_data)
                 return
 
             if os.path.exists(os.path.join(self.config_manager.menus_path, file_name + ".json")):
-                self.show_add_sub_menu(player, "§l§c文件已存在", form_data)
+                self.show_add_sub_menu(player, tr("cd.file_exists"), form_data)
                 return
 
             self.data_manager.add_button( menu_files[parent_index], {
@@ -533,7 +532,7 @@ class MenuAdminHandler:
                 "content": content or tr("cd.select"),
                 "buttons": MenuDataManager.get_default_sub_menu()["buttons"]
             })
-            player.send_message(self.config_manager.prefix + "§2添加成功")
+            player.send_message(self.config_manager.prefix + tr("cd.add_success"))
             self.show_add_menu(player, "add_menu")
 
         form.on_submit = on_submit
@@ -543,7 +542,7 @@ class MenuAdminHandler:
         form_data = form_data or {}
         menu_files = MenuUtils.get_menu_files(config_manager=self.config_manager)
         if not menu_files:
-            player.send_message(self.config_manager.prefix + "§c没有可用的菜单文件")
+            player.send_message(self.config_manager.prefix + tr("cd.no_menu_files"))
             self.show_add_menu(player)
             return
 
@@ -568,15 +567,15 @@ class MenuAdminHandler:
                 self.show_add_menu(player)
                 return
             data = json.loads(data) if isinstance(data, str) else data
-            file_index = data[0]
-            type_index = data[1]
+            file_index = int(data[0])
+            type_index = int(data[1])
             button_text = data[2].strip()
             command = data[3].strip()
             money = data[4].strip()
             position = data[5].strip()
 
             if not button_text or not command:
-                self.show_add_button(player, "§c标题和指令必填", form_data)
+                self.show_add_button(player, tr("cd.title_command_required"), form_data)
                 return
 
             type_map = ["form", "opfm", "comm", "opcm"]
@@ -592,7 +591,7 @@ class MenuAdminHandler:
                 new_button["oplist"] = []
 
             self.data_manager.add_button( menu_files[file_index], new_button, int(position) if position.isdigit() else None)
-            player.send_message(self.config_manager.prefix + "§2添加成功")
+            player.send_message(self.config_manager.prefix + tr("cd.add_success"))
             self.show_add_menu(player, "add_button")
 
         form.on_submit = on_submit
@@ -621,7 +620,7 @@ class MenuAdminHandler:
         if delete_type == "del_menu":
             files = MenuUtils.get_menu_files(True, self.config_manager)
             if not files:
-                player.send_message(self.config_manager.prefix + "§c无可删除的菜单")
+                player.send_message(self.config_manager.prefix + tr("cd.no_menu_to_delete"))
                 self.show_delete_menu(player)
                 return
 
@@ -630,7 +629,7 @@ class MenuAdminHandler:
             for f in files:
                 menu_data = self.data_manager.get_menu(f)
                 form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
-            form.add_button("§c返回上级")
+            form.add_button(tr("cd.back"))
 
             def on_submit(p, selected):
                 if selected is None or selected == len(files):
@@ -640,7 +639,7 @@ class MenuAdminHandler:
                     deleted = files[selected]
                     self.data_manager.delete_menu( deleted)
                     self.data_manager.remove_orphan_buttons( deleted)
-                    player.send_message(self.config_manager.prefix + "§2删除成功: " + deleted)
+                    player.send_message(self.config_manager.prefix + tr("cd.delete_success") + ": " + deleted)
                     self.show_delete_menu(player, delete_type)
 
             form.on_submit = on_submit
@@ -649,7 +648,7 @@ class MenuAdminHandler:
         elif delete_type == "del_button":
             files = MenuUtils.get_menu_files(config_manager=self.config_manager)
             if not files:
-                player.send_message(self.config_manager.prefix + "§c无可用的菜单")
+                player.send_message(self.config_manager.prefix + tr("cd.no_menu_available"))
                 self.show_delete_menu(player)
                 return
 
@@ -658,7 +657,7 @@ class MenuAdminHandler:
             for f in files:
                 menu_data = self.data_manager.get_menu(f)
                 form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
-            form.add_button("§c返回上级")
+            form.add_button(tr("cd.back"))
 
             def on_submit(p, selected):
                 if selected is None or selected == len(files):
@@ -673,18 +672,18 @@ class MenuAdminHandler:
     def show_delete_button_list(self, player: Player, file_name: str):
         menu_data = self.data_manager.get_menu(file_name)
         if not menu_data.get("buttons") or len(menu_data["buttons"]) == 0:
-            player.send_message(self.config_manager.prefix + "§c该菜单没有按钮")
+            player.send_message(self.config_manager.prefix + tr("cd.menu_no_buttons"))
             self.show_delete_menu(player, "del_button")
             return
 
-        form = ActionForm(title="删除按钮 - " + menu_data.get("title", "菜单"))
+        form = ActionForm(title=tr("cd.delete_button_title") + " - " + menu_data.get("title", tr("cd.menu")))
         form.content = tr("cd.select_button_delete")
         for btn in menu_data["buttons"]:
             t = btn.get("text", "") + " [" + btn.get("type", "") + "]"
             if btn.get("money", 0) > 0:
-                t += f" (需{btn['money']}金币)"
+                t += f" (" + tr("cd.need_money", btn["money"]) + ")"
             form.add_button(t)
-        form.add_button("§c返回上级")
+        form.add_button(tr("cd.back"))
 
         def on_submit(p, selected):
             if selected is None or selected == len(menu_data["buttons"]):
@@ -693,9 +692,9 @@ class MenuAdminHandler:
             if 0 <= selected < len(menu_data["buttons"]):
                 deleted_btn = menu_data["buttons"][selected]
                 if self.data_manager.delete_button( file_name, selected):
-                    player.send_message(self.config_manager.prefix + "§2删除成功: " + deleted_btn.get("text", ""))
+                    player.send_message(self.config_manager.prefix + tr("cd.delete_success") + ": " + deleted_btn.get("text", ""))
                 else:
-                    player.send_message(self.config_manager.prefix + "§c删除失败")
+                    player.send_message(self.config_manager.prefix + tr("cd.delete_fail"))
                 self.show_delete_button_list(player, file_name)
 
         form.on_submit = on_submit
@@ -729,7 +728,7 @@ class MenuAdminHandler:
     def show_edit_menu_info(self, player: Player):
         files = MenuUtils.get_menu_files(config_manager=self.config_manager)
         if not files:
-            player.send_message(self.config_manager.prefix + "§c无可用的菜单")
+            player.send_message(self.config_manager.prefix + tr("cd.no_menu_available"))
             self.show_edit_menu(player)
             return
 
@@ -738,7 +737,7 @@ class MenuAdminHandler:
         for f in files:
             menu_data = self.data_manager.get_menu(f)
             form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
-        form.add_button("§c返回上级")
+        form.add_button(tr("cd.back"))
 
         def on_submit(p, selected):
             if selected is None or selected == len(files):
@@ -760,7 +759,7 @@ class MenuAdminHandler:
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="修改菜单: " + file_name, controls=controls)
+        form = ModalForm(title=tr("cd.edit_menu_title") + ": " + file_name, controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -770,12 +769,12 @@ class MenuAdminHandler:
             new_title = data[0].strip()
             new_content = data[1].strip()
             if not new_title or not new_content:
-                self.show_edit_menu_info_form(player, file_name, "§c标题和内容不能为空")
+                self.show_edit_menu_info_form(player, file_name, tr("cd.title_content_required"))
                 return
             menu_data["title"] = new_title
             menu_data["content"] = new_content
             self.data_manager.set_menu( file_name, menu_data)
-            player.send_message(self.config_manager.prefix + "§2修改成功")
+            player.send_message(self.config_manager.prefix + tr("cd.edit_success"))
             self.show_edit_menu_info(player)
 
         form.on_submit = on_submit
@@ -784,7 +783,7 @@ class MenuAdminHandler:
     def show_edit_button_select(self, player: Player):
         files = MenuUtils.get_menu_files(config_manager=self.config_manager)
         if not files:
-            player.send_message(self.config_manager.prefix + "§c无可用的菜单")
+            player.send_message(self.config_manager.prefix + tr("cd.no_menu_available"))
             self.show_edit_menu(player)
             return
 
@@ -793,7 +792,7 @@ class MenuAdminHandler:
         for f in files:
             menu_data = self.data_manager.get_menu(f)
             form.add_button((menu_data.get("title", "") or "菜单") + " | " + f)
-        form.add_button("§c返回上级")
+        form.add_button(tr("cd.back"))
 
         def on_submit(p, selected):
             if selected is None or selected == len(files):
@@ -808,15 +807,15 @@ class MenuAdminHandler:
     def show_edit_button_list(self, player: Player, file_name: str):
         menu_data = self.data_manager.get_menu(file_name)
         if not menu_data.get("buttons") or len(menu_data["buttons"]) == 0:
-            player.send_message(self.config_manager.prefix + "§c该菜单没有按钮")
+            player.send_message(self.config_manager.prefix + tr("cd.menu_no_buttons"))
             self.show_edit_button_select(player)
             return
 
-        form = ActionForm(title="修改按钮 - " + menu_data.get("title", "菜单"))
+        form = ActionForm(title=tr("cd.edit_button_title") + " - " + menu_data.get("title", tr("cd.menu")))
         form.content = tr("cd.select_button_edit")
         for btn in menu_data["buttons"]:
             form.add_button(btn.get("text", "") + " [" + btn.get("type", "") + "]")
-        form.add_button("§c返回上级")
+        form.add_button(tr("cd.back"))
 
         def on_submit(p, selected):
             if selected is None or selected == len(menu_data["buttons"]):
@@ -843,7 +842,7 @@ class MenuAdminHandler:
         current_type_index = type_map.index(raw_type) if raw_type in type_map else 0
 
         controls = [
-            Dropdown(label="按钮类型", options=button_types, default_index=current_type_index),
+            Dropdown(label=tr("cd.select_button_type"), options=button_types, default_index=current_type_index),
             TextInput(label=tr("cd.button_text"), placeholder="例如: 说你好", default_value=button.get("text", "")),
             TextInput(label=tr("cd.button_command"), placeholder="例如: say @a 你好", default_value=button.get("command", "")),
             TextInput(label=tr("cd.button_money"), placeholder="例如: 999", default_value=str(button.get("money", 0)))
@@ -851,7 +850,7 @@ class MenuAdminHandler:
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="修改按钮: " + button.get("text", ""), controls=controls)
+        form = ModalForm(title=tr("cd.edit_button_title") + ": " + button.get("text", ""), controls=controls)
 
         def on_submit(p, data):
             if not data:
@@ -864,7 +863,7 @@ class MenuAdminHandler:
             money = data[3].strip()
 
             if not button_text or not command:
-                self.show_edit_button_form(player, file_name, button_index, "§c标题和指令不能为空")
+                self.show_edit_button_form(player, file_name, button_index, tr("cd.title_command_required"))
                 return
 
             new_button = {
@@ -879,9 +878,9 @@ class MenuAdminHandler:
                 new_button["oplist"] = button.get("oplist", [])
 
             if self.data_manager.update_button( file_name, button_index, new_button):
-                player.send_message(self.config_manager.prefix + "§2修改成功")
+                player.send_message(self.config_manager.prefix + tr("cd.edit_success"))
             else:
-                player.send_message(self.config_manager.prefix + "§c修改失败")
+                player.send_message(self.config_manager.prefix + tr("cd.edit_fail"))
             self.show_edit_button_list(player, file_name)
 
         form.on_submit = on_submit
@@ -898,22 +897,22 @@ class MenuAdminHandler:
                 default_index = i + 1
                 break
 
-        controls = [Dropdown(label=f"主菜单文件（当前: {main_file}）", options=options, default_index=default_index)]
+        controls = [Dropdown(label=tr("cd.main_menu_file", main_file), options=options, default_index=default_index)]
         if error:
             controls.append(Label(text=error))
 
-        form = ModalForm(title="其他设置", controls=controls)
+        form = ModalForm(title=tr("cd.modify_other"), controls=controls)
 
         def on_submit(p, data):
             if not data:
                 self.show_main_settings(player)
                 return
             data = json.loads(data) if isinstance(data, str) else data
-            if data[0] > 0:
-                self.config_manager.set({"main": files[data[0] - 1].replace(".json", "")})
+            if int(data[0]) > 0:
+                self.config_manager.set({"main": files[int(data[0]) - 1].replace(".json", "")})
                 self.show_other_settings(player, "§2修改成功")
             else:
-                self.show_other_settings(player, "§e未做任何修改")
+                self.show_other_settings(player, tr("cd.no_change"))
 
         form.on_submit = on_submit
         player.send_form(form)
@@ -957,21 +956,21 @@ class GetClockCommandHandler:
 
     def execute(self, player: Player) -> bool:
         if self.has_claimed(player.xuid):
-            player.send_message("§6[YEssential] §c你已经领取过钟表了")
+            player.send_message(tr("cd.clock_claimed"))
             return False
 
         item = self.plugin.server.item_factory.get_item("minecraft:clock", 1)
         if not item:
-            player.send_message("§6[YEssential] §c获取钟表失败")
+            player.send_message(tr("cd.clock_fail"))
             return False
 
         if not player.inventory.can_hold_item(item):
-            player.send_message("§6[YEssential] §c背包已满，请清理背包后重试")
+            player.send_message(tr("cd.inventory_full"))
             return False
 
         player.inventory.add_item(item)
         self.mark_claimed(player.xuid)
-        player.send_message("§6[YEssential] §a已获得钟表，此物品每人仅限领取一次")
+        player.send_message(tr("cd.clock_success"))
         return True
 
 
@@ -995,7 +994,7 @@ class CdSystem:
         if player.is_op:
             self.admin_handler.show_main_settings(player)
         else:
-            player.send_message("§6[YEssential] §c你不是管理员!")
+            player.send_message(tr("cd.not_op"))
 
     def getclock(self, player: Player):
         self.getclock_handler.execute(player)

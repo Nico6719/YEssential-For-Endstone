@@ -152,7 +152,7 @@ class FcamSystem:
 
     def on_packet_receive(self, event):
         """拦截 PlayerAuthInputPacket → 防止服务端处理灵魂出窍玩家的移动"""
-        if event.packet_id == MinecraftPacketIds.PlayerAuthInput:
+        if event.packet_id == MinecraftPacketIds.PlayerAuthInputPacket:
             player = self._address_map.get(event.address)
             if player and player.name in self.fcam_players:
                 event.cancel()

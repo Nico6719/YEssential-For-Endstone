@@ -2,8 +2,9 @@
 YEssential Plugin - 主入口
 基岩版多功能基础插件, 基于 Endstone 框架
 """
+import time
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PacketReceiveEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerQuitEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
+from endstone.event import event_handler, PacketReceiveEvent, PlayerInteractEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerQuitEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
 from endstone.command import Command, CommandSender, CommandSenderWrapper
 from endstone import Player
 from typing import List
@@ -260,7 +261,6 @@ class YEssentialPlugin(Plugin):
         self.servers = ServersSystem(self)
         self.hub = HubSystem(self)
         self.motd = MotdSystem(self)
-        self.register_events(self.motd)  # 将 motd 注册为独立 listener
         self.cd = CdSystem(self)
         self.fcam = FcamSystem(self)
         self.redpacket = RedpacketSystem(self)
@@ -268,6 +268,9 @@ class YEssentialPlugin(Plugin):
         self.cleanmgr = CleanmgrSystem(self)
         self.suicide = SuicideSystem(self)
         self.sign_system = SignSystem(self)
+
+        # 注册事件监听
+        self.register_events(self)
 
         # 2. 初始化更新检查器
         self.update_checker = UpdateChecker(self)
@@ -380,6 +383,33 @@ class YEssentialPlugin(Plugin):
         """Fcam 拦截移动包"""
         if hasattr(self, 'fcam') and self.fcam:
             self.fcam.on_packet_receive(event)
+
+    @event_handler
+    def on_player_interact(self, event: PlayerInteractEvent):
+        """右键钟表打开菜单"""
+        player = event.player
+        if _is_simulated(player):
+            return
+
+        # 仅响应右键
+        if event.action not in (PlayerInteractEvent.RIGHT_CLICK_BLOCK, PlayerInteractEvent.RIGHT_CLICK_AIR):
+            return
+
+        # 检查手持物品是否为钟
+        item = player.inventory.item_in_main_hand
+        if item is None or item.type != "minecraft:clock":
+            return
+
+        # 防双击：500ms 内不再触发
+        xuid = player.xuid
+        now = time.time()
+        last = getattr(self, '_cd_menu_last', {})
+        if xuid in last and now - last[xuid] < 0.5:
+            return
+        last[xuid] = now
+        self._cd_menu_last = last
+
+        self.cd.open_menu(player)
 
     @event_handler
     def on_actor_damage(self, event: ActorDamageEvent):
