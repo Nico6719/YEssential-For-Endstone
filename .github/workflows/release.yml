@@ -101,22 +101,17 @@ jobs:
 
           # 逐条 commit 并获取作者 GitHub 用户名
           PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
-          COMMITS=""
+
+          # 一次 API 调用获取所有提交和作者
           if [ -n "$PREV_TAG" ]; then
-            RANGE="${PREV_TAG}..HEAD"
+            RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
+            COMMITS=$(echo "$RESPONSE" | jq -r '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")')
+            AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login // empty] | unique | map(select(. != "github-actions[bot]")) | map("@" + .) | join(" ")')
           else
-            RANGE="HEAD~50..HEAD"
+            COMMITS=$(git log HEAD~50..HEAD --format="- %s" 2>/dev/null)
+            AUTHORS=""
           fi
-
-          declare -A AUTHORS_MAP
-          while IFS='|' read -r sha msg; do
-            login=$(gh api "repos/${{ github.repository }}/commits/$sha" --jq '.author.login // "unknown"' 2>/dev/null || echo "unknown")
-            COMMITS="${COMMITS}- ${msg} (@${login})"$'\n'
-            AUTHORS_MAP["$login"]=1
-          done < <(git log "${RANGE}" --format="%H|%s" 2>/dev/null || echo "")
           COMMITS="${COMMITS:-详见 CHANGELOG.md}"
-
-          AUTHORS=$(printf '%s\n' "${!AUTHORS_MAP[@]}" | grep -v "github-actions\[bot\]" | sed 's/.*/@&/' | paste -sd ' ')
 
           BODY="${HEADER}"
           [ -n "$PREV_TAG" ] && BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"

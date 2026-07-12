@@ -52,13 +52,10 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # 提取相对于 main 的新提交（每条后面 @贡献者）
+          # 一次 API 调用获取所有提交和作者
           git fetch origin main
-          COMMITS=""
-          while IFS='|' read -r sha msg; do
-            login=$(gh api "repos/${{ github.repository }}/commits/$sha" --jq '.author.login // "unknown"' 2>/dev/null || echo "unknown")
-            COMMITS="${COMMITS}- ${msg} (@${login})"$'\n'
-          done < <(git log origin/main..HEAD --format="%H|%s" 2>/dev/null || echo "")
+          COMMITS=$(gh api "repos/${{ github.repository }}/compare/main...dev" \
+            --jq '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")' 2>/dev/null)
           COMMITS="${COMMITS:-无新提交}"
 
           # 提取贡献者
