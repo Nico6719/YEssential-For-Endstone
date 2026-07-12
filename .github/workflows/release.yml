@@ -60,7 +60,6 @@ jobs:
         with:
           args: --latest --strip header --prepend CHANGELOG.md
         env:
-          OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
       - name: Commit updated CHANGELOG
