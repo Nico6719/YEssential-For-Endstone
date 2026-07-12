@@ -89,38 +89,57 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # 从 CHANGELOG 提取标题部分
-          HEADER=$(awk -v ver="$VERSION" '
+          # ── 1. CHANGELOG 总结 ──
+          SUMMARY=$(awk -v ver="$VERSION" '
             /^## \[/ {
               if (found) exit
-              if (index($0, "[" ver "]")) found=1
-              next
+              if (index($0, "[" ver "]")) { found=1; next }
             }
-            found && /^###/ { print; next }
-          ' CHANGELOG.md 2>/dev/null || echo "## YEssential v${VERSION}")
+            found { print }
+          ' CHANGELOG.md 2>/dev/null)
+          SUMMARY="${SUMMARY:-## YEssential v${VERSION}}"
 
-          # 逐条 commit 并获取作者 GitHub 用户名
+          # ── 2. 获取上一版本 tag ──
           git fetch --tags --force
-          VERSION="${{ steps.version.outputs.version }}"
           ALL_TAGS=$(git tag --sort=-v:refname | grep -v "v${VERSION}")
           PREV_TAG=$(echo "$ALL_TAGS" | head -n1)
 
-          # 一次 API 调用获取当前版本范围的提交和作者
+          # ── 3. API 获取提交并按类型分组 ──
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
-            COMMITS=$(echo "$RESPONSE" | jq -r '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")')
-            AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login // empty] | unique | map(select(. != "github-actions[bot]")) | map("@" + .) | join(" ")')
+
+            DETAILS=$(echo "$RESPONSE" | jq -r '
+              def icon($m):
+                if $m|test("^feat") then "🚀"
+                elif $m|test("^fix") then "🐛"
+                elif $m|test("^docs") then "📚"
+                elif $m|test("^refactor") then "♻️"
+                elif $m|test("^chore") then "🔧"
+                elif $m|test("^ci") then "🤖"
+                else "📝" end;
+              def label($i):
+                {"🚀":"新功能","🐛":"修复","📚":"文档","♻️":"重构","🔧":"杂项","🤖":"CI/CD","📝":"其他"}[$i] // "更新";
+              [.commits[]? | select(.author.login != "github-actions[bot]") | {
+                i: icon(.commit.message),
+                m: (.commit.message|split("\n")[0]|sub("^\\w+:\\s*";"")),
+                a: ("@"+.author.login)
+              }] | group_by(.i) | map(
+                "### \(.[0].i) \(label(.[0].i))\n" +
+                (map("- \(.m) \(.a)")|join("\n"))
+              ) | join("\n\n")
+            ' 2>/dev/null)
+
+            AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")')
           else
-            COMMITS="🚀 YEssential v${VERSION} 首次发布"
+            DETAILS="🚀 YEssential v${VERSION} 首次发布"
             AUTHORS=""
           fi
-          COMMITS="${COMMITS:-详见 CHANGELOG.md}"
 
-          BODY="${HEADER}"
+          # ── 4. 组装 Release Body ──
+          BODY="${SUMMARY}"
           [ -n "$PREV_TAG" ] && BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"
-          BODY="${BODY}"$'\n\n'"### 📝 提交记录"
-          BODY="${BODY}"$'\n'"${COMMITS}"
-          [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n'"**Contributors**: ${AUTHORS}"
+          [ -n "$DETAILS" ] && BODY="${BODY}"$'\n\n'"${DETAILS}"
+          [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
 
           { echo "BODY<<EOF"; echo "$BODY"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
