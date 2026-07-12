@@ -45,3 +45,17 @@ def plugin_print(text, level="INFO") -> bool:
     log_level = log_level_map.get(level, logging.INFO)
     logger.log(log_level, str(text))
     return True
+
+
+# 全局 debug 开关，由 main.py 的 on_enable 设置
+_debug_enabled = False
+
+
+def set_debug(enabled: bool):
+    global _debug_enabled
+    _debug_enabled = enabled
+
+
+def debug(text: str):
+    if _debug_enabled:
+        plugin_print(f"[DEBUG] {text}", "DEBUG")

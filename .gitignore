@@ -161,3 +161,10 @@ cython_debug/
 
 # Wheels
 wheelhouse/
+
+# API documentation
+api.txt
+
+# DIY
+.claude
+YEssential-main

@@ -1,0 +1,11 @@
+{
+    "latest_version": "0.1.0-beta.1",
+    "versions": {
+        "0.1.0-beta.1": {
+            "download_url": "https://github.com/Nico6719/YEssential-For-Endstone/releases/download/v0.1.0-beta.1/endstone_yessential-0.1.0_beta_1-py3-none-any.whl",
+            "update_content": "YEssential For EndStone 首个测试版本，包含经济/菜单/家园/TPA/RTP/Warp 等完整功能",
+            "author": "Nico6719&梦涵LOVE",
+            "update_time": "2026-07-12 15:50:00"
+        }
+    }
+}

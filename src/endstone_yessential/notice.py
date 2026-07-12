@@ -5,6 +5,7 @@ from endstone import Player
 from endstone.form import ActionForm, ModalForm, TextInput
 
 from .log import plugin_print
+from .i18n import tr
 
 class NoticeSystem:
     def __init__(self, plugin):
@@ -16,7 +17,7 @@ class NoticeSystem:
 
     def load_notices(self):
         if not os.path.exists(self.notice_path):
-            self.notices = ["欢迎来到服务器！", "请遵守服务器规则。"]
+            self.notices = [tr("notice.welcome"), tr("notice.rules")]
             self.save_notices()
         else:
             try:
@@ -37,19 +38,19 @@ class NoticeSystem:
         """显示公告"""
         content = "\n".join([f"§7- §f{n}" for n in self.notices])
         form = ActionForm(
-            title="§6服务器公告",
+            title=tr("notice.title"),
             content=content
         )
         if player.is_op:
-            form.add_button("§a添加公告", on_click=lambda p: self.open_add_notice_gui(p))
+            form.add_button(tr("notice.add_btn"), on_click=lambda p: self.open_add_notice_gui(p))
         
-        form.add_button("§c关闭")
+        form.add_button(tr("notice.close"))
         player.send_form(form)
 
     def open_add_notice_gui(self, player: Player):
         form = ModalForm(
-            title="§6添加公告",
-            controls=[TextInput(label="请输入公告内容", placeholder="例如: 祝大家游戏愉快！")],
+            title=tr("notice.add_title"),
+            controls=[TextInput(label=tr("notice.content_label"), placeholder="例如: 祝大家游戏愉快！")],
             on_submit=lambda p, data: self.add_notice(p, data[0])
         )
         player.send_form(form)
@@ -58,5 +59,31 @@ class NoticeSystem:
         if content:
             self.notices.append(content)
             self.save_notices()
-            player.send_message("§6[YEssential] §a公告已添加。")
+            player.send_message(tr("notice.added"))
             self.show_notice(player)
+
+    def open_settings(self, player: Player):
+        """管理员公告设置 GUI"""
+        form = ActionForm(title=tr("notice.admin_title"))
+        form.content = tr("notice.admin_content")
+        form.add_button(tr("notice.add_btn"), on_click=lambda p: self.open_add_notice_gui(p))
+        form.add_button(tr("notice.del_btn"), on_click=lambda p: self._delete_notice_gui(p))
+        form.add_button(tr("notice.back_btn"), on_click=lambda p: self.show_notice(p))
+        player.send_form(form)
+
+    def _delete_notice_gui(self, player: Player):
+        form = ActionForm(title=tr("notice.del_title"))
+        if not self.notices:
+            form.content = tr("notice.no_notice")
+        else:
+            for i, n in enumerate(self.notices):
+                form.add_button(f"§c{i + 1}. §7{n[:30]}...", on_click=lambda p, idx=i: self._do_delete(p, idx))
+        form.add_button(tr("notice.back_btn"), on_click=lambda p: self.open_settings(p))
+        player.send_form(form)
+
+    def _do_delete(self, player: Player, index: int):
+        if 0 <= index < len(self.notices):
+            del self.notices[index]
+            self.save_notices()
+            player.send_message(tr("notice.deleted", str(index + 1)))
+        self._delete_notice_gui(player)
