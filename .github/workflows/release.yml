@@ -1,0 +1,62 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Mark as pre-release'
+        type: boolean
+        default: false
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(python -c "import ast,re;c=open('src/endstone_yessential/constant.py').read();m=re.search(r'plugin_version\s*=\s*\"(.+?)\"',c);print(m.group(1) if m else '0.0.0')")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: YEssential v${{ steps.version.outputs.version }}
+          body: |
+            ## YEssential v${{ steps.version.outputs.version }}
+
+            基于 EndStone 的多功能基础插件。
+
+            ### 安装
+            下载 `.whl` 文件放入 `plugins/` 目录，重启服务器。
+
+            ### 功能
+            - 经济系统 / 菜单 / 家园 / Warp / TPA
+            - RTP / Back / DeathLog / Hub
+            - PVP / 维护模式 / 清理 / 签到
+            - 红包 / 崩溃管理 / 跨服传送
+            - 多语言国际化 (zh_CN / en_US)
+          prerelease: ${{ github.event.inputs.prerelease || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
+          files: |
+            dist/*.whl
+          generate_release_notes: true

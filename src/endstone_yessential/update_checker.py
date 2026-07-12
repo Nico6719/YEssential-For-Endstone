@@ -16,7 +16,7 @@ class UpdateChecker:
     """GitHub 更新检查器"""
 
     # GitHub API URL
-    UPDATE_URL = "https://api.github.com/repos/MengHanLOVE1027/endstone-yessential/releases/latest"
+    UPDATE_URL = "https://api.github.com/repos/Nico6719/YEssential-For-Endstone/releases/latest"
 
     def __init__(self, plugin):
         self.plugin = plugin
@@ -67,7 +67,7 @@ class UpdateChecker:
                             f"  §6[YEssential] §a发现新版本！\n"
                             f"  §7当前版本: §c{plugin_version}\n"
                             f"  §7最新版本: §a{latest_version}\n"
-                            f"  §7下载地址: §bhttps://github.com/MengHanLOVE1027/endstone-yessential/releases/latest\n"
+                            f"  §7下载地址: §bhttps://github.com/Nico6719/YEssential-For-Endstone/releases/latest\n"
                             f"  §7更新日志: §f{data.get('name', latest_version)}\n"
                             f"{'='*50}"
                         )

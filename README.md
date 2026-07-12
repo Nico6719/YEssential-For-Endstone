@@ -113,7 +113,3 @@
 
 本项目的诞生离不开PHEyeji等人的帮助与支持！<br>
 如果您也想为YEssential做贡献欢迎提交 Issue，共同完善 YEssential。 
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Nico6719/YEssential-For-Endstone&type=Date)](https://star-history.com/#Nico6719/YEssential-For-Endstone&Date)
