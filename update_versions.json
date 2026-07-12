@@ -1,6 +1,12 @@
 {
-    "latest_version": "0.1.0-beta.2",
+    "latest_version": "0.1.0-beta.3",
     "versions": {
+        "0.1.0-beta.3": {
+            "download_url": "https://github.com/Nico6719/YEssential-For-Endstone/releases/download/v0.1.0-beta.3/endstone_yessential-0.1.0b3-py3-none-any.whl",
+            "update_content": "完善 GitHub Actions 自动构建发布流程，优化 CHANGELOG 生成和贡献者展示",
+            "author": "Nico6719&梦涵LOVE",
+            "update_time": "2026-07-12 22:00:00"
+        },
         "0.1.0-beta.2": {
             "download_url": "https://github.com/Nico6719/YEssential-For-Endstone/releases/download/v0.1.0-beta.2/endstone_yessential-0.1.0b2-py3-none-any.whl",
             "update_content": "修复菜单触发、新增 /tpasettings /deathlog /noticeset /rtpreset 命令、EasyCheckUpdate 支持、GitHub Actions 自动构建发布",
