@@ -437,9 +437,16 @@ class EconomySystem:
                 if idx is None: self._gui_op(admin); return
                 t = pls[idx]
                 if op == "get":
-                    admin.send_message(tr("economy.player_balance", t.name, int(self.get_money_internal(t))))
-                else: self._show_history(admin, t.name)
-                self._gui_op(admin)
+                    bal = int(self.get_money_internal(t))
+                    coin = self.config.coin_name
+                    f2 = ActionForm(title=f"§6{tr('economy.admin_look', coin)}",
+                                    content=tr("economy.player_balance", t.name, bal))
+                    f2.add_button(tr("economy.back_btn"))
+                    f2.on_submit = lambda _, __: self._gui_op(admin)
+                    admin.send_form(f2)
+                else:
+                    self._show_history(admin, t.name)
+                    # _show_history 自带返回按钮，不再额外发菜单
             f.on_submit = cb; admin.send_form(f)
         else:
             fm = ModalForm(title=f"§6{label}", controls=[Dropdown(label=tr("economy.select_player"), options=names), TextInput(label=tr("economy.amount_label"), placeholder="0", default_value="")])

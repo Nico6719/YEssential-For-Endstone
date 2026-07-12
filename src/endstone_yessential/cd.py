@@ -4,6 +4,7 @@ import time
 from typing import Dict, List, Any, Optional
 from endstone import Player
 from endstone.form import ActionForm, ModalForm, Dropdown, TextInput, Label
+from endstone.event import event_handler, PlayerInteractEvent
 from .i18n import tr
 
 class MenuConfigManager:
@@ -998,3 +999,59 @@ class CdSystem:
 
     def getclock(self, player: Player):
         self.getclock_handler.execute(player)
+
+
+class MenuTriggerListener:
+    """菜单触发监听器 — 严格按照 JS 版 registerEvents 逻辑
+    onUseItemOn(方块) => mode 0/2
+    onUseItem(空气)   => mode 1/2
+    menuPendingThisTick 防同 tick 双击
+    """
+
+    def __init__(self, cd_system: CdSystem):
+        self._cd = cd_system
+        self._pending = set()
+
+    @event_handler
+    def on_player_interact(self, event: PlayerInteractEvent):
+        player = event.player
+        xuid = player.xuid
+
+        # 同 tick 已触发过，跳过（menuPendingThisTick）
+        if xuid in self._pending:
+            return
+
+        action = event.action
+        trigger_mode = self._cd.config_manager.get_items_trigger_mode()
+
+        # onUseItemOn: mode 0 或 2
+        if action == PlayerInteractEvent.RIGHT_CLICK_BLOCK:
+            if trigger_mode not in (0, 2):
+                return
+        # onUseItem: mode 1 或 2
+        elif action == PlayerInteractEvent.RIGHT_CLICK_AIR:
+            if trigger_mode not in (1, 2):
+                return
+        else:
+            return
+
+        # 检查手持物品是否在触发列表中
+        item = player.inventory.item_in_main_hand
+        if item is None:
+            return
+
+        items = self._cd.config_manager.get_items()
+        if item.type not in items:
+            return
+
+        # 标记已触发
+        self._pending.add(xuid)
+
+        # 打开菜单（JS 版直接调用 showMenu，无延迟）
+        self._cd.open_menu(player)
+
+        # 50ms 后清除标记（JS 版 setTimeout）
+        def _clear():
+            self._pending.discard(xuid)
+
+        self._cd.plugin.server.scheduler.run_task(self._cd.plugin, _clear, 1)

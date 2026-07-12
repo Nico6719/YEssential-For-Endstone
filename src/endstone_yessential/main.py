@@ -2,9 +2,8 @@
 YEssential Plugin - 主入口
 基岩版多功能基础插件, 基于 Endstone 框架
 """
-import time
 from endstone.plugin import Plugin
-from endstone.event import event_handler, PacketReceiveEvent, PlayerInteractEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerQuitEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
+from endstone.event import event_handler, PacketReceiveEvent, PlayerJoinEvent, PlayerDeathEvent, PlayerQuitEvent, PlayerRespawnEvent, ActorDamageEvent, ServerCommandEvent
 from endstone.command import Command, CommandSender, CommandSenderWrapper
 from endstone import Player
 from typing import List
@@ -269,8 +268,9 @@ class YEssentialPlugin(Plugin):
         self.suicide = SuicideSystem(self)
         self.sign_system = SignSystem(self)
 
-        # 注册事件监听
-        self.register_events(self)
+        # 注册菜单触发监听器（独立 listener，与 JS 版 registerEvents 一致）
+        from .cd import MenuTriggerListener
+        self.register_events(MenuTriggerListener(self.cd))
 
         # 2. 初始化更新检查器
         self.update_checker = UpdateChecker(self)
@@ -385,33 +385,6 @@ class YEssentialPlugin(Plugin):
             self.fcam.on_packet_receive(event)
 
     @event_handler
-    def on_player_interact(self, event: PlayerInteractEvent):
-        """右键钟表打开菜单"""
-        player = event.player
-        if _is_simulated(player):
-            return
-
-        # 仅响应右键
-        if event.action not in (PlayerInteractEvent.RIGHT_CLICK_BLOCK, PlayerInteractEvent.RIGHT_CLICK_AIR):
-            return
-
-        # 检查手持物品是否为钟
-        item = player.inventory.item_in_main_hand
-        if item is None or item.type != "minecraft:clock":
-            return
-
-        # 防双击：500ms 内不再触发
-        xuid = player.xuid
-        now = time.time()
-        last = getattr(self, '_cd_menu_last', {})
-        if xuid in last and now - last[xuid] < 0.5:
-            return
-        last[xuid] = now
-        self._cd_menu_last = last
-
-        self.cd.open_menu(player)
-
-    @event_handler
     def on_actor_damage(self, event: ActorDamageEvent):
         """PVP 伤害拦截 + Fcam 受伤退出"""
         if hasattr(self, 'pvp') and self.pvp:
@@ -452,6 +425,7 @@ class YEssentialPlugin(Plugin):
                     sender.send_message(tr("no_permission_reload"))
                     return True
                 self.config_manager.load_config()
+                self.cd.config_manager.load()  # 重新读取菜单配置
                 self.i18n.init()  # 重新读取 Language 设置
                 sender.send_message(tr("reload"))
                 return True
