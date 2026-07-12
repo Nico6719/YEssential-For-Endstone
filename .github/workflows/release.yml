@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'src/endstone_yessential/constant.py'
   workflow_dispatch:
 
 concurrency:
@@ -101,13 +99,18 @@ jobs:
           ' CHANGELOG.md)
           BODY="${BODY:-YEssential v${VERSION}}"
 
-          PREV_TAG=$(git tag --sort=-v:refname | head -n1)
+          PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
           if [ -n "$PREV_TAG" ]; then
             BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"
           fi
 
-          AUTHORS=$(gh api "repos/${{ github.repository }}/commits?per_page=100" \
-            --jq '[.[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            AUTHORS=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" \
+              --jq '[.commits[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+          else
+            AUTHORS=$(gh api "repos/${{ github.repository }}/commits?per_page=100" \
+              --jq '[.[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+          fi
           [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
 
           { echo "BODY<<EOF"; echo "$BODY"; echo "EOF"; } >> "$GITHUB_OUTPUT"
