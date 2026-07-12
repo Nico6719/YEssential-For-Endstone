@@ -77,6 +77,8 @@ jobs:
       - name: Extract changelog for current version
         id: changelog
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
           VERSION="${GITHUB_REF_NAME#v}"
@@ -104,11 +106,14 @@ jobs:
             BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${GITHUB_REF_NAME}"
           fi
 
-          # 提取贡献者
+          # 通过 GitHub Compare API 获取真实用户名
           if [ -n "$PREV_TAG" ]; then
-            AUTHORS=$(git log "${PREV_TAG}..HEAD" --format="%ae" | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ')
+            AUTHORS=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...${GITHUB_REF_NAME}" \
+              --jq '[.commits[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
           else
-            AUTHORS=$(git log --format="%ae" | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ')
+            AUTHORS=$(gh api "repos/${{ github.repository }}/commits?per_page=100" \
+              --jq '[.[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+          fi
           fi
           if [ -n "$AUTHORS" ]; then
             BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
