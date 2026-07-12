@@ -83,3 +83,32 @@ class BackSystem:
 
         form.add_button(tr("back.close"))
         player.send_form(form)
+
+    def open_death_log(self, player: Player):
+        """查看死亡记录 GUI"""
+        form = ActionForm(title=tr("back.deathlog_title"))
+
+        if player.unique_id in self.death_points and self.death_points[player.unique_id]:
+            for i, death_point in enumerate(self.death_points[player.unique_id]):
+                loc = death_point["location"]
+                death_time = time.time() - death_point["time"]
+
+                if death_time < 60:
+                    time_str = tr("back.sec_ago", int(death_time))
+                elif death_time < 3600:
+                    time_str = tr("back.min_ago", int(death_time / 60))
+                elif death_time < 86400:
+                    time_str = tr("back.hour_ago", int(death_time / 3600))
+                else:
+                    time_str = tr("back.day_ago", int(death_time / 86400))
+
+                dim = str(loc.dimension).replace("minecraft:", "")
+                button_text = f"§e#{i + 1}: §a({int(loc.x)}, {int(loc.y)}, {int(loc.z)}) §7[{dim}] §7- {time_str}"
+                form.add_button(button_text, on_click=lambda p, idx=i: self.teleport_back(p, idx))
+
+            form.content = tr("back.deathlog_count", len(self.death_points[player.unique_id]))
+        else:
+            form.content = tr("back.deathlog_empty")
+
+        form.add_button(tr("back.close"))
+        player.send_form(form)

@@ -178,6 +178,36 @@ class YEssentialPlugin(Plugin):
             "usages": ["/signset"],
             "permissions": ["yessential.command.signset"],
         },
+        "tpasettings": {
+            "description": "TPA 传送设置",
+            "usages": ["/tpasettings"],
+            "permissions": ["yessential.command.tpa"],
+        },
+        "deathlog": {
+            "description": "查看死亡记录",
+            "usages": ["/deathlog"],
+            "permissions": ["yessential.command.back"],
+        },
+        "noticeset": {
+            "description": "管理公告",
+            "usages": ["/noticeset"],
+            "permissions": ["yessential.command.notice.admin"],
+        },
+        "rtpreset": {
+            "description": "重置 RTP 冷却时间",
+            "usages": ["/rtpreset <player: target>"],
+            "permissions": ["yessential.command.rtpreset"],
+        },
+        "redpacket": {
+            "description": "红包系统（长指令版）",
+            "usages": ["/redpacket", "/redpacket history", "/redpacket list", "/redpacket open", "/redpacket send"],
+            "permissions": ["yessential.command.rp"],
+        },
+        "redpackethelp": {
+            "description": "红包功能详解",
+            "usages": ["/redpackethelp"],
+            "permissions": ["yessential.command.rp"],
+        },
     }
 
     permissions = {
@@ -208,6 +238,7 @@ class YEssentialPlugin(Plugin):
         "yessential.command.suicide": {"description": "允许使用自杀命令", "default": True},
         "yessential.command.sign": {"description": "允许使用签到命令", "default": True},
         "yessential.command.signset": {"description": "允许管理签到系统", "default": "op"},
+        "yessential.command.rtpreset": {"description": "允许重置 RTP 冷却", "default": "op"},
     }
 
     def on_load(self):
@@ -682,6 +713,52 @@ class YEssentialPlugin(Plugin):
                 return True
             if hasattr(self, 'sign_system') and self.sign_system:
                 self.sign_system.open_settings(sender)
+            return True
+
+        # ── tpasettings ────────────────────────────────────
+        elif cmd == "tpasettings":
+            self.tpa.toggle_settings(sender)
+            return True
+
+        # ── deathlog ───────────────────────────────────────
+        elif cmd == "deathlog":
+            self.back.open_death_log(sender)
+            return True
+
+        # ── noticeset ──────────────────────────────────────
+        elif cmd == "noticeset":
+            if not sender.has_permission("yessential.command.notice.admin"):
+                sender.send_message(tr("no_permission"))
+                return True
+            self.notice.open_settings(sender)
+            return True
+
+        # ── rtpreset ───────────────────────────────────────
+        elif cmd == "rtpreset":
+            if not sender.has_permission("yessential.command.rtpreset"):
+                sender.send_message(tr("no_permission"))
+                return True
+            target_name = args[0] if args else sender.name
+            if self.rtp.reset_cooldown(target_name):
+                sender.send_message(f"§a已重置 {target_name} 的 RTP 冷却时间。")
+            else:
+                sender.send_message(f"§e{target_name} 当前没有冷却中。")
+            return True
+
+        # ── redpacket (长指令版) ────────────────────────────
+        elif cmd == "redpacket":
+            if isinstance(sender, Player):
+                self.redpacket.on_command(sender, args)
+            else:
+                sender.send_message(tr("player_only"))
+            return True
+
+        # ── redpackethelp ───────────────────────────────────
+        elif cmd == "redpackethelp":
+            if isinstance(sender, Player):
+                self.redpacket.show_help(sender)
+            else:
+                sender.send_message(tr("player_only"))
             return True
 
         return False

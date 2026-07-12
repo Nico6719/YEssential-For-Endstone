@@ -142,6 +142,13 @@ class RTPSystem:
         if cd > 0 and player.name in self.cooltime:
             del self.cooltime[player.name]
 
+    def reset_cooldown(self, player_name: str):
+        """重置玩家 RTP 冷却（管理员用）"""
+        if player_name in self.cooltime:
+            del self.cooltime[player_name]
+            return True
+        return False
+
     def start_cooltime_task(self):
         def tick():
             for k in list(self.cooltime.keys()):

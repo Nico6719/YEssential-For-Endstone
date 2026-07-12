@@ -61,3 +61,29 @@ class NoticeSystem:
             self.save_notices()
             player.send_message(tr("notice.added"))
             self.show_notice(player)
+
+    def open_settings(self, player: Player):
+        """管理员公告设置 GUI"""
+        form = ActionForm(title=tr("notice.admin_title"))
+        form.content = tr("notice.admin_content")
+        form.add_button(tr("notice.add_btn"), on_click=lambda p: self.open_add_notice_gui(p))
+        form.add_button(tr("notice.del_btn"), on_click=lambda p: self._delete_notice_gui(p))
+        form.add_button(tr("notice.back_btn"), on_click=lambda p: self.show_notice(p))
+        player.send_form(form)
+
+    def _delete_notice_gui(self, player: Player):
+        form = ActionForm(title=tr("notice.del_title"))
+        if not self.notices:
+            form.content = tr("notice.no_notice")
+        else:
+            for i, n in enumerate(self.notices):
+                form.add_button(f"§c{i + 1}. §7{n[:30]}...", on_click=lambda p, idx=i: self._do_delete(p, idx))
+        form.add_button(tr("notice.back_btn"), on_click=lambda p: self.open_settings(p))
+        player.send_form(form)
+
+    def _do_delete(self, player: Player, index: int):
+        if 0 <= index < len(self.notices):
+            del self.notices[index]
+            self.save_notices()
+            player.send_message(tr("notice.deleted", str(index + 1)))
+        self._delete_notice_gui(player)

@@ -21,6 +21,11 @@ class TPASystem:
         sender_name = sender.name
         target_name = target.name
 
+        # 目标已屏蔽所有请求
+        if self.is_blocked(target_name):
+            sender.send_message(tr("tpa.target_blocked", target_name))
+            return
+
         # 已有待处理请求则拒绝
         if sender_name in self.pending_requests:
             sender.send_message(tr("tpa.already_pending"))
@@ -94,15 +99,30 @@ class TPASystem:
         """打开 TPA 玩家选择界面"""
         online_players = self.plugin.server.online_players
         form = ActionForm(title=tr("tpa.title"))
-        
+
         # 过滤掉自己
         targets = [p for p in online_players if p.name != player.name]
-        
+
         if not targets:
             form.content = tr("tpa.no_players")
             form.add_button(tr("tpa.close"))
         else:
             for target in targets:
                 form.add_button(f"§a{target.name}", on_click=lambda p, t=target: self.send_tpa_request(p, t))
-        
+
         player.send_form(form)
+
+    def toggle_settings(self, player: Player):
+        """开关 TPA 设置：是否自动拒绝所有请求"""
+        name = player.name
+        blocked = getattr(self, '_blocked', set())
+        if name in blocked:
+            blocked.discard(name)
+            player.send_message(tr("tpa.settings_on"))
+        else:
+            blocked.add(name)
+            player.send_message(tr("tpa.settings_off"))
+        self._blocked = blocked
+
+    def is_blocked(self, player_name: str) -> bool:
+        return player_name in getattr(self, '_blocked', set())

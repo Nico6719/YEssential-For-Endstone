@@ -1,78 +1,69 @@
 <div align="center">
 
-![YEssential](https://socialify.git.ci/Nico6719/YEssential/image?custom_language=JavaScript&description=1&font=Inter&forks=1&issues=1&language=1&logo=https://zh.minecraft.wiki/images/Bookshelf_JE4_BE2.png?21f85&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
-
-> 来试试[NEssential](https://github.com/Nico6719/NEssential)？全新一代基础插件，以YEssential为基础重构的高性能，多功能的基础插件!
+![YEssential](https://socialify.git.ci/Nico6719/YEssential-For-Endstone/image?custom_language=JavaScript&description=1&font=Inter&forks=1&issues=1&language=1&logo=https://zh.minecraft.wiki/images/Bookshelf_JE4_BE2.png?21f85&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 
 # 📦 YEssential
 
-**基于 LSE 的多功能基础插件**
+**基于 EndStone 的多功能基础插件**
 
-![](https://img.shields.io/github/v/release/Nico6719/YEssential?style=flat-square&logo=github&color=orange&label=Version)
-![](https://img.shields.io/github/downloads/Nico6719/YEssential/total?style=flat-square&logo=github&color=33ccff&label=Downloads)
-![](https://img.shields.io/github/languages/top/Nico6719/YEssential?style=flat-square&logo=javascript&color=yellow)
+![](https://img.shields.io/github/v/release/Nico6719/YEssential-For-Endstone?style=flat-square&logo=github&color=orange&label=Version)
+![](https://img.shields.io/github/downloads/Nico6719/YEssential-For-Endstone/total?style=flat-square&logo=github&color=33ccff&label=Downloads)
+![](https://img.shields.io/github/languages/top/Nico6719/YEssential-For-Endstone?style=flat-square&logo=python&color=yellow)
 
-![](https://img.shields.io/github/stars/Nico6719/YEssential?style=flat-square&logo=github&color=yellow&label=Stars)
-![](https://img.shields.io/github/last-commit/Nico6719/YEssential?style=flat-square&color=lightgrey)
+![](https://img.shields.io/github/stars/Nico6719/YEssential-For-Endstone?style=flat-square&logo=github&color=yellow&label=Stars)
+![](https://img.shields.io/github/last-commit/Nico6719/YEssential-For-Endstone?style=flat-square&color=lightgrey)
 ![](https://komarev.com/ghpvc/?username=Nico6719-YEssential&color=green&style=flat-square&label=Views)
 
 </div>
 
 ---
 
-> 一个简洁、实用的基础插件，适用于基岩版服务器。基于 LegacyScriptEngine (LSE) 的插件，并且可以迁移 TMEssential 的部分数据（如 home 和 warp 的数据）以及 [PMenu](https://www.minebbs.com/resources/pmenu.4277/) 的菜单数据（100%兼容！）导入配置文件/数据教程在文末。<br>
-> **如果您使用的是低于1.21.80的版本的服务端请使用（小于等于2.10.2）旧版本插件!**
+> 一个简洁、实用的多功能基础插件，适用于基岩版服务器。基于 EndStone 框架重构的 Python 版本，支持国际化、完整的 GUI 交互体验。
 
 ## 📌 基本信息
 
 - **名称**：YEssential
 - **类型**：基础插件 / 多功能模块化插件
-- **平台**：LegacyScriptEngine (LSE)
-- **主要功能**：提供服务器基础功能（如：Home Tpr Tpa Warp Money 等）
-- **支持迁移其他插件数据**：如 TMEssential 的 home 和 warp 数据可迁移到本插件等
+- **平台**：EndStone (Python)
+- **主要功能**：提供服务器基础功能（Home / TPA / Warp / Money / 菜单 / RTP 等）
+- **语言支持**：中文 / English（i18n 国际化）
 
 ---
 
 ### 📦 安装方法
 
-- 方法1：使用lip安装，指令：lip install github.com/Nico6719/YEssential
-- 方法2：下载本插件解压到Plugins目录内即可
+1. 下载 `.whl` 文件放入 `plugins/` 目录
+2. 重启服务器
 
 ---
 
-## ⚙️ 插件亮点
+## ⚙️ 功能
 
-### 功能
-
-| 功能                | 描述                                                                               | 状态      |
-| ------------------- | ---------------------------------------------------------------------------------- | --------- |
-| Modules             | 多模块支持！                                                                       | ✅        |
-| Economic            | 经济核心                                                                           | ✅        |
-| 菜单                | 菜单功能，兼容[PMenu](https://www.minebbs.com/resources/pmenu.4277/)的配置文件！！ | ✅        |
-| Hub                 | 一键回城，可通过指令设置传送点。                                                   | ✅        |
-| Rtp                 | 随机传送，附带动画。                                                               | ✅        |
-| Tpa                 | 传送系统，借鉴了子邪大佬写的 TeleportMaster。                                      | 🚧 开发中 |
-| Home&Warp           | 家系统和公共传送点系统。                                                           | ✅        |
-| Fcam                | 灵魂出窍（旁观者）。                                                               | 🚧 开发中 |
-| Back&DeathLog       | 回死亡点以及记录玩家死亡点。                                                       | ✅        |
-| DMotd               | 动态 Motd 功能。                                                                   | ✅        |
-| WeiHu               | 维护服务器功能，禁止其他非管理成员进入服务器。                                     | 🚧 开发中 |
-| Clean               | 自动清理掉落物和实体，掉落物过多时 & 定时自动清理，支持白名单。                    | 🚧 开发中 |
-| Suicide             | 玩家紫砂（kill myself）。                                                          | ✅        |
-| BetterStopMsg       | 自定义关服提示。                                                                   | ✅        |
-| i18n Support        | 多语言支持。                                                                       | 🚧 开发中 |
-| Notice              | 自定义公告，支持颜色符号，\n换行，支持游戏内在线编辑！                             | ✅        |
-| FixExpLag           | 防止经验球卡服。                                                                   | 🚧 开发中 |
-| Crash               | 崩溃玩家客户端（慎用！）。                                                         | 🚧 开发中 |
-| RedPacket           | 玩家可以自行发红包。                                                               | 🚧 开发中 |
-| ServersTP           | 一键传送到其他服务器。                                                             | ✅️        |
-| PVP                 | 防止玩家恶意攻击。                                                                 | 🚧 开发中 |
-| Keepinventory       | 开服自动开启死亡不掉落。                                                           | ✅️        |
-| AutoUpdate          | 自动更新插件本体并重载。                                                           | 🚧 开发中 |
-| Bstats统计          | 统计BDS信息和在线人数（可在Config内关闭）                                          | 🚧 开发中 |
-| Gui修改插件配置     | 网页编辑器。                                                                       | 🚧 开发中 |
-| Plugin for Endstone | Endstone 版本的 YEssential。                                                       | 🚧 开发中 |
-| SideBar             | 支持自定义侧边栏以及支持 PAPI 变量。                                               | 📅 计划中 |
+| 功能          | 描述                                                   | 状态 |
+| ------------- | ------------------------------------------------------ | ---- |
+| Economic      | 经济核心（支持计分板/LLMoney），排行榜，税率，历史记录 | ✅   |
+| 菜单          | 钟表右键呼出菜单，GUI 编辑器，多级菜单                 | ✅   |
+| Hub           | 一键回城，/sethub 设置传送点                           | ✅   |
+| RTP           | 随机传送，支持不同维度安全传送，动画，冷却，花费       | ✅   |
+| TPA           | 玩家互传系统，支持 /tpasettings 屏蔽请求               | ✅   |
+| Home          | 家园系统，GUI 管理多家园                               | ✅   |
+| Warp          | 公共传送点系统                                         | ✅   |
+| Fcam          | 灵魂出窍（旁观者模式）                                 | ✅   |
+| Back          | 返回死亡点                                             | ✅   |
+| DeathLog      | 死亡记录查询，支持点击传送                             | ✅   |
+| MOTD          | 动态 Motd 轮播                                         | ✅   |
+| Maintenance   | 维护模式，禁止非管理员进入                             | ✅   |
+| Clean         | 实体/掉落物自动清理，TPS 检测，白名单                  | ✅   |
+| Suicide       | 玩家自杀                                               | ✅   |
+| Notice        | 自定义公告，游戏内在线编辑                             | ✅   |
+| Crash         | 崩溃玩家客户端（管理员工具）                           | ✅   |
+| RedPacket     | 红包系统（随机金额/固定金额），支持离线缓存            | ✅   |
+| Servers       | 跨服传送菜单                                           | ✅   |
+| PVP           | 个人 PVP 开关                                          | ✅   |
+| Sign          | 每日签到，连续签到奖励                                 | ✅   |
+| KeepInventory | 开服自动开启死亡不掉落                                 | ✅   |
+| i18n          | 多语言国际化（zh_CN / en_US）                          | ✅   |
+| UpdateChecker | 启动时检查插件更新                                     | ✅   |
 
 ---
 
@@ -109,19 +100,12 @@
 /redpacket history && list && open && send	 #红包功能（长指令版）
 /rp history && list && open && send	 #红包功能（短指令版）
 /redpackethelp	 #红包功能详解（GUI界面）
+/yest	 #主命令，/yest reload 重载插件
+/menu	 #打开主菜单（同 /cd）
+/getclock	 #领取钟表（每人限领一次）
+/sign	 #每日签到
+/signset	 #签到管理（管理员）
 ```
-
----
-
-## 迁移其他插件的数据
-
-- 迁移TMET基础插件配置文件教程：
-  把 服务端目录\plugins\Timiya\data内的homelist.json和warplist.json
-  移动到服务端目录\plugins\YEssential\data内并且分别重命名为homedata.json和warpdata.json然后保存即可
-
-- 迁移PMenu菜单插件配置文件教程：
-  把 服务端目录\plugins\Planet\PMENU\packs内的所有东西
-  移动 到 服务端目录\plugins\YEssential\data\menus内即可
 
 ---
 
