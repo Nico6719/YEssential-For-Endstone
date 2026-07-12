@@ -4,6 +4,28 @@ All notable changes to YEssential (EndStone Python version) will be documented i
 
 ---
 
+## [0.1.0-beta.2] - 2026-07-12
+
+### 🔧 修复与改进
+
+- 修复右键钟表无法呼出菜单的问题（改用 `player.inventory.item_in_main_hand` 检测手持物品）
+- 修复 `PlayerInteractEvent` 未注册导致菜单事件不触发
+- 修复 `fcam.py` 中 `PlayerAuthInput` → `PlayerAuthInputPacket` 属性名错误
+- 修复经济系统「查看玩家金币」和「历史记录」的表单叠加闪烁问题
+- 新增 `/tpasettings` 命令（开关 TPA 接收）
+- 新增 `/deathlog` 命令（死亡记录查询）
+- 新增 `/noticeset` 命令（公告管理）
+- 新增 `/rtpreset` 命令（重置 RTP 冷却）
+- 新增 `/redpacket` 和 `/redpackethelp` 命令
+- 新增 `MenuTriggerListener` 独立监听器，修复菜单触发逻辑
+- 新增 EasyCheckUpdate 支持（`update_url` 类属性）
+- 新增 GitHub Actions 自动构建发布（PR + 自动打 tag + Release）
+- README 更新为 EndStone Python 版信息
+
+> **Full Changelog**: https://github.com/Nico6719/YEssential-For-Endstone/compare/v0.1.0-beta.1...v0.1.0-beta.2
+
+---
+
 ## [0.1.0-beta.1] - 2026-07-12
 
 ### 🎉 首个测试版
