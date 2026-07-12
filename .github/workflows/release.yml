@@ -88,29 +88,36 @@ jobs:
         run: |
           set -e
           VERSION="${{ steps.version.outputs.version }}"
-          BODY=$(awk -v ver="$VERSION" '
+
+          # 从 CHANGELOG 提取标题部分
+          HEADER=$(awk -v ver="$VERSION" '
             /^## \[/ {
               if (found) exit
               if (index($0, "[" ver "]")) found=1
               next
             }
-            found { print }
-          ' CHANGELOG.md)
-          BODY="${BODY:-YEssential v${VERSION}}"
+            found && /^###/ { print; next }
+          ' CHANGELOG.md 2>/dev/null || echo "## YEssential v${VERSION}")
 
+          # 逐条 commit 并获取作者 GitHub 用户名
           PREV_TAG=$(git tag --sort=-v:refname | sed -n '2p')
-          if [ -n "$PREV_TAG" ]; then
-            BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"
-          fi
 
+          # 一次 API 调用获取所有提交和作者
           if [ -n "$PREV_TAG" ]; then
-            AUTHORS=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" \
-              --jq '[.commits[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+            RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
+            COMMITS=$(echo "$RESPONSE" | jq -r '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")')
+            AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login // empty] | unique | map(select(. != "github-actions[bot]")) | map("@" + .) | join(" ")')
           else
-            AUTHORS=$(gh api "repos/${{ github.repository }}/commits?per_page=100" \
-              --jq '[.[].author.login] | unique | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+            COMMITS=$(git log HEAD~50..HEAD --format="- %s" 2>/dev/null)
+            AUTHORS=""
           fi
-          [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
+          COMMITS="${COMMITS:-详见 CHANGELOG.md}"
+
+          BODY="${HEADER}"
+          [ -n "$PREV_TAG" ] && BODY="${BODY}"$'\n\n'"**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...v${VERSION}"
+          BODY="${BODY}"$'\n\n'"### 📝 提交记录"
+          BODY="${BODY}"$'\n'"${COMMITS}"
+          [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n'"**Contributors**: ${AUTHORS}"
 
           { echo "BODY<<EOF"; echo "$BODY"; echo "EOF"; } >> "$GITHUB_OUTPUT"
 
