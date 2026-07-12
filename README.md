@@ -1,6 +1,6 @@
 <div align="center">
 
-![YEssential](https://socialify.git.ci/Nico6719/YEssential-For-Endstone/image?custom_language=JavaScript&description=1&font=Inter&forks=1&issues=1&language=1&logo=https://zh.minecraft.wiki/images/Bookshelf_JE4_BE2.png?21f85&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
+![YEssential](https://socialify.git.ci/Nico6719/YEssential-For-Endstone/image?custom_language=Python&description=1&font=Inter&forks=1&issues=1&language=1&logo=https://zh.minecraft.wiki/images/Bookshelf_JE4_BE2.png?21f85&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 
 # 📦 YEssential
 
@@ -12,7 +12,7 @@
 
 ![](https://img.shields.io/github/stars/Nico6719/YEssential-For-Endstone?style=flat-square&logo=github&color=yellow&label=Stars)
 ![](https://img.shields.io/github/last-commit/Nico6719/YEssential-For-Endstone?style=flat-square&color=lightgrey)
-![](https://komarev.com/ghpvc/?username=Nico6719-YEssential&color=green&style=flat-square&label=Views)
+![](https://komarev.com/ghpvc/?username=Nico6719&repo=YEssential-For-Endstone&color=green&style=flat-square&label=Views)
 
 </div>
 
