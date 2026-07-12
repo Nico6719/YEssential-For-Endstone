@@ -5,20 +5,22 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      prerelease:
-        description: 'Mark as pre-release'
-        type: boolean
-        default: false
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-and-release:
+  build:
+    name: Build Wheel
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -31,32 +33,80 @@ jobs:
       - name: Build wheel
         run: python -m build --wheel
 
-      - name: Get version
+      - name: Get version from constant.py
         id: version
+        shell: bash
         run: |
-          VERSION=$(python -c "import ast,re;c=open('src/endstone_yessential/constant.py').read();m=re.search(r'plugin_version\s*=\s*\"(.+?)\"',c);print(m.group(1) if m else '0.0.0')")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          VERSION=$(python -c "import re;c=open('src/endstone_yessential/constant.py').read();m=re.search(r'plugin_version\s*=\s*\"(.+?)\"',c);print(m.group(1) if m else '0.0.0')")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YEssential-${{ steps.version.outputs.version }}
+          path: dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    name: Publish Release
+    timeout-minutes: 10
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find release-artifacts -type f | sort
+
+      - name: Extract changelog for current version
+        id: changelog
+        shell: bash
+        run: |
+          set -e
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          if [ -f CHANGELOG.md ]; then
+            BODY=$(awk -v ver="$VERSION" '
+              /^## \[/ {
+                if (found) exit
+                if (index($0, "[" ver "]")) found=1
+                next
+              }
+              found { print }
+            ' CHANGELOG.md)
+
+            if [ -z "$BODY" ]; then
+              BODY="详见 CHANGELOG.md"
+            fi
+          else
+            BODY="YEssential v${VERSION}"
+          fi
+
+          {
+            echo "BODY<<EOF"
+            echo "$BODY"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: YEssential v${{ steps.version.outputs.version }}
-          body: |
-            ## YEssential v${{ steps.version.outputs.version }}
-
-            基于 EndStone 的多功能基础插件。
-
-            ### 安装
-            下载 `.whl` 文件放入 `plugins/` 目录，重启服务器。
-
-            ### 功能
-            - 经济系统 / 菜单 / 家园 / Warp / TPA
-            - RTP / Back / DeathLog / Hub
-            - PVP / 维护模式 / 清理 / 签到
-            - 红包 / 崩溃管理 / 跨服传送
-            - 多语言国际化 (zh_CN / en_US)
-          prerelease: ${{ github.event.inputs.prerelease || contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
-          files: |
-            dist/*.whl
-          generate_release_notes: true
+          files: release-artifacts/**
+          body: ${{ steps.changelog.outputs.BODY }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
