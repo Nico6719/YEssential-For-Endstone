@@ -55,8 +55,8 @@ jobs:
           COMMITS=$(git log origin/main..HEAD --format="- %s" 2>/dev/null || git log HEAD --format="- %s")
 
           # 提取贡献者
-          AUTHORS=$(git log origin/main..HEAD --format="%an" 2>/dev/null | sort -u | sed 's/.*/@&/' | paste -sd ' ') || \
-                    AUTHORS=$(git log --format="%an" | sort -u | sed 's/.*/@&/' | paste -sd ' ')
+          AUTHORS=$(git log origin/main..HEAD --format="%ae" 2>/dev/null | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ') || \
+                    AUTHORS=$(git log --format="%ae" | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ')
 
           # 判断版本类型
           case "$VERSION" in

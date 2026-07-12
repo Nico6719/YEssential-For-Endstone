@@ -106,9 +106,9 @@ jobs:
 
           # 提取贡献者
           if [ -n "$PREV_TAG" ]; then
-            AUTHORS=$(git log "${PREV_TAG}..HEAD" --format="%an" | sort -u | sed 's/.*/@&/' | paste -sd ' ')
+            AUTHORS=$(git log "${PREV_TAG}..HEAD" --format="%ae" | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ')
           else
-            AUTHORS=$(git log --format="%an" | sort -u | sed 's/.*/@&/' | paste -sd ' ')
+            AUTHORS=$(git log --format="%ae" | sed 's/@.*//' | sort -u | sed 's/.*/@&/' | paste -sd ' ')
           fi
           if [ -n "$AUTHORS" ]; then
             BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
