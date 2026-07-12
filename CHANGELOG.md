@@ -1,3 +1,76 @@
+## [v0.1.0-beta.2] - 2026-07-12
+
+### 📝 其他
+
+- Merge pull request #13 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #12 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #11 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #10 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #9 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #8 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #7 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #6 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #5 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #4 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #3 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #2 from Nico6719/dev
+
+v0.1.0-beta.2: Dev → Main
+- Merge pull request #1 from Nico6719/dev
+
+将 YEssential For LeviLamina 的功能迁移至 Endstone
+### 🔧 杂项
+
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+- Update CHANGELOG for v0.1.0-beta.2
+### 🚀 新功能
+
+- 优化 CHANGELOG 生成逻辑，增加错误处理并提取作者信息
+- 优化获取上一版本 tag 和提交信息的逻辑，简化命令行操作
+- 优化发布说明生成，改进 Release Body 组装逻辑并使用临时文件存储
+- 更新发布说明格式，优化输出 BODY 结构并简化版本标题
+- 优化发布说明生成，增加 CHANGELOG 总结和提交记录按类型分组
+- 优化发布流程，更新获取提交和作者信息的逻辑，支持当前版本范围的提取
+- 优化提交记录提取，使用 API 一次性获取所有提交和作者信息
+- 优化提交记录提取，增加贡献者信息并更新变更日志格式
+- 移除生成变更日志时的输出文件环境变量
+- 优化发布工作流，调整标签提取逻辑并更新 changelog 生成配置
+- 删除自动标记和变更日志生成工作流，优化发布流程
+- 移除自动标记工作流中的路径限制，允许在 main 分支上推送任何更改
+- 使用 GitHub Compare API 提取贡献者信息，优化 PR 和 Release 工作流
+- 更新版本至0.1.0-beta.2，修复多个问题并新增命令，添加自动生成变更日志功能
+- 添加自动标记和创建 PR 的工作流
+- 添加完整变更日志链接和贡献者信息提取功能
+- 移除冗余字段并优化版本信息结构
+- 添加更新URL属性并移除EasyCheckUpdate桥接文件相关代码
 ## [v0.1.0-beta.1] - 2026-07-12
 
 ### ♻️ 重构
