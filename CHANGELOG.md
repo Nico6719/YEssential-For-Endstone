@@ -4,6 +4,19 @@ All notable changes to YEssential (EndStone Python version) will be documented i
 
 ---
 
+## [0.1.0-beta.3] - 2026-07-12
+
+### 🔧 修复与改进
+
+- 完善 GitHub Actions 自动构建发布流程（合并 auto-tag 和 release 为单一 workflow）
+- 修复 release notes 生成中 `echo | head` 导致 Broken pipe 错误
+- 优化贡献者提取，使用 GitHub Compare API 一次性获取所有提交和作者
+- 优化 release body 结构：CHANGELOG 总结 + 逐条提交 @作者 + 汇总贡献者
+- 过滤 bot 提交，release notes 只显示真人贡献者
+- Release 标题统一为 `vx.x.x` 格式
+
+---
+
 ## [0.1.0-beta.2] - 2026-07-12
 
 ### 🔧 修复与改进
@@ -21,8 +34,6 @@ All notable changes to YEssential (EndStone Python version) will be documented i
 - 新增 EasyCheckUpdate 支持（`update_url` 类属性）
 - 新增 GitHub Actions 自动构建发布（PR + 自动打 tag + Release）
 - README 更新为 EndStone Python 版信息
-
-> **Full Changelog**: https://github.com/Nico6719/YEssential-For-Endstone/compare/v0.1.0-beta.1...v0.1.0-beta.2
 
 ---
 
