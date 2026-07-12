@@ -102,13 +102,13 @@ jobs:
           # ── 2. 获取上一版本 tag ──
           git fetch --tags --force
           ALL_TAGS=$(git tag --sort=-v:refname | grep -v "v${VERSION}")
-          PREV_TAG=$(echo "$ALL_TAGS" | head -n1)
+          PREV_TAG=$(head -n1 <<< "$ALL_TAGS")
 
           # ── 3. API 获取提交并按类型分组 ──
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
 
-            DETAILS=$(echo "$RESPONSE" | jq -r '
+            DETAILS=$(jq -r '
               def icon($m):
                 if $m|test("^feat") then "🚀"
                 elif $m|test("^fix") then "🐛"
@@ -129,7 +129,7 @@ jobs:
               ) | join("\n\n")
             ' 2>/dev/null)
 
-            AUTHORS=$(echo "$RESPONSE" | jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")')
+            AUTHORS=$(jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")' <<< "$RESPONSE")
           else
             DETAILS="🚀 YEssential v${VERSION} 首次发布"
             AUTHORS=""
