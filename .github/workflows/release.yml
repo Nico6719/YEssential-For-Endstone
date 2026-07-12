@@ -90,13 +90,14 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
 
           # ── 1. CHANGELOG 总结 ──
+          set +o pipefail
           SUMMARY=$(awk -v ver="$VERSION" '
             /^## \[/ {
               if (found) exit
               if (index($0, "[" ver "]")) { found=1; next }
             }
             found { print }
-          ' CHANGELOG.md 2>/dev/null)
+          ' CHANGELOG.md 2>/dev/null || true)
           SUMMARY="${SUMMARY:-## YEssential v${VERSION}}"
 
           # ── 2. 获取上一版本 tag ──
@@ -107,6 +108,7 @@ jobs:
           # ── 3. API 获取提交并按类型分组 ──
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
+            AUTHORS=$(jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")' <<< "$RESPONSE" 2>/dev/null || true)
 
             DETAILS=$(jq -r '
               def icon($m):
@@ -127,9 +129,7 @@ jobs:
                 "### \(.[0].i) \(label(.[0].i))\n" +
                 (map("- \(.m) \(.a)")|join("\n"))
               ) | join("\n\n")
-            ' 2>/dev/null)
-
-            AUTHORS=$(jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")' <<< "$RESPONSE")
+            ' 2>/dev/null || true)
           else
             DETAILS="🚀 YEssential v${VERSION} 首次发布"
             AUTHORS=""
