@@ -141,7 +141,7 @@ jobs:
           [ -n "$DETAILS" ] && BODY="${BODY}"$'\n\n'"${DETAILS}"
           [ -n "$AUTHORS" ] && BODY="${BODY}"$'\n\n'"**Contributors**: ${AUTHORS}"
 
-          { echo "BODY<<EOF"; echo "$BODY"; echo "EOF"; } >> "$GITHUB_OUTPUT"
+          printf 'BODY<<BODYEOF\n%s\nBODYEOF\n' "$BODY" >> "$GITHUB_OUTPUT"
 
       - name: Create tag and Release
         if: steps.check.outputs.exists == 'false'
@@ -159,7 +159,7 @@ jobs:
           case "$TAG" in *beta*|*alpha*|*rc*|*dev*) PRERELEASE="true" ;; esac
 
           gh release create "$TAG" \
-            --title "YEssential v${{ steps.version.outputs.version }}" \
+            --title "v${{ steps.version.outputs.version }}" \
             --notes "${{ steps.changelog.outputs.BODY }}" \
             --prerelease=$PRERELEASE \
             dist/*.whl
