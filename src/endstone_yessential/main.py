@@ -41,6 +41,7 @@ def _is_simulated(player: Player) -> bool:
 
 class YEssentialPlugin(Plugin):
     api_version = "0.5"
+    update_url = plugin_update_url
     commands = {
         "yest": {
             "description": "YEssential 主命令",
@@ -274,9 +275,6 @@ class YEssentialPlugin(Plugin):
     def on_enable(self):
         plugin_print(tr("logo.enabled", plugin_name))
 
-        # 写入 EasyCheckUpdate 桥接文件（供 LSE 版 EasyCheckUpdate 扫描）
-        self._init_easycheckupdate()
-
         # Debug 开关
         set_debug(self.config_manager.config_data.get("Debug", False))
         debug("Plugin enabling...")
@@ -341,33 +339,6 @@ class YEssentialPlugin(Plugin):
         plugin_print(tr("logo.disabling", plugin_name))
         self.motd.stop_rotation()
         plugin_print(tr("logo.disabled", plugin_name))
-
-    def _init_easycheckupdate(self):
-        """写入 EasyCheckUpdate 桥接文件供 LSE 版 EasyCheckUpdate 扫描"""
-        import json, os
-        bridge_dir = "./plugins/YEssential/"
-        bridge_path = bridge_dir + "easycheckupdate.json"
-        try:
-            os.makedirs(bridge_dir, exist_ok=True)
-            current = {}
-            if os.path.exists(bridge_path):
-                with open(bridge_path, 'r', encoding='utf-8') as f:
-                    current = json.load(f)
-            if current.get("version") != plugin_version:
-                data = {
-                    "name": plugin_name,
-                    "version": plugin_version,
-                    "type": "github",
-                    "repo": "Nico6719/YEssential-For-Endstone",
-                    "branch": "main",
-                    "update_url": plugin_update_url,
-                    "release_url": plugin_github_link + "/releases/latest"
-                }
-                with open(bridge_path, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=4, ensure_ascii=False)
-                plugin_print("[EasyCheckUpdate] bridge file written", "INFO")
-        except Exception as e:
-            self.logger.warning(f"[EasyCheckUpdate] bridge write fail: {e}")
 
     # ══════════════════════════════════════════════════════════
     # Event Handlers
