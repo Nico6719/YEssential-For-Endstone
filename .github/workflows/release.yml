@@ -105,7 +105,7 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # ── 1. CHANGELOG 总结 ──
+          # ── 1. 从 CHANGELOG.md 提取 git-cliff 生成的分类总结 ──
           set +o pipefail
           SUMMARY=$(awk -v ver="$VERSION" '
             /^## \[/ {
@@ -116,33 +116,43 @@ jobs:
           ' CHANGELOG.md 2>/dev/null || true)
           SUMMARY="${SUMMARY:-## YEssential v${VERSION}}"
 
-          # ── 2. 获取上一版本 tag ──
-          git fetch --tags --force
-          ALL_TAGS=$(git tag --sort=-v:refname | grep -v "v${VERSION}")
-          PREV_TAG=$(head -n1 <<< "$ALL_TAGS")
+          # ── 2. 获取上一版本 tag，API 拉取原始提交和贡献者 ──
+          PREV_TAG=$(git tag --sort=-v:refname | grep -v "v${VERSION}" | head -n1)
 
-          # ── 3. API 获取提交并按类型分组 ──
           if [ -n "$PREV_TAG" ]; then
-            RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "")
-            AUTHORS=$(jq -r '[.commits[]?.author.login//empty]|unique|map(select(.!="github-actions[bot]"))|map("@"+.)|join(" ")' <<< "$RESPONSE" 2>/dev/null || true)
+            RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "{}")
 
-            DETAILS=$(jq -r '
+            DETAILS=$(echo "$RESPONSE" | jq -r '
               [.commits[]? | select(.author.login != "github-actions[bot]")] |
-              map("- \(.commit.message|split("\n")[0]) (@\(.author.login))") |
+              map("- \(.commit.message | split("\n")[0]) (@\(.author.login))") |
               join("\n")
-            ' <<< "$RESPONSE" 2>/dev/null || true)
+            ' 2>/dev/null || echo "")
+
+            AUTHORS=$(echo "$RESPONSE" | jq -r '
+              [.commits[]?.author.login // empty] |
+              unique |
+              map(select(. != "github-actions[bot]")) |
+              map("@" + .) |
+              join(" ")
+            ' 2>/dev/null || echo "")
           else
-            DETAILS="🚀 YEssential v${VERSION} 首次发布"
+            DETAILS=""
             AUTHORS=""
           fi
 
-          # ── 4. 组装 Release Body ──
+          # ── 3. 组装 Release Body ──
           {
-            printf '%s\n' "$SUMMARY"
-            [ -n "$PREV_TAG" ] && printf '\n**Full Changelog**: https://github.com/%s/compare/%s...v%s\n' \
-              "${{ github.repository }}" "$PREV_TAG" "$VERSION"
-            [ -n "$DETAILS" ] && printf '\n%s\n' "$DETAILS"
-            [ -n "$AUTHORS" ] && printf '\n**Contributors**: %s\n' "$AUTHORS"
+            printf '%s\n\n' "$SUMMARY"
+            if [ -n "$PREV_TAG" ]; then
+              printf '**Full Changelog**: https://github.com/%s/compare/%s...v%s\n' \
+                "${{ github.repository }}" "$PREV_TAG" "$VERSION"
+            fi
+            if [ -n "$DETAILS" ]; then
+              printf '\n### 📋 原始提交\n\n%s\n' "$DETAILS"
+            fi
+            if [ -n "$AUTHORS" ]; then
+              printf '\n**Contributors**: %s\n' "$AUTHORS"
+            fi
           } > /tmp/release_body.md
 
           printf 'BODY<<BODYEOF\n' >> "$GITHUB_OUTPUT"
