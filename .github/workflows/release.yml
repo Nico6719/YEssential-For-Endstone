@@ -142,18 +142,12 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # 获取上一版本 tag，API 拉取提交和贡献者
+          # 获取上一版本 tag
           PREV_TAG=$(git tag --sort=-v:refname | grep -v "v${VERSION}" | head -n1)
 
+          # 贡献者
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "{}")
-
-            DETAILS=$(echo "$RESPONSE" | jq -r '
-              [.commits[]? | select(.author.login != "github-actions[bot]")] |
-              map("- \(.commit.message | split("\n")[0]) (@\(.author.login))") |
-              join("\n")
-            ' 2>/dev/null || echo "")
-
             AUTHORS=$(echo "$RESPONSE" | jq -r '
               [.commits[]?.author.login // empty] |
               unique |
@@ -162,19 +156,19 @@ jobs:
               join(" ")
             ' 2>/dev/null || echo "")
           else
-            DETAILS=""
             AUTHORS=""
           fi
 
-          # 组装 Release Body
+          # 组装 Release Body：以 git-cliff 分类 CHANGELOG 为主体
           {
-            printf '## YEssential v%s\n\n' "$VERSION"
-            if [ -n "$PREV_TAG" ]; then
-              printf '**Full Changelog**: https://github.com/%s/compare/%s...v%s\n' \
-                "${{ github.repository }}" "$PREV_TAG" "$VERSION"
+            if [ -s /tmp/changelog.md ]; then
+              cat /tmp/changelog.md
+            else
+              printf '## YEssential v%s\n\n' "$VERSION"
             fi
-            if [ -n "$DETAILS" ]; then
-              printf '\n### 📋 提交记录\n\n%s\n' "$DETAILS"
+            if [ -n "$PREV_TAG" ]; then
+              printf '\n**Full Changelog**: https://github.com/%s/compare/%s...v%s\n' \
+                "${{ github.repository }}" "$PREV_TAG" "$VERSION"
             fi
             if [ -n "$AUTHORS" ]; then
               printf '\n**Contributors**: %s\n' "$AUTHORS"
