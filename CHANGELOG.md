@@ -1216,6 +1216,25 @@ All notable changes to YEssential (EndStone Python version) will be documented i
 
 ---
 
+## [0.1.0-beta.4] - 2026-08-12
+
+### 🔧 修复与改进
+
+- 修复 GitHub Actions 自动构建发布流程中 `release` 步骤无法获取 `GITHUB_TOKEN` 的问题
+- 修复 Release notes 生成中 git-cliff 输出冗余原始提交造成噪音的问题
+- 修复插件描述中分隔符格式不统一的问题
+
+### ⚙️ CI/CD 与工程
+
+- 重构 Release Body 生成逻辑，改为从 CHANGELOG.md 读取分类总结 + API 原始提交
+- 移除 git-cliff 自动生成依赖，简化 release notes 生成链路
+- 添加更新 CHANGELOG 的自动化工作流
+- 重构构建脚本并更新项目元数据
+- 发布工作流改为仅支持 tag 推送触发，移除 main 分支 push 触发
+- 更新功能状态标记（Fcam、Maintenance、Crash 标记为开发中）
+
+---
+
 ## [0.1.0-beta.3] - 2026-07-12
 
 ### 🔧 修复与改进
