@@ -5,6 +5,10 @@ on:
     branches:
       - dev
 
+concurrency:
+  group: dev-pr-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
   pull-requests: write
@@ -40,7 +44,17 @@ jobs:
         id: version
         shell: bash
         run: |
-          VERSION=$(python -c "import re;c=open('src/endstone_yessential/constant.py').read();m=re.search(r'plugin_version\s*=\s*\"(.+?)\"',c);print(m.group(1) if m else '0.0.0')")
+          VERSION=$(python3 << 'PYEOF'
+          import os
+          p = os.path.join('src', 'endstone_yessential', 'constant.py')
+          v = '0.0.0'
+          for line in open(p, encoding='utf-8'):
+              if line.startswith('plugin_version'):
+                  v = line.split('=')[1].strip().strip('"').strip("'")
+                  break
+          print(v)
+          PYEOF
+          )
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build PR body
@@ -52,15 +66,23 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # 一次 API 调用获取所有提交和作者
+          # 一次 API 调用同时获取提交列表和贡献者
           git fetch origin main
-          COMMITS=$(gh api "repos/${{ github.repository }}/compare/main...dev" \
-            --jq '[.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] | join("\n")' 2>/dev/null)
+          RESPONSE=$(gh api "repos/${{ github.repository }}/compare/main...dev" 2>/dev/null || echo "{}")
+
+          COMMITS=$(echo "$RESPONSE" | jq -r '
+            [.commits[]? | "- \(.commit.message | split("\n")[0]) (@\(.author.login // "unknown"))"] |
+            join("\n")
+          ' 2>/dev/null)
           COMMITS="${COMMITS:-无新提交}"
 
-          # 提取贡献者
-          AUTHORS=$(gh api "repos/${{ github.repository }}/compare/main...dev" \
-            --jq '[.commits[].author.login // empty] | unique | map(select(. != null and . != "github-actions[bot]")) | map("@" + .) | join(" ")' 2>/dev/null || echo "")
+          AUTHORS=$(echo "$RESPONSE" | jq -r '
+            [.commits[].author.login // empty] |
+            unique |
+            map(select(. != null and . != "github-actions[bot]")) |
+            map("@" + .) |
+            join(" ")
+          ' 2>/dev/null || echo "")
 
           # 判断版本类型
           case "$VERSION" in
