@@ -134,13 +134,12 @@ jobs:
           # ── 从 CHANGELOG.md 提取当前版本的分类总结 ──
           CHANGELOG_SUMMARY=""
           if [ -f CHANGELOG.md ]; then
-            # 提取从 "## [$VERSION]" 到下一个 "## [" 之间的内容
             CHANGELOG_SUMMARY=$(awk -v ver="$VERSION" '
               BEGIN { found=0 }
               $0 ~ "^## \\[" ver "\\]" { found=1; next }
               found && /^## \[/ { exit }
-              found { print }
-            ' CHANGELOG.md | sed '/^$/N;/^\n$/d' | sed 's/^$/<br>/' || echo "")
+              found
+            ' CHANGELOG.md | awk 'NF{p=1} p' || echo "")
           fi
 
           if [ -n "$PREV_TAG" ]; then
@@ -181,11 +180,17 @@ jobs:
             printf '%s\n\n' "$CHANGELOG_SUMMARY" >> /tmp/release_body.md
             echo '---' >> /tmp/release_body.md
             echo >> /tmp/release_body.md
-            echo '#### 原始提交记录' >> /tmp/release_body.md
+            echo '<details>' >> /tmp/release_body.md
+            echo '<summary>📋 原始提交记录</summary>' >> /tmp/release_body.md
             echo >> /tmp/release_body.md
           fi
 
           printf '%s\n' "$COMMITS" >> /tmp/release_body.md
+
+          if [ -n "$CHANGELOG_SUMMARY" ]; then
+            echo >> /tmp/release_body.md
+            echo '</details>' >> /tmp/release_body.md
+          fi
 
           cat >> /tmp/release_body.md <<BODYEOF
 
