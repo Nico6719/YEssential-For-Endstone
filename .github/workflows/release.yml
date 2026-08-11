@@ -138,6 +138,7 @@ jobs:
               BEGIN { found=0 }
               $0 ~ "^## \\[" ver "\\]" { found=1; next }
               found && /^## \[/ { exit }
+              found && /^---$/ { exit }
               found
             ' CHANGELOG.md | awk 'NF{p=1} p' || echo "")
           fi
