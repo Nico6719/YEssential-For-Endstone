@@ -63,6 +63,19 @@ v0.1.0-beta.3: Dev → Main
 ### 🚀 新功能
 
 - 更新版本至 0.1.0-beta.3，优化 CHANGELOG 生成和贡献者展示
+## [v0.1.0-beta.3] - 2026-07-12
+
+### 📝 其他
+
+- Merge pull request #14 from Nico6719/dev
+
+v0.1.0-beta.3: Dev → Main
+### 🔧 杂项
+
+- Update CHANGELOG for v0.1.0-beta.3
+### 🚀 新功能
+
+- 更新版本至 0.1.0-beta.3，优化 CHANGELOG 生成和贡献者展示
 ## [v0.1.0-beta.2] - 2026-07-12
 
 ### 📝 其他
