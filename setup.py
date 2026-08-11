@@ -19,7 +19,7 @@ setuptools.setup(
     author=["Nico6719", "MengHanLOVE1027"],
     url="https://github.com/Nico6719/YEssential-For-Endstone",
     author_email=["nico6719@qq.com", "2193438288@qq.com"],
-    description="基于 Endstone 的Y系列基础插件 \ A Y series essential plugin based on Endstone",
+    description="基于 Endstone 的Y系列基础插件 | A Y series essential plugin based on Endstone",
     long_description=long_description,
     long_description_content_type="text/markdown",
     package_dir={"": "src"},
