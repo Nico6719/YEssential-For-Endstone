@@ -78,6 +78,15 @@ jobs:
         env:
           GITHUB_REPO: ${{ github.repository }}
 
+      - name: Fix version in changelog
+        if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          DATE=$(date +%Y-%m-%d)
+          sed -i "s/\[unreleased\]/[${VERSION}] - ${DATE}/" /tmp/changelog.md
+          echo "Changelog version fixed: ${VERSION}"
+
       - name: Commit CHANGELOG & sync to dev
         if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
         shell: bash
