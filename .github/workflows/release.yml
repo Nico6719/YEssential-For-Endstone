@@ -67,80 +67,12 @@ jobs:
       - name: Install build tools
         run: pip install build
 
-      # ────────────────────────────────────
-      # 1. 先生成 CHANGELOG（在构建之前）
-      # ────────────────────────────────────
-      - name: Generate changelog with git-cliff
-        if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
-        uses: orhun/git-cliff-action@v4
-        with:
-          args: --latest --strip header --output /tmp/changelog.md
-        env:
-          GITHUB_REPO: ${{ github.repository }}
-
-      - name: Fix version in changelog
-        if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
-        shell: bash
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          DATE=$(date +%Y-%m-%d)
-          sed -i "s/\[unreleased\]/[${VERSION}] - ${DATE}/" /tmp/changelog.md
-          echo "Changelog version fixed: ${VERSION}"
-
-      - name: Commit CHANGELOG & sync to dev
-        if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
-        shell: bash
-        run: |
-          if [ ! -s /tmp/changelog.md ]; then
-            echo "git-cliff produced empty output, skipping."
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # 拼接新内容到 CHANGELOG.md 头部
-          if [ -f CHANGELOG.md ]; then
-            cat /tmp/changelog.md CHANGELOG.md > /tmp/new_changelog.md
-            mv /tmp/new_changelog.md CHANGELOG.md
-          else
-            cp /tmp/changelog.md CHANGELOG.md
-          fi
-
-          git add CHANGELOG.md
-
-          if git diff --cached --quiet; then
-            echo "No CHANGELOG changes"
-            exit 0
-          fi
-
-          VERSION="${{ steps.version.outputs.version }}"
-          git commit -m "chore: update CHANGELOG for v${VERSION} [skip ci]"
-
-          # 推送到 main
-          git push origin HEAD:main
-
-          # 同步到 dev
-          git fetch origin dev
-          git checkout -b sync-changelog origin/dev
-          git checkout main -- CHANGELOG.md
-          git add CHANGELOG.md
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: sync CHANGELOG from main [skip ci]"
-            git push origin HEAD:dev || echo "⚠️ Push to dev failed, will sync on next PR"
-          else
-            echo "dev CHANGELOG already up to date"
-          fi
-
-      # ────────────────────────────────────
-      # 2. 构建 wheel
-      # ────────────────────────────────────
       - name: Build wheel
         if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
         run: python -m build --wheel
 
       # ────────────────────────────────────
-      # 3. 生成 Release 说明
+      # 生成 Release 说明
       # ────────────────────────────────────
       - name: Extract release notes
         id: changelog
@@ -151,12 +83,34 @@ jobs:
           set -e
           VERSION="${{ steps.version.outputs.version }}"
 
-          # 获取上一版本 tag
+          # 1. 从 CHANGELOG.md 提取当前版本的分类总结
+          SUMMARY=""
+          if [ -f CHANGELOG.md ]; then
+            SUMMARY=$(awk -v ver="${VERSION}" '
+              /^## \[/ {
+                if (found) exit
+                if (index($0, "[" ver "]")) { found=1; next }
+              }
+              found {
+                if (/^## \[/ || /^---$/) exit
+                print
+              }
+            ' CHANGELOG.md 2>/dev/null || true)
+          fi
+          SUMMARY="${SUMMARY:-## YEssential v${VERSION}}"
+
+          # 2. 获取上一版本 tag，API 拉取提交和贡献者
           PREV_TAG=$(git tag --sort=-v:refname | grep -v "v${VERSION}" | head -n1)
 
-          # 贡献者
           if [ -n "$PREV_TAG" ]; then
             RESPONSE=$(gh api "repos/${{ github.repository }}/compare/${PREV_TAG}...HEAD" 2>/dev/null || echo "{}")
+
+            DETAILS=$(echo "$RESPONSE" | jq -r '
+              [.commits[]? | select(.author.login != "github-actions[bot]")] |
+              map("- \(.commit.message | split("\n")[0]) (@\(.author.login))") |
+              join("\n")
+            ' 2>/dev/null || echo "")
+
             AUTHORS=$(echo "$RESPONSE" | jq -r '
               [.commits[]?.author.login // empty] |
               unique |
@@ -165,19 +119,19 @@ jobs:
               join(" ")
             ' 2>/dev/null || echo "")
           else
+            DETAILS=""
             AUTHORS=""
           fi
 
-          # 组装 Release Body：以 git-cliff 分类 CHANGELOG 为主体
+          # 3. 组装 Release Body
           {
-            if [ -s /tmp/changelog.md ]; then
-              cat /tmp/changelog.md
-            else
-              printf '## YEssential v%s\n\n' "$VERSION"
-            fi
+            printf '%s\n' "$SUMMARY"
             if [ -n "$PREV_TAG" ]; then
               printf '\n**Full Changelog**: https://github.com/%s/compare/%s...v%s\n' \
                 "${{ github.repository }}" "$PREV_TAG" "$VERSION"
+            fi
+            if [ -n "$DETAILS" ]; then
+              printf '\n%s\n' "$DETAILS"
             fi
             if [ -n "$AUTHORS" ]; then
               printf '\n**Contributors**: %s\n' "$AUTHORS"
@@ -189,7 +143,7 @@ jobs:
           printf '\nBODYEOF\n' >> "$GITHUB_OUTPUT"
 
       # ────────────────────────────────────
-      # 4. 创建 Tag（main push / workflow_dispatch）
+      # 创建 Tag（main push / workflow_dispatch）
       # ────────────────────────────────────
       - name: Create tag (main push / workflow_dispatch)
         if: steps.check.outputs.exists == 'false'
@@ -202,9 +156,6 @@ jobs:
           git push origin "$TAG"
           echo "Created and pushed tag: $TAG"
 
-      # ────────────────────────────────────
-      # 5. 发布 Release
-      # ────────────────────────────────────
       - name: Create GitHub Release
         if: github.event_name != 'workflow_dispatch' || steps.check.outputs.exists == 'false'
         shell: bash

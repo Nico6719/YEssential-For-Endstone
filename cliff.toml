@@ -1,32 +1,19 @@
-# git-cliff configuration for YEssential
 [changelog]
-header = "# Changelog\n\nAll notable changes to YEssential will be documented in this file.\n"
-body = """
-{%- if version -%}
-    ## [{{ version }}] - {{ timestamp | date(format="%Y-%m-%d") }}
-{% else -%}
-    ## [unreleased]
-{% endif -%}
-{% for group, commits in commits | group_by(attribute="group") %}
-    ### {{ group }}
-    {% for commit in commits %}
-        - {{ commit.message | upper_first }}
-    {%- endfor -%}
-{% endfor %}\n
-"""
-trim = true
+header = "# Changelog\n\nAll notable changes to YEssential (EndStone Python version) will be documented in this file.\n\n---\n"
+footer = ""
+sort = "newest"
+tag_prefix = "v"
+preferred_tag = "semver"
 
-[git]
-conventional_commits = true
-filter_unconventional = false
-commit_parsers = [
-    { message = "^feat", group = "🚀 新功能" },
-    { message = "^fix", group = "🐛 修复" },
-    { message = "^docs", group = "📚 文档" },
-    { message = "^refactor", group = "♻️ 重构" },
-    { message = "^perf", group = "⚡ 性能" },
-    { message = "^chore", group = "🔧 杂项" },
-    { message = "^ci", group = "🤖 CI/CD" },
-    { message = ".*", group = "📝 其他" },
-]
-sort_commits = "newest"
+[changelog.sections]
+feat = "🎉 新增功能"
+fix = "🔧 修复与改进"
+perf = "⚡ 性能优化"
+refactor = "♻️ 代码重构"
+docs = "📝 文档更新"
+chore = "🧩 工程维护"
+
+[commit_parsers]
+# 匹配fix类提交归到修复改进
+{ message = "^fix", section = "fix" }
+{ message = "^feat", section = "feat" }
