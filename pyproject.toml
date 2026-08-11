@@ -10,7 +10,7 @@ authors = [
     { name = "Nico6719", email = "nico6719@qq.com" },
     { name = "MengHanLOVE", email = "2193438288@qq.com" }
 ]
-description = "基于 Endstone 的 YEssential"
+description = "基于 Endstone 的Y系列基础插件 \ A Y series essential plugin based on Endstone"
 readme = "README.md"
 license-files = ["LICEN[CS]E*"]
 keywords = ["endstone", "plugin", "essential", "yessential", "tpa", "money", "shop"]
