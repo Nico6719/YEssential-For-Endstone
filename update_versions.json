@@ -1,6 +1,12 @@
 {
-    "latest_version": "0.1.0-beta.3",
+    "latest_version": "0.1.0-beta.4",
     "versions": {
+        "0.1.0-beta.4": {
+            "download_url": "https://github.com/Nico6719/YEssential-For-Endstone/releases/download/v0.1.0-beta.4/endstone_yessential-0.1.0b4-py3-none-any.whl",
+            "update_content": "修复 GITHUB_TOKEN 获取失败和 Release Notes 冗余问题；重构 Release Body 生成链路，迁移至 CHANGELOG.md 分类总结 + API 原始提交；移除 git-cliff 依赖；更新功能状态标记",
+            "author": "Nico6719&梦涵LOVE",
+            "update_time": "2026-08-12 12:00:00"
+        },
         "0.1.0-beta.3": {
             "download_url": "https://github.com/Nico6719/YEssential-For-Endstone/releases/download/v0.1.0-beta.3/endstone_yessential-0.1.0b3-py3-none-any.whl",
             "update_content": "完善 GitHub Actions 自动构建发布流程，优化 CHANGELOG 生成和贡献者展示",

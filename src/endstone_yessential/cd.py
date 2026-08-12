@@ -1,11 +1,12 @@
 import json
 import os
-import time
-from typing import Dict, List, Any, Optional
+
 from endstone import Player
-from endstone.form import ActionForm, ModalForm, Dropdown, TextInput, Label
-from endstone.event import event_handler, PlayerInteractEvent
+from endstone.event import PlayerInteractEvent, event_handler
+from endstone.form import ActionForm, Dropdown, Label, ModalForm, TextInput
+
 from .i18n import tr
+
 
 class MenuConfigManager:
     def __init__(self, plugin):
@@ -59,13 +60,13 @@ class MenuConfigManager:
     def get_score(self) -> str:
         return self._config.get("score", "money")
 
-    def get_items(self) -> List[str]:
+    def get_items(self) -> list[str]:
         return self._config.get("items", ["minecraft:clock"])
 
     def get_main(self) -> str:
         return self._config.get("main", "main")
 
-    def get_shield(self) -> List[str]:
+    def get_shield(self) -> list[str]:
         return self._config.get("shield", [])
 
     def get_items_trigger_mode(self) -> int:
@@ -102,7 +103,7 @@ class MenuUtils:
         return bool(re.match(r'^[A-Za-z0-9]+$', s)) and 1 <= len(s) <= 20
 
     @staticmethod
-    def get_menu_files(exclude_main: bool = False, config_manager: MenuConfigManager = None) -> List[str]:
+    def get_menu_files(exclude_main: bool = False, config_manager: MenuConfigManager = None) -> list[str]:
         menus_path = config_manager.menus_path if config_manager else "./plugins/YEssential/data/Menus/"
         if not os.path.exists(menus_path):
             return []
@@ -246,7 +247,7 @@ class MenuDataManager:
             if len(menu_data["buttons"]) != before:
                 self.set_menu(f, menu_data)
 
-    def add_button(self, file_name: str, button: dict, index: Optional[int] = None):
+    def add_button(self, file_name: str, button: dict, index: int | None = None):
         if not file_name.endswith(".json"):
             file_name += ".json"
         menu_data = self.get_menu(file_name)
@@ -682,7 +683,7 @@ class MenuAdminHandler:
         for btn in menu_data["buttons"]:
             t = btn.get("text", "") + " [" + btn.get("type", "") + "]"
             if btn.get("money", 0) > 0:
-                t += f" (" + tr("cd.need_money", btn["money"]) + ")"
+                t += " (" + tr("cd.need_money", btn["money"]) + ")"
             form.add_button(t)
         form.add_button(tr("cd.back"))
 
@@ -931,7 +932,7 @@ class GetClockCommandHandler:
             with open(self.data_path, 'w', encoding='utf-8') as f:
                 json.dump([], f)
 
-    def load_claimed(self) -> List[str]:
+    def load_claimed(self) -> list[str]:
         try:
             with open(self.data_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -939,7 +940,7 @@ class GetClockCommandHandler:
         except:
             return []
 
-    def save_claimed(self, data: List[str]):
+    def save_claimed(self, data: list[str]):
         try:
             with open(self.data_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2)

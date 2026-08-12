@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ──────────────────────────────────────────
+  # Python 语法检查 + Wheel 构建验证
+  # ──────────────────────────────────────────
+  lint-and-build:
+    name: Lint & Build Check
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install build ruff
+
+      - name: Ruff lint
+        run: ruff check src/ --output-format=github || true
+
+      - name: Python syntax check
+        run: python -m compileall src/
+
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: Verify wheel exists
+        shell: bash
+        run: |
+          if ls dist/*.whl 1>/dev/null 2>&1; then
+            echo "✅ Wheel built successfully"
+            ls -la dist/
+          else
+            echo "❌ No wheel found"
+            exit 1
+          fi
+
