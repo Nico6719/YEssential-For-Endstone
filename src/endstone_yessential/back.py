@@ -1,15 +1,16 @@
-from typing import Dict, List
-from endstone import Player, ColorFormat
-from endstone.level import Location
-from endstone.form import ActionForm
-from .i18n import tr
 import time
+
+from endstone import ColorFormat, Player
+from endstone.form import ActionForm
+
+from .i18n import tr
+
 
 class BackSystem:
     def __init__(self, plugin):
         self.plugin = plugin
         # 使用unique_id作为键来存储死亡点
-        self.death_points: Dict[str, List[Dict]] = {}
+        self.death_points: dict[str, list[dict]] = {}
         # 每个玩家最多记录的死亡点数量
         self.max_death_points = 5
 
@@ -58,7 +59,7 @@ class BackSystem:
         """打开返回死亡点 GUI"""
         form = ActionForm(title=tr("back.title"))
 
-        if player.unique_id in self.death_points and self.death_points[player.unique_id]:
+        if self.death_points.get(player.unique_id):
             # 显示所有记录的死亡点
             for i, death_point in enumerate(self.death_points[player.unique_id]):
                 loc = death_point["location"]
@@ -88,7 +89,7 @@ class BackSystem:
         """查看死亡记录 GUI"""
         form = ActionForm(title=tr("back.deathlog_title"))
 
-        if player.unique_id in self.death_points and self.death_points[player.unique_id]:
+        if self.death_points.get(player.unique_id):
             for i, death_point in enumerate(self.death_points[player.unique_id]):
                 loc = death_point["location"]
                 death_time = time.time() - death_point["time"]
