@@ -8,7 +8,7 @@ dynamic = ["version"]
 dependencies = []
 authors = [
     { name = "Nico6719", email = "nico6719@qq.com" },
-    { name = "MengHanLOVE", email = "2193438288@qq.com" }
+    { name = "MengHanLOVE1027", email = "2193438288@qq.com" }
 ]
 description = "基于 Endstone 的Y系列基础插件 | A Y series essential plugin based on Endstone"
 readme = "README.md"
